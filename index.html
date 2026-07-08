@@ -70,6 +70,16 @@
     font-size: 1.3rem;
     letter-spacing: 0.01em;
   }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .nav-logo{
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+  }
   .nav-word b.lis{ color: var(--circuit-teal); font-weight:500; }
   .nav-cta{
     font-family: var(--mono);
@@ -457,7 +467,21 @@
 <body>
 
 <nav class="wrap">
-  <div class="nav-word">era<b class="lis">lis</b></div>
+  <div class="brand">
+    <svg class="nav-logo" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Símbolo Eralis">
+      <ellipse class="orbit" cx="120" cy="120" rx="100" ry="40"/>
+      <circle class="moon-body" cx="120" cy="120" r="62" fill="url(#moonGrad)"/>
+      <circle cx="98" cy="145" r="10" fill="#aebdd4" opacity="0.55" filter="url(#craterShadow)"/>
+      <circle cx="86" cy="108" r="7" fill="#aebdd4" opacity="0.5" filter="url(#craterShadow)"/>
+      <circle cx="108" cy="92" r="5.5" fill="#aebdd4" opacity="0.5" filter="url(#craterShadow)"/>
+      <circle class="moon-shadow" cx="146" cy="102" r="56"/>
+      <g class="trace">
+        <path d="M 78 132 L 96 132 L 104 122 L 104 108"/>
+        <circle class="node" cx="104" cy="108" r="3"/>
+      </g>
+    </svg>
+    <div class="nav-word">era<b class="lis">lis</b></div>
+  </div>
 </nav>
 
 <header class="hero wrap">
@@ -555,7 +579,7 @@
 <footer class="wrap" id="contato">
   <div class="foot-word">era<b class="lis">lis</b></div>
   <div class="foot-meta">
-    <a href="mailto:contato@eralis.com.br">contato@eralis.com.br</a> · eralis.com.br
+    eralis.com.br
   </div>
 </footer>
 
