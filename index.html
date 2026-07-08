@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eralis</title>
+<title>Eralis — Sistemas Oracle para o Varejo</title>
 <meta name="description" content="Eralis — em breve.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -405,7 +405,7 @@
     padding: 10px 12px;
     color: var(--moon-silver);
     font-family: var(--sans);
-    font-size: 0.92rem;
+    font-size: 1rem;
     transition: border-color .15s ease;
   }
   .field input:focus, .field textarea:focus{
@@ -447,9 +447,12 @@
 
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 760px){
+    .wrap{ padding: 0 22px; }
+    nav.wrap{ padding-top: 24px; padding-bottom: 24px; }
     .hero{
       grid-template-columns: 1fr;
       padding-top: 32px;
+      padding-bottom: 64px;
       text-align:center;
     }
     .eyebrow{ justify-content:center; }
@@ -457,10 +460,24 @@
     h1.headline{ max-width:none; margin:0 auto; }
     .sub{ margin-left:auto; margin-right:auto; }
     .hero-actions{ justify-content:center; }
-    .mark-wrap{ order:-1; }
+    .hero-actions .btn-primary{ width:100%; text-align:center; }
+    .mark-wrap{ order:-1; margin-bottom: 8px; }
     .mark-wrap svg{ max-width: 220px; }
     .grid-cards{ grid-template-columns: 1fr; }
     footer{ flex-direction:column; text-align:center; }
+    .modal-backdrop{ padding: 16px; align-items: flex-end; }
+    .modal-panel{
+      max-height: 92vh;
+      padding: 28px 22px 22px;
+      border-radius: 14px 14px 0 0;
+    }
+  }
+
+  @media (max-width: 420px){
+    .wrap{ padding: 0 16px; }
+    .nav-word{ font-size: 1.15rem; }
+    h1.headline{ font-size: 2.1rem; }
+    .modal-panel{ padding: 24px 16px 18px; }
   }
 </style>
 </head>
@@ -590,7 +607,7 @@
     <h2 id="contactTitle">Fale com a Eralis</h2>
     <p class="modal-sub">Deixe seus dados e retornamos em breve.</p>
 
-    <form id="contactForm" action="https://formspree.io/f/SEU_FORM_ID" method="POST">
+    <form id="contactForm" action="https://formspree.io/f/mpqggzky" method="POST">
       <div class="field">
         <label for="f-nome">Nome</label>
         <input type="text" id="f-nome" name="nome" required autocomplete="name">
@@ -693,7 +710,7 @@
           throw new Error('Falha no envio');
         }
       }).catch(function(){
-        status.textContent = 'Não foi possível enviar agora. Tente novamente em alguns minutos, ou escreva para edsoncdiasfilho@gmail.com';
+        status.textContent = 'Não foi possível enviar agora. Tente novamente ou escreva para contato@eralis.com.br.';
         status.classList.add('is-error');
         submitBtn.textContent = 'Enviar';
         submitBtn.disabled = false;
