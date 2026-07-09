@@ -114,7 +114,27 @@
   }
   .hero-ship-behind{ z-index: -1; }
   .hero-ship-front{ z-index: 2; }
-  .ship-mobile{ visibility: hidden !important; opacity: 0 !important; }
+  .ship-mobile{ display: none; }
+  .mobile-ship{
+    position: absolute;
+    top: 26px;
+    left: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    animation: mobileShipFly 24s linear infinite;
+  }
+  @keyframes mobileShipFly{
+    0%    { transform: translateX(-14vw) scaleX(1); opacity: 0; }
+    8%    { opacity: 1; }
+    10%   { transform: translateX(-2vw) scaleX(1); }
+    48%   { transform: translateX(60vw) scaleX(1); opacity: 1; }
+    50%   { transform: translateX(63vw) scaleX(1); opacity: 1; }
+    52%   { transform: translateX(60vw) scaleX(-1); }
+    90%   { transform: translateX(-2vw) scaleX(-1); opacity: 1; }
+    92%   { opacity: 0; }
+    100%  { transform: translateX(-14vw) scaleX(1); opacity: 0; }
+  }
   .eyebrow{
     font-family: var(--mono);
     font-size: 0.72rem;
@@ -489,7 +509,7 @@
     .wrap{ padding: 0 22px; }
     nav.wrap{ padding-top: 24px; padding-bottom: 24px; }
     .ship-desktop{ visibility:hidden !important; opacity:0 !important; }
-    .ship-mobile{ visibility:visible !important; opacity:1 !important; }
+    .ship-mobile{ display:block; }
     .hero{
       grid-template-columns: 1fr;
       padding-top: 32px;
@@ -572,23 +592,14 @@
     </g>
   </svg>
 
-  <!-- mobile: single ship, always on top, entering from the left -->
-  <svg class="hero-ship-layer hero-ship-front ship-mobile" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <linearGradient id="trailGrad3" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#57d9c3" stop-opacity="0"/>
-        <stop offset="100%" stop-color="#57d9c3" stop-opacity="0.85"/>
-      </linearGradient>
-    </defs>
-    <g class="hero-ship">
-      <animateMotion dur="24s" repeatCount="indefinite" rotate="auto"
-        path="M 40 190 C 220 160 380 165 500 175 C 560 180 610 178 650 170 C 610 190 560 198 500 195 C 380 205 220 210 40 190 Z"/>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.04;0.12;0.88;0.96;1" dur="24s" repeatCount="indefinite"/>
-      <path d="M -20 0 L -5 -4 L -5 4 Z" fill="url(#trailGrad3)"/>
-      <path d="M -5 -5 L 12 0 L -5 5 Z" fill="#eef4fb"/>
-      <circle cx="1" cy="0" r="1.6" fill="#57d9c3"/>
-    </g>
-  </svg>
+  <!-- mobile: single ship, pure CSS animation (no SMIL), always on top, entering from the left -->
+  <div class="mobile-ship ship-mobile" aria-hidden="true">
+    <svg viewBox="0 0 34 16" width="34" height="16">
+      <path d="M0 8 L11 4.5 L11 11.5 Z" fill="#57d9c3" opacity="0.55"/>
+      <path d="M11 3 L31 8 L11 13 Z" fill="#eef4fb"/>
+      <circle cx="16" cy="8" r="2.2" fill="#57d9c3"/>
+    </svg>
+  </div>
 
   <div>
 
