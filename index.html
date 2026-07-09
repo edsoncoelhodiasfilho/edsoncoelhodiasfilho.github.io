@@ -114,7 +114,7 @@
   }
   .hero-ship-behind{ z-index: -1; }
   .hero-ship-front{ z-index: 2; }
-  .ship-mobile{ visibility: hidden; }
+  .ship-mobile{ visibility: hidden !important; opacity: 0 !important; }
   .eyebrow{
     font-family: var(--mono);
     font-size: 0.72rem;
@@ -488,8 +488,8 @@
   @media (max-width: 760px){
     .wrap{ padding: 0 22px; }
     nav.wrap{ padding-top: 24px; padding-bottom: 24px; }
-    .ship-desktop{ visibility:hidden; }
-    .ship-mobile{ visibility:visible; }
+    .ship-desktop{ visibility:hidden !important; opacity:0 !important; }
+    .ship-mobile{ visibility:visible !important; opacity:1 !important; }
     .hero{
       grid-template-columns: 1fr;
       padding-top: 32px;
@@ -572,32 +572,21 @@
     </g>
   </svg>
 
-  <!-- mobile: text sits below, moon sits above (stacked layout) -->
-  <svg class="hero-ship-layer hero-ship-behind ship-mobile" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+  <!-- mobile: single ship, always on top, entering from the left -->
+  <svg class="hero-ship-layer hero-ship-front ship-mobile" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
     <defs>
-      <linearGradient id="trailGrad3" x1="0" y1="0" x2="0" y2="1">
+      <linearGradient id="trailGrad3" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stop-color="#57d9c3" stop-opacity="0"/>
         <stop offset="100%" stop-color="#57d9c3" stop-opacity="0.85"/>
       </linearGradient>
     </defs>
     <g class="hero-ship">
-      <animateMotion dur="30s" repeatCount="indefinite" rotate="auto"
-        path="M 500 350 C 480 280 480 180 485 100 C 488 70 492 55 500 40 C 508 55 512 70 515 100 C 520 180 520 280 500 350 Z"/>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.03;0.09;0.48;0.52;1" dur="30s" repeatCount="indefinite"/>
-      <path d="M 0 22 L -4.5 5 L 4.5 5 Z" fill="url(#trailGrad3)"/>
-      <path d="M -5.5 5 L 0 -13 L 5.5 5 Z" fill="#eef4fb"/>
-      <circle cx="0" cy="-1.2" r="1.8" fill="#57d9c3"/>
-    </g>
-  </svg>
-
-  <svg class="hero-ship-layer hero-ship-front ship-mobile" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
-    <g class="hero-ship">
-      <animateMotion dur="30s" repeatCount="indefinite" rotate="auto"
-        path="M 500 350 C 480 280 480 180 485 100 C 488 70 492 55 500 40 C 508 55 512 70 515 100 C 520 180 520 280 500 350 Z"/>
-      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.48;0.52;0.91;0.97;1" dur="30s" repeatCount="indefinite"/>
-      <path d="M 0 22 L -4.5 5 L 4.5 5 Z" fill="url(#trailGrad3)"/>
-      <path d="M -5.5 5 L 0 -13 L 5.5 5 Z" fill="#eef4fb"/>
-      <circle cx="0" cy="-1.2" r="1.8" fill="#57d9c3"/>
+      <animateMotion dur="24s" repeatCount="indefinite" rotate="auto"
+        path="M 40 190 C 220 160 380 165 500 175 C 560 180 610 178 650 170 C 610 190 560 198 500 195 C 380 205 220 210 40 190 Z"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.04;0.12;0.88;0.96;1" dur="24s" repeatCount="indefinite"/>
+      <path d="M -20 0 L -5 -4 L -5 4 Z" fill="url(#trailGrad3)"/>
+      <path d="M -5 -5 L 12 0 L -5 5 Z" fill="#eef4fb"/>
+      <circle cx="1" cy="0" r="1.6" fill="#57d9c3"/>
     </g>
   </svg>
 
