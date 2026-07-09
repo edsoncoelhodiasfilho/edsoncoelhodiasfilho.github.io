@@ -114,6 +114,7 @@
   }
   .hero-ship-behind{ z-index: -1; }
   .hero-ship-front{ z-index: 2; }
+  .ship-mobile{ display: none; }
   .eyebrow{
     font-family: var(--mono);
     font-size: 0.72rem;
@@ -487,7 +488,8 @@
   @media (max-width: 760px){
     .wrap{ padding: 0 22px; }
     nav.wrap{ padding-top: 24px; padding-bottom: 24px; }
-    .hero-ship-layer{ display:none; }
+    .ship-desktop{ display:none; }
+    .ship-mobile{ display:block; }
     .hero{
       grid-template-columns: 1fr;
       padding-top: 32px;
@@ -542,7 +544,7 @@
 </nav>
 
 <header class="hero wrap">
-  <svg class="hero-ship-layer hero-ship-behind" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+  <svg class="hero-ship-layer hero-ship-behind ship-desktop" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
     <defs>
       <linearGradient id="trailGrad2" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stop-color="#57d9c3" stop-opacity="0"/>
@@ -559,7 +561,7 @@
     </g>
   </svg>
 
-  <svg class="hero-ship-layer hero-ship-front" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+  <svg class="hero-ship-layer hero-ship-front ship-desktop" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
     <g class="hero-ship">
       <animateMotion dur="30s" repeatCount="indefinite" rotate="auto"
         path="M 380 205 C 550 185 700 190 830 197 C 880 200 920 198 950 192 C 920 205 880 210 830 208 C 700 216 550 222 380 205 Z"/>
@@ -570,7 +572,31 @@
     </g>
   </svg>
 
+  <!-- mobile: text sits below, moon sits above (stacked layout) -->
+  <svg class="hero-ship-layer hero-ship-behind ship-mobile" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+    <g class="hero-ship">
+      <animateMotion dur="30s" repeatCount="indefinite" rotate="auto"
+        path="M 500 350 C 480 280 480 180 485 100 C 488 70 492 55 500 40 C 508 55 512 70 515 100 C 520 180 520 280 500 350 Z"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.03;0.09;0.48;0.52;1" dur="30s" repeatCount="indefinite"/>
+      <path d="M 0 22 L -4.5 5 L 4.5 5 Z" fill="url(#trailGrad2)"/>
+      <path d="M -5.5 5 L 0 -13 L 5.5 5 Z" fill="#eef4fb"/>
+      <circle cx="0" cy="-1.2" r="1.8" fill="#57d9c3"/>
+    </g>
+  </svg>
+
+  <svg class="hero-ship-layer hero-ship-front ship-mobile" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+    <g class="hero-ship">
+      <animateMotion dur="30s" repeatCount="indefinite" rotate="auto"
+        path="M 500 350 C 480 280 480 180 485 100 C 488 70 492 55 500 40 C 508 55 512 70 515 100 C 520 180 520 280 500 350 Z"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.48;0.52;0.91;0.97;1" dur="30s" repeatCount="indefinite"/>
+      <path d="M 0 22 L -4.5 5 L 4.5 5 Z" fill="url(#trailGrad2)"/>
+      <path d="M -5.5 5 L 0 -13 L 5.5 5 Z" fill="#eef4fb"/>
+      <circle cx="0" cy="-1.2" r="1.8" fill="#57d9c3"/>
+    </g>
+  </svg>
+
   <div>
+
     <div class="eyebrow">Em construção</div>
     <h1 class="headline">Algo novo está <em>a caminho.</em></h1>
     <p class="sub">Estamos preparando o espaço da Eralis. Em breve, mais novidades por aqui.</p>
