@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eralis</title>
+<title>Eralis — Sistemas Oracle para o Varejo</title>
 <meta name="description" content="Eralis — em breve.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,7 +101,19 @@
     grid-template-columns: 1fr 340px;
     gap: 48px;
     align-items: center;
+    position: relative;
+    z-index: 0;
   }
+  .hero-ship-layer{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .hero-ship-behind{ z-index: -1; }
+  .hero-ship-front{ z-index: 2; }
   .eyebrow{
     font-family: var(--mono);
     font-size: 0.72rem;
@@ -223,6 +235,34 @@
     0%,100%{ opacity:0.55; transform: scale(1); }
     50%{ opacity:0.9; transform: scale(1.1); }
   }
+  .eclipse-cycle{
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+  }
+  .eclipse-cycle.trigger{
+    animation: eclipseNow 10s ease-in-out;
+  }
+  @keyframes eclipseNow{
+    0%{ transform: translate(0, 0) scale(1); }
+    44%{ transform: translate(-26px, 18px) scale(1.18); }
+    55%{ transform: translate(-26px, 18px) scale(1.18); }
+    100%{ transform: translate(0, 0) scale(1); }
+  }
+  .eclipse-corona{
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    opacity: 0;
+  }
+  .eclipse-corona.trigger{
+    animation: coronaNow 10s ease-in-out;
+  }
+  @keyframes coronaNow{
+    0%{ opacity: 0; transform: scale(0.92); }
+    44%{ opacity: 0.9; transform: scale(1); }
+    55%{ opacity: 0.9; transform: scale(1); }
+    100%{ opacity: 0; transform: scale(0.92); }
+  }
+  .mark-wrap svg{ cursor: pointer; }
 
   /* ---------- SERVICES ---------- */
   .services{
@@ -447,6 +487,7 @@
   @media (max-width: 760px){
     .wrap{ padding: 0 22px; }
     nav.wrap{ padding-top: 24px; padding-bottom: 24px; }
+    .hero-ship-layer{ display:none; }
     .hero{
       grid-template-columns: 1fr;
       padding-top: 32px;
@@ -501,6 +542,34 @@
 </nav>
 
 <header class="hero wrap">
+  <svg class="hero-ship-layer hero-ship-behind" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="trailGrad2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#57d9c3" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#57d9c3" stop-opacity="0.85"/>
+      </linearGradient>
+    </defs>
+    <g class="hero-ship">
+      <animateMotion dur="30s" repeatCount="indefinite" rotate="auto"
+        path="M 380 205 C 550 185 700 190 830 197 C 880 200 920 198 950 192 C 920 205 880 210 830 208 C 700 216 550 222 380 205 Z"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.03;0.09;0.48;0.52;1" dur="30s" repeatCount="indefinite"/>
+      <path d="M -22 0 L -5 -4.5 L -5 4.5 Z" fill="url(#trailGrad2)"/>
+      <path d="M -5 -5.5 L 13 0 L -5 5.5 Z" fill="#eef4fb"/>
+      <circle cx="1.2" cy="0" r="1.8" fill="#57d9c3"/>
+    </g>
+  </svg>
+
+  <svg class="hero-ship-layer hero-ship-front" viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+    <g class="hero-ship">
+      <animateMotion dur="30s" repeatCount="indefinite" rotate="auto"
+        path="M 380 205 C 550 185 700 190 830 197 C 880 200 920 198 950 192 C 920 205 880 210 830 208 C 700 216 550 222 380 205 Z"/>
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.48;0.52;0.91;0.97;1" dur="30s" repeatCount="indefinite"/>
+      <path d="M -22 0 L -5 -4.5 L -5 4.5 Z" fill="url(#trailGrad2)"/>
+      <path d="M -5 -5.5 L 13 0 L -5 5.5 Z" fill="#eef4fb"/>
+      <circle cx="1.2" cy="0" r="1.8" fill="#57d9c3"/>
+    </g>
+  </svg>
+
   <div>
     <div class="eyebrow">Em construção</div>
     <h1 class="headline">Algo novo está <em>a caminho.</em></h1>
@@ -528,10 +597,20 @@
         <clipPath id="moonClip">
           <circle cx="120" cy="120" r="62"/>
         </clipPath>
+        <filter id="coronaGlow" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="3.2"/>
+        </filter>
+        <linearGradient id="trailGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#57d9c3" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#57d9c3" stop-opacity="0.85"/>
+        </linearGradient>
       </defs>
 
       <!-- soft halo glow, breathing -->
       <circle class="halo glow-breathe" cx="120" cy="120" r="82" fill="url(#haloGrad)"/>
+
+      <!-- corona ring, only visible around the eclipse peak -->
+      <circle class="eclipse-corona" cx="120" cy="120" r="74" fill="none" stroke="#eef4fb" stroke-width="2.6" filter="url(#coronaGlow)"/>
 
       <!-- inner orbit, spins opposite direction -->
       <g class="orbit-inner spin-reverse">
@@ -568,7 +647,7 @@
       </g>
 
       <!-- shadow side of the moon, phase crescent -->
-      <circle class="moon-shadow" cx="146" cy="102" r="56"/>
+      <circle class="moon-shadow eclipse-cycle" cx="146" cy="102" r="56"/>
 
       <!-- circuit traces etched on the crescent -->
       <g class="trace pulse">
@@ -638,6 +717,45 @@
     </form>
   </div>
 </div>
+
+<script>
+  (function(){
+    var heroSvg = document.querySelector('.mark-wrap svg');
+    var shadow = document.querySelector('.eclipse-cycle');
+    var corona = document.querySelector('.eclipse-corona');
+    if(!heroSvg || !shadow || !corona) return;
+
+    var isEclipsing = false;
+    var autoTimer = null;
+
+    function runEclipse(){
+      if(isEclipsing) return;
+      isEclipsing = true;
+
+      shadow.classList.add('trigger');
+      corona.classList.add('trigger');
+
+      shadow.addEventListener('animationend', function handler(){
+        shadow.classList.remove('trigger');
+        corona.classList.remove('trigger');
+        shadow.removeEventListener('animationend', handler);
+        isEclipsing = false;
+      });
+    }
+
+    function scheduleAuto(){
+      if(autoTimer) clearInterval(autoTimer);
+      autoTimer = setInterval(runEclipse, 22000);
+    }
+
+    heroSvg.addEventListener('click', function(){
+      runEclipse();
+      scheduleAuto(); // restart the natural cadence after a manual trigger
+    });
+
+    scheduleAuto();
+  })();
+</script>
 
 <script>
   (function(){
