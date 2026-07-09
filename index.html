@@ -120,20 +120,31 @@
     pointer-events: none;
     opacity: 0;
     z-index: -1;
-    animation: mobileShipArc 22s ease-in-out infinite;
+    animation: mobileShipArc 22s linear infinite;
   }
   .mobile-ship svg{ display:block; }
   @keyframes mobileShipArc{
-    0%   { left: 2%;  top: 47%; opacity: 0; transform: translate(-50%,-50%) rotate(-65deg); }
-    6%   { opacity: 1; }
-    10%  { left: 14%; top: 38%; transform: translate(-50%,-50%) rotate(-65deg); }
-    30%  { left: 35%; top: 18%; transform: translate(-50%,-50%) rotate(-25deg); }
-    50%  { left: 50%; top: 9%;  transform: translate(-50%,-50%) rotate(0deg); opacity: 1; }
-    70%  { left: 65%; top: 18%; transform: translate(-50%,-50%) rotate(25deg); }
-    90%  { left: 86%; top: 38%; transform: translate(-50%,-50%) rotate(65deg); opacity: 1; }
-    94%  { opacity: 0; }
-    97%  { left: 98%; top: 47%; opacity: 0; transform: translate(-50%,-50%) rotate(65deg); }
-    100% { left: 2%;  top: 47%; opacity: 0; transform: translate(-50%,-50%) rotate(-65deg); }
+    0%   { left: 2.0%;  top: 47.0%; opacity: 0; transform: translate(-50%,-50%) rotate(-65.0deg); }
+    5%   { left: 6.8%;  top: 41.1%; opacity: 1; transform: translate(-50%,-50%) rotate(-64.2deg); }
+    10%  { left: 11.6%; top: 35.3%; opacity: 1; transform: translate(-50%,-50%) rotate(-61.8deg); }
+    15%  { left: 16.4%; top: 29.8%; opacity: 1; transform: translate(-50%,-50%) rotate(-57.9deg); }
+    20%  { left: 21.2%; top: 24.7%; opacity: 1; transform: translate(-50%,-50%) rotate(-52.6deg); }
+    25%  { left: 26.0%; top: 20.1%; opacity: 1; transform: translate(-50%,-50%) rotate(-46.0deg); }
+    30%  { left: 30.8%; top: 16.3%; opacity: 1; transform: translate(-50%,-50%) rotate(-38.2deg); }
+    35%  { left: 35.6%; top: 13.1%; opacity: 1; transform: translate(-50%,-50%) rotate(-29.5deg); }
+    40%  { left: 40.4%; top: 10.9%; opacity: 1; transform: translate(-50%,-50%) rotate(-20.1deg); }
+    45%  { left: 45.2%; top: 9.5%;  opacity: 1; transform: translate(-50%,-50%) rotate(-10.1deg); }
+    50%  { left: 50.0%; top: 9.0%;  opacity: 1; transform: translate(-50%,-50%) rotate(0deg); }
+    55%  { left: 54.8%; top: 9.5%;  opacity: 1; transform: translate(-50%,-50%) rotate(10.1deg); }
+    60%  { left: 59.6%; top: 10.9%; opacity: 1; transform: translate(-50%,-50%) rotate(20.1deg); }
+    65%  { left: 64.4%; top: 13.1%; opacity: 1; transform: translate(-50%,-50%) rotate(29.5deg); }
+    70%  { left: 69.2%; top: 16.3%; opacity: 1; transform: translate(-50%,-50%) rotate(38.2deg); }
+    75%  { left: 74.0%; top: 20.1%; opacity: 1; transform: translate(-50%,-50%) rotate(46.0deg); }
+    80%  { left: 78.8%; top: 24.7%; opacity: 1; transform: translate(-50%,-50%) rotate(52.6deg); }
+    85%  { left: 83.6%; top: 29.8%; opacity: 1; transform: translate(-50%,-50%) rotate(57.9deg); }
+    90%  { left: 88.4%; top: 35.3%; opacity: 1; transform: translate(-50%,-50%) rotate(61.8deg); }
+    95%  { left: 93.2%; top: 41.1%; opacity: 1; transform: translate(-50%,-50%) rotate(64.2deg); }
+    100% { left: 98.0%; top: 47.0%; opacity: 0; transform: translate(-50%,-50%) rotate(65.0deg); }
   }
   .eyebrow{
     font-family: var(--mono);
