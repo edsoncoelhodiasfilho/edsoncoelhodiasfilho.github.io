@@ -203,27 +203,25 @@
     fill: var(--moon-glow);
     opacity:0.55;
   }
-  @media (prefers-reduced-motion: no-preference){
-    .pulse{ animation: pulse 3.6s ease-in-out infinite; }
-    .spin-slow{ animation: spin 60s linear infinite; transform-origin: 120px 120px; }
-    .spin-reverse{ animation: spin-reverse 38s linear infinite; transform-origin: 120px 120px; }
-    .glow-breathe{ animation: glow-breathe 5s ease-in-out infinite; transform-origin: 120px 120px; }
-    @keyframes pulse{
-      0%,100%{ opacity:1; }
-      50%{ opacity:0.45; }
-    }
-    @keyframes spin{
-      from{ transform: rotate(0deg); }
-      to{ transform: rotate(360deg); }
-    }
-    @keyframes spin-reverse{
-      from{ transform: rotate(360deg); }
-      to{ transform: rotate(0deg); }
-    }
-    @keyframes glow-breathe{
-      0%,100%{ opacity:0.55; transform: scale(1); }
-      50%{ opacity:0.9; transform: scale(1.1); }
-    }
+  .pulse{ animation: pulse 1.8s ease-in-out infinite; }
+  .spin-slow{ animation: spin 22s linear infinite; transform-origin: 120px 120px; }
+  .spin-reverse{ animation: spin-reverse 14s linear infinite; transform-origin: 120px 120px; }
+  .glow-breathe{ animation: glow-breathe 2.4s ease-in-out infinite; transform-origin: 120px 120px; }
+  @keyframes pulse{
+    0%,100%{ opacity:1; }
+    50%{ opacity:0.45; }
+  }
+  @keyframes spin{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(360deg); }
+  }
+  @keyframes spin-reverse{
+    from{ transform: rotate(360deg); }
+    to{ transform: rotate(0deg); }
+  }
+  @keyframes glow-breathe{
+    0%,100%{ opacity:0.55; transform: scale(1); }
+    50%{ opacity:0.9; transform: scale(1.1); }
   }
 
   /* ---------- SERVICES ---------- */
