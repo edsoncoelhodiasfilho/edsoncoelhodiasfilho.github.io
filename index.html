@@ -117,23 +117,34 @@
   .ship-mobile{ display: none; }
   .mobile-ship{
     position: absolute;
-    top: 26px;
-    left: 0;
-    z-index: 2;
+    left: 50%;
     pointer-events: none;
     opacity: 0;
-    animation: mobileShipFly 24s linear infinite;
   }
-  @keyframes mobileShipFly{
-    0%    { transform: translateX(-14vw) scaleX(1); opacity: 0; }
-    8%    { opacity: 1; }
-    10%   { transform: translateX(-2vw) scaleX(1); }
-    48%   { transform: translateX(60vw) scaleX(1); opacity: 1; }
-    50%   { transform: translateX(63vw) scaleX(1); opacity: 1; }
-    52%   { transform: translateX(60vw) scaleX(-1); }
-    90%   { transform: translateX(-2vw) scaleX(-1); opacity: 1; }
-    92%   { opacity: 0; }
-    100%  { transform: translateX(-14vw) scaleX(1); opacity: 0; }
+  .mobile-ship svg{ display:block; }
+  .mobile-ship-behind{
+    z-index: -1;
+    animation: mobileShipBehind 24s linear infinite;
+  }
+  .mobile-ship-front{
+    z-index: 2;
+    animation: mobileShipFront 24s linear infinite;
+  }
+  @keyframes mobileShipBehind{
+    0%   { top: 86%; transform: translateX(-50%) rotate(-90deg); opacity: 0; }
+    8%   { opacity: 1; }
+    10%  { top: 70%; transform: translateX(-50%) rotate(-90deg); }
+    46%  { top: 20%; transform: translateX(-50%) rotate(-90deg); opacity: 1; }
+    50%  { top: 16%; opacity: 0; }
+    100% { top: 86%; opacity: 0; }
+  }
+  @keyframes mobileShipFront{
+    0%   { top: 16%; transform: translateX(-50%) rotate(90deg); opacity: 0; }
+    50%  { top: 16%; opacity: 0; }
+    54%  { top: 20%; transform: translateX(-50%) rotate(90deg); opacity: 1; }
+    90%  { top: 70%; transform: translateX(-50%) rotate(90deg); opacity: 1; }
+    92%  { opacity: 0; }
+    100% { top: 86%; opacity: 0; }
   }
   .eyebrow{
     font-family: var(--mono);
@@ -592,8 +603,15 @@
     </g>
   </svg>
 
-  <!-- mobile: single ship, pure CSS animation (no SMIL), always on top, entering from the left -->
-  <div class="mobile-ship ship-mobile" aria-hidden="true">
+  <!-- mobile: two layers (behind/front), pure CSS animation, entering from below -->
+  <div class="mobile-ship mobile-ship-behind ship-mobile" aria-hidden="true">
+    <svg viewBox="0 0 34 16" width="34" height="16">
+      <path d="M0 8 L11 4.5 L11 11.5 Z" fill="#57d9c3" opacity="0.55"/>
+      <path d="M11 3 L31 8 L11 13 Z" fill="#eef4fb"/>
+      <circle cx="16" cy="8" r="2.2" fill="#57d9c3"/>
+    </svg>
+  </div>
+  <div class="mobile-ship mobile-ship-front ship-mobile" aria-hidden="true">
     <svg viewBox="0 0 34 16" width="34" height="16">
       <path d="M0 8 L11 4.5 L11 11.5 Z" fill="#57d9c3" opacity="0.55"/>
       <path d="M11 3 L31 8 L11 13 Z" fill="#eef4fb"/>
