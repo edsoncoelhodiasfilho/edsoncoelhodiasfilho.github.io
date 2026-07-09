@@ -117,34 +117,23 @@
   .ship-mobile{ display: none; }
   .mobile-ship{
     position: absolute;
-    left: 50%;
     pointer-events: none;
     opacity: 0;
+    z-index: -1;
+    animation: mobileShipArc 22s ease-in-out infinite;
   }
   .mobile-ship svg{ display:block; }
-  .mobile-ship-behind{
-    z-index: -1;
-    animation: mobileShipBehind 24s linear infinite;
-  }
-  .mobile-ship-front{
-    z-index: 2;
-    animation: mobileShipFront 24s linear infinite;
-  }
-  @keyframes mobileShipBehind{
-    0%   { top: 86%; transform: translateX(-50%) rotate(-90deg); opacity: 0; }
-    8%   { opacity: 1; }
-    10%  { top: 70%; transform: translateX(-50%) rotate(-90deg); }
-    46%  { top: 20%; transform: translateX(-50%) rotate(-90deg); opacity: 1; }
-    50%  { top: 16%; opacity: 0; }
-    100% { top: 86%; opacity: 0; }
-  }
-  @keyframes mobileShipFront{
-    0%   { top: 16%; transform: translateX(-50%) rotate(90deg); opacity: 0; }
-    50%  { top: 16%; opacity: 0; }
-    54%  { top: 20%; transform: translateX(-50%) rotate(90deg); opacity: 1; }
-    90%  { top: 70%; transform: translateX(-50%) rotate(90deg); opacity: 1; }
-    92%  { opacity: 0; }
-    100% { top: 86%; opacity: 0; }
+  @keyframes mobileShipArc{
+    0%   { left: 2%;  top: 47%; opacity: 0; transform: translate(-50%,-50%) rotate(-65deg); }
+    6%   { opacity: 1; }
+    10%  { left: 14%; top: 38%; transform: translate(-50%,-50%) rotate(-65deg); }
+    30%  { left: 35%; top: 18%; transform: translate(-50%,-50%) rotate(-25deg); }
+    50%  { left: 50%; top: 9%;  transform: translate(-50%,-50%) rotate(0deg); opacity: 1; }
+    70%  { left: 65%; top: 18%; transform: translate(-50%,-50%) rotate(25deg); }
+    90%  { left: 86%; top: 38%; transform: translate(-50%,-50%) rotate(65deg); opacity: 1; }
+    94%  { opacity: 0; }
+    97%  { left: 98%; top: 47%; opacity: 0; transform: translate(-50%,-50%) rotate(65deg); }
+    100% { left: 2%;  top: 47%; opacity: 0; transform: translate(-50%,-50%) rotate(-65deg); }
   }
   .eyebrow{
     font-family: var(--mono);
@@ -603,15 +592,8 @@
     </g>
   </svg>
 
-  <!-- mobile: two layers (behind/front), pure CSS animation, entering from below -->
-  <div class="mobile-ship mobile-ship-behind ship-mobile" aria-hidden="true">
-    <svg viewBox="0 0 34 16" width="34" height="16">
-      <path d="M0 8 L11 4.5 L11 11.5 Z" fill="#57d9c3" opacity="0.55"/>
-      <path d="M11 3 L31 8 L11 13 Z" fill="#eef4fb"/>
-      <circle cx="16" cy="8" r="2.2" fill="#57d9c3"/>
-    </svg>
-  </div>
-  <div class="mobile-ship mobile-ship-front ship-mobile" aria-hidden="true">
+  <!-- mobile: single ship, arcs from the left corner of "EM CONSTRUÇÃO" up behind the moons to the right corner -->
+  <div class="mobile-ship ship-mobile" aria-hidden="true">
     <svg viewBox="0 0 34 16" width="34" height="16">
       <path d="M0 8 L11 4.5 L11 11.5 Z" fill="#57d9c3" opacity="0.55"/>
       <path d="M11 3 L31 8 L11 13 Z" fill="#eef4fb"/>
