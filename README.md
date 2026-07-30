@@ -26,6 +26,6 @@ Seja bem-vindo ao meu perfil do GitHub. Sou um profissional sênior de tecnologi
 ---
 
 ### ✉️ Vamos nos conectar?
-- **LinkedIn:** [://linkedin.com](https://www.linkedin.com/in/edson-coelho-65213829)
-- **Portfólio & Currículo:** [://seu-dominio.com](http://www.eralis.com.br)
+- **LinkedIn:** : https://www.linkedin.com/in/edson-coelho-65213829
+- **Portfólio & Currículo:** : http://www.eralis.com.br
 - **E-mail:** edsoncdiasfilho@gmail.com
