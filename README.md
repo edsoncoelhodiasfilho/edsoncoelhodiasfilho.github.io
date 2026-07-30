@@ -5,15 +5,15 @@ Seja bem-vindo ao meu perfil do GitHub. Sou um profissional sênior de tecnologi
 ---
 
 ### 🚀 O que eu faço
-- **Ecossistema ERP & POS:** Sólida experiência em sustentação e suporte N3 das plataformas **TOTVS Varejo (Linha Consinco)** e sistemas de automação comercial **Conecto Emporium**.
+- **Ecossistema ERP & POS:** Sólida experiência em sustentação e suporte N3
 - **Infraestrutura & Automação:** Especialista em administração de servidores **Linux**, criação de rotinas automatizadas em **Python** e automação de scripts complexos via **Shell Script**.
-- **Banco de Dados:** Profundo domínio em desenvolvimento, otimização de queries e tuning de ambientes críticos em **Oracle Database (PL/SQL)**.
+- **Banco de Dados:** Domínio em desenvolvimento, otimização de queries e tuning de ambientes críticos em **Oracle Database (PL/SQL)**.
 - **Especialização Atual:** Direcionando minha senioridade consultiva e de processos de negócio para o desenvolvimento no ecossistema **TOTVS Protheus (ADVPL, TL++, arquitetura MVC e APIs REST)**.
 
 ---
 
 ### 🛠️ Tecnologias e Ferramentas
-- **Linguagens:** ADVPL, TL++, Python, PL/SQL (Oracle), Bash/Shell Script, PHP, JavaScript.
+- **Linguagens:** ADVPL, TL++, Python, PL/SQL (Oracle), Bash/Shell Script.
 - **Ambientes:** Linux Enterprise, DBAccess, Application Server Protheus.
 - **Metodologias:** ITIL V3, Gestão de Incidentes de Nível 3, Análise Funcional.
 
@@ -26,6 +26,6 @@ Seja bem-vindo ao meu perfil do GitHub. Sou um profissional sênior de tecnologi
 ---
 
 ### ✉️ Vamos nos conectar?
-- **LinkedIn:** [://linkedin.com](https://www.://linkedin.com)
+- **LinkedIn:** [://linkedin.com](https://www.linkedin.com/in/edson-coelho-65213829)
 - **Portfólio & Currículo:** [://seu-dominio.com](http://www.eralis.com.br)
 - **E-mail:** edsoncdiasfilho@gmail.com
