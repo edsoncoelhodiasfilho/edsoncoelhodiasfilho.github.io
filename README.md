@@ -14,7 +14,7 @@ Seja bem-vindo ao meu perfil do GitHub. Sou um profissional sênior de tecnologi
 
 ### 🛠️ Tecnologias e Ferramentas
 - **Linguagens:** ADVPL, TL++, Python, PL/SQL (Oracle), Bash/Shell Script.
-- **Ambientes:** Linux SuSe Leap, DBAccess, Application Server Protheus.
+- **Ambientes:** Linux, DBAccess, Application Server Protheus.
 - **Metodologias:** ITIL V3, Gestão de Incidentes de Nível 3, Análise Funcional.
 
 ---
