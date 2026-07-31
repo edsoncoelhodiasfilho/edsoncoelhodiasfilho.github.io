@@ -21,7 +21,7 @@ Seja bem-vindo ao meu perfil do GitHub. Sou um profissional sênior de tecnologi
 
 ### 📁 Repositórios de Destaque neste Perfil
 *   **[protheus-advpl-tlpp](https://github.com/edsoncoelhodiasfilho/protheus-advpl-tlpp):** Laboratório de códigos práticos com customizações de Pontos de Entrada, validação de regras de varejo e desenvolvimento de telas em padrão MVC e endpoints REST.
-*   **[infra-and-database-automations](https://github.com):** Utilitários de automação em Python e Shell Script voltados para administração de sistemas Linux e monitoramento do Protheus AppServer.
+*   **[infra-and-database-automations](https://github.com/edsoncoelhodiasfilho/infra-and-database-automations):** Utilitários de automação em Python e Shell Script voltados para administração de sistemas Linux e monitoramento do Protheus AppServer.
 
 ---
 
