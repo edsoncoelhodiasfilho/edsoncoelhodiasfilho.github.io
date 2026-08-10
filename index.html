@@ -1,107 +1,330 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio Profissional | Especialista ERP</title>
-    <!-- Script Oficial Tailwind v4 para Navegadores -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased">
+```html
+<!-- HEADER -->
+<header class="max-w-4xl mx-auto pt-20 px-6">
+    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
 
-    <!-- HEADER -->
-    <header class="max-w-4xl mx-auto pt-20 px-6">
-        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <!-- Container da Foto de Perfil -->
-            <div class="flex-shrink-0">
-                <img src="./foto.png" alt="Foto de Edson C Dias Filho" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-teal-500 object-cover shadow-lg shadow-teal-900/20">
-            </div>
-            
-            <!-- Informações Principais -->
-            <div class="text-center sm:text-left">
-                <h1 class="text-4xl font-extrabold text-white tracking-tight sm:text-5xl">EDSON C DIAS FILHO</h1>
-                <p class="text-xl text-teal-400 mt-2 font-semibold">Analista de Sistemas N3 / ERP & Oracle PL/SQL</p>
-                <p class="text-slate-400 text-sm mt-1">📍 Disponibilidade 100% Remota (Brasil)</p>
-            </div>
+        <!-- Foto de Perfil -->
+        <div class="flex-shrink-0">
+            <img
+                src="./foto.png"
+                alt="Foto de Edson C Dias Filho"
+                class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-teal-500 object-cover shadow-lg shadow-teal-900/20"
+            >
         </div>
-        
-        <p class="text-slate-300 mt-6 max-w-3xl text-lg leading-relaxed text-justify sm:text-left">
-            Profissional com 18 anos de trajetória na área de TI voltada ao Varejo. Especialista em suporte de nível 3, sustentação e infraestrutura de sistemas críticos <b>(Linha TOTVS Consinco e Conecto Emporium)</b>. Domínio de ambientes Linux, banco de dados Oracle e automação com Python/Shell Script. Atualmente, estou direcionando toda essa bagagem analítica para atuar como Analista de Suporte N3 / Sustentação Oracle PL/SQL, focado em garantir a integridade dos dados e a performance de aplicações corporativas.</b>.
-        </p>
-        
-        <div class="flex flex-wrap justify-center sm:justify-start gap-4 mt-8">
-            <!-- Botão de Destaque do Currículo -->
-            <a href="./curriculo.pdf" download="curriculo.pdf" class="bg-teal-600 hover:bg-teal-500 text-white font-semibold px-5 py-2.5 rounded transition-all duration-200 shadow-lg shadow-teal-900/40 flex items-center gap-2">
-                <span>📥</span> Baixar Currículo (PDF)
-            </a>
-            <a href="https://www.linkedin.com/in/edson-coelho-65213829" target="_blank" class="bg-teal-600 hover:bg-teal-500 text-white font-medium px-5 py-2.5 rounded transition-all duration-200">LinkedIn</a>
-            <a href="https://github.com/edsoncoelhodiasfilho" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-5 py-2.5 rounded border border-slate-700 transition-all duration-200">GitHub</a>
+
+        <!-- Informações Principais -->
+        <div class="text-center sm:text-left">
+            <h1 class="text-4xl font-extrabold text-white tracking-tight sm:text-5xl">
+                EDSON C DIAS FILHO
+            </h1>
+
+            <p class="text-xl text-teal-400 mt-2 font-semibold">
+                Analista de Sistemas N3 | Sustentação | Oracle PL/SQL
+            </p>
+
+            <p class="text-slate-400 text-sm mt-1">
+                📍 Disponibilidade 100% Remota (Brasil)
+            </p>
         </div>
-    </header>
+    </div>
 
-    <!-- COMPETÊNCIAS -->
-    <main class="max-w-4xl mx-auto my-16 px-6 space-y-16">
-        <section>
-            <h2 class="text-2xl font-bold text-white mb-6 border-b border-slate-800 pb-2">⚡ Competências Técnicas</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
-                    <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">Ecossistema ERP</h3>
-                    <ul class="space-y-2 text-slate-300 text-sm">
-                        <li>• TOTVS Protheus (ADVPL / TL++)</li>
-                        <li>• Arquitetura MVC e APIs REST</li>
-                        <li>• TOTVS Varejo (Consinco)</li>
-                        <li>• Conecto Emporium (PDV)</li>
-                    </ul>
-                </div>
-                <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
-                    <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">Infra & Automação</h3>
-                    <ul class="space-y-2 text-slate-300 text-sm">
-                        <li>• Linux (Servers / AppServer)</li>
-                        <li>• Bash / Shell Scripting</li>
-                        <li>• Python (Automação)</li>
-                    </ul>
-                </div>
-                <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
-                    <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">Banco de Dados</h3>
-                    <ul class="space-y-2 text-slate-300 text-sm">
-                        <li>• Oracle Database (PL/SQL)</li>
-                        <li>• Dicionário Protheus (Tabelas SX)</li>
-                        <li>• DBAccess Configuration</li>
-                    </ul>
-                </div>
+    <p class="text-slate-300 mt-6 max-w-3xl text-lg leading-relaxed text-justify sm:text-left">
+        Profissional de TI com <b>mais de 18 anos de experiência</b> em ambientes
+        corporativos de alta criticidade, com atuação em <b>suporte N3, sustentação
+        de sistemas, ERP, Oracle Database e PL/SQL</b>. Experiência na análise e
+        resolução de incidentes complexos, investigação de problemas em banco de
+        dados, execução de rotinas SQL/PLSQL, análise de logs e apoio à continuidade
+        operacional. Atuação complementar com <b>Python, Shell Script e Linux</b>
+        para automação, monitoramento e diagnóstico de ambientes.
+    </p>
+
+    <div class="flex flex-wrap justify-center sm:justify-start gap-4 mt-8">
+
+        <!-- Currículo -->
+        <a
+            href="./curriculo.pdf"
+            download="curriculo.pdf"
+            class="bg-teal-600 hover:bg-teal-500 text-white font-semibold px-5 py-2.5 rounded transition-all duration-200 shadow-lg shadow-teal-900/40 flex items-center gap-2"
+        >
+            <span>📥</span> Baixar Currículo (PDF)
+        </a>
+
+        <!-- LinkedIn -->
+        <a
+            href="https://www.linkedin.com/in/edson-coelho-65213829"
+            target="_blank"
+            class="bg-teal-600 hover:bg-teal-500 text-white font-medium px-5 py-2.5 rounded transition-all duration-200"
+        >
+            LinkedIn
+        </a>
+
+        <!-- GitHub -->
+        <a
+            href="https://github.com/edsoncoelhodiasfilho"
+            target="_blank"
+            class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-5 py-2.5 rounded border border-slate-700 transition-all duration-200"
+        >
+            GitHub
+        </a>
+    </div>
+</header>
+
+
+<!-- COMPETÊNCIAS -->
+<main class="max-w-4xl mx-auto my-16 px-6 space-y-16">
+
+    <section>
+
+        <h2 class="text-2xl font-bold text-white mb-6 border-b border-slate-800 pb-2">
+            ⚡ Competências Técnicas
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+
+            <!-- N3 / SUSTENTAÇÃO -->
+            <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
+
+                <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">
+                    Suporte N3 & Sustentação
+                </h3>
+
+                <ul class="space-y-2 text-slate-300 text-sm">
+                    <li>• Análise de incidentes complexos</li>
+                    <li>• Sustentação de sistemas críticos</li>
+                    <li>• Troubleshooting de aplicações</li>
+                    <li>• Análise de causa raiz</li>
+                    <li>• Análise de logs e falhas</li>
+                    <li>• Tratamento de problemas recorrentes</li>
+                </ul>
+
             </div>
-        </section>
 
-        <!-- REPOSITÓRIOS -->
-        <section>
-            <h2 class="text-2xl font-bold text-white mb-6 border-b border-slate-800 pb-2">📁 Repositórios de Destaque</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-800 p-6 rounded-lg border border-slate-700/60 hover:border-teal-500/50 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold text-white">protheus-advpl-tlpp</h3>
-                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-                            Laboratório prático com códigos dos cursos e materiais envolvendo o ecossistema TOTVS Protheus. Inclui customizações por Pontos de Entrada, construção de telas em padrão MVC e endpoints REST.
-                        </p>
-                    </div>
-                    <a href="https://github.com/edsoncoelhodiasfilho/protheus-advpl-tlpp" target="_blank" class="text-teal-400 hover:text-teal-300 text-sm font-semibold inline-block mt-6">Ver código no GitHub →</a>
-                </div>
 
-                <div class="bg-slate-800 p-6 rounded-lg border border-slate-700/60 hover:border-teal-500/50 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold text-white">infra-automations</h3>
-                        <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-                            Scripts e utilitários desenvolvidos para administração de servidores Linux, monitoramento de serviços e coleta de logs do Protheus AppServer.
-                        </p>
-                    </div>
-                    <a href="https://github.com/edsoncoelhodiasfilho/infra-and-database-automations" target="_blank" class="text-teal-400 hover:text-teal-300 text-sm font-semibold inline-block mt-6">Ver código no GitHub →</a>
-                </div>
+            <!-- ORACLE / PL SQL -->
+            <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
+
+                <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">
+                    Oracle & PL/SQL
+                </h3>
+
+                <ul class="space-y-2 text-slate-300 text-sm">
+                    <li>• Oracle Database</li>
+                    <li>• SQL avançado</li>
+                    <li>• Procedures & Functions</li>
+                    <li>• Packages & Triggers</li>
+                    <li>• Cursors & Exceptions</li>
+                    <li>• MERGE / Bulk Processing</li>
+                    <li>• Análise e otimização de queries</li>
+                </ul>
+
             </div>
-        </section>
-    </main>
 
-    <footer class="max-w-4xl mx-auto py-12 text-center text-xs text-slate-600 border-t border-slate-800/60">
-        <p>&copy; 2026 | Hospedado via GitHub Pages no domínio próprio.</p>
-    </footer>
 
-</body>
-</html>
+            <!-- AUTOMAÇÃO -->
+            <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
+
+                <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">
+                    Automação & Infraestrutura
+                </h3>
+
+                <ul class="space-y-2 text-slate-300 text-sm">
+                    <li>• Python</li>
+                    <li>• Bash / Shell Script</li>
+                    <li>• Linux</li>
+                    <li>• Automação de rotinas</li>
+                    <li>• Monitoramento de processos</li>
+                    <li>• Análise e coleta de logs</li>
+                </ul>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ERP & VAREJO -->
+    <section>
+
+        <h2 class="text-2xl font-bold text-white mb-6 border-b border-slate-800 pb-2">
+            🏪 Experiência em ERP & Varejo
+        </h2>
+
+        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700/60">
+
+            <p class="text-slate-300 leading-relaxed">
+                Experiência em ambientes corporativos de <b>ERP e Varejo</b>,
+                atuando na sustentação de sistemas críticos e processos relacionados
+                a <b>produtos, preços, promoções, integrações e sistemas de frente
+                de loja (POS)</b>.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+
+                <ul class="space-y-2 text-slate-300 text-sm">
+                    <li>• Sustentação de aplicações corporativas</li>
+                    <li>• Integração entre sistemas</li>
+                    <li>• Processos de preços e promoções</li>
+                    <li>• Sistemas ERP e POS</li>
+                </ul>
+
+                <ul class="space-y-2 text-slate-300 text-sm">
+                    <li>• Investigação de inconsistências</li>
+                    <li>• Análise de dados no Oracle</li>
+                    <li>• Correção e validação de informações</li>
+                    <li>• Apoio técnico às equipes de desenvolvimento</li>
+                </ul>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- REPOSITÓRIOS -->
+    <section>
+
+        <h2 class="text-2xl font-bold text-white mb-6 border-b border-slate-800 pb-2">
+            📁 Projetos & Repositórios
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+            <!-- ORACLE / PL SQL -->
+            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700/60 hover:border-teal-500/50 transition-all duration-300 flex flex-col justify-between">
+
+                <div>
+
+                    <h3 class="text-xl font-bold text-white">
+                        Oracle SQL & PL/SQL
+                    </h3>
+
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">
+                        Laboratório de scripts SQL e PL/SQL voltados para ambientes
+                        corporativos, incluindo Procedures, Functions, Packages,
+                        Triggers, tratamento de exceções, processamento de dados,
+                        MERGE e técnicas de otimização.
+                    </p>
+
+                </div>
+
+                <a
+                    href="https://github.com/edsoncoelhodiasfilho"
+                    target="_blank"
+                    class="text-teal-400 hover:text-teal-300 text-sm font-semibold inline-block mt-6"
+                >
+                    Ver projetos no GitHub →
+                </a>
+
+            </div>
+
+
+            <!-- AUTOMAÇÃO -->
+            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700/60 hover:border-teal-500/50 transition-all duration-300 flex flex-col justify-between">
+
+                <div>
+
+                    <h3 class="text-xl font-bold text-white">
+                        Python & Database Automations
+                    </h3>
+
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">
+                        Scripts Python para automação de tarefas, integração com
+                        Oracle, processamento de dados, monitoramento de logs,
+                        execução de rotinas e apoio à sustentação de ambientes
+                        corporativos.
+                    </p>
+
+                </div>
+
+                <a
+                    href="https://github.com/edsoncoelhodiasfilho/infra-and-database-automations"
+                    target="_blank"
+                    class="text-teal-400 hover:text-teal-300 text-sm font-semibold inline-block mt-6"
+                >
+                    Ver código no GitHub →
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- DIFERENCIAIS -->
+    <section>
+
+        <h2 class="text-2xl font-bold text-white mb-6 border-b border-slate-800 pb-2">
+            🎯 Diferenciais
+        </h2>
+
+        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700/60">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                <div>
+                    <h3 class="font-semibold text-teal-400">
+                        🔎 Investigação
+                    </h3>
+
+                    <p class="text-slate-400 text-sm mt-2">
+                        Capacidade de investigar incidentes, analisar logs,
+                        dados e comportamento das aplicações para identificar
+                        a causa raiz dos problemas.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-semibold text-teal-400">
+                        🗄️ Banco de Dados
+                    </h3>
+
+                    <p class="text-slate-400 text-sm mt-2">
+                        Experiência prática com Oracle, SQL e PL/SQL aplicados
+                        à sustentação, análise de dados e resolução de problemas.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-semibold text-teal-400">
+                        ⚙️ Automação
+                    </h3>
+
+                    <p class="text-slate-400 text-sm mt-2">
+                        Utilização de Python e Shell Script para reduzir tarefas
+                        manuais e aumentar a eficiência operacional.
+                    </p>
+                </div>
+
+
+                <div>
+                    <h3 class="font-semibold text-teal-400">
+                        🏪 Visão de Negócio
+                    </h3>
+
+                    <p class="text-slate-400 text-sm mt-2">
+                        Experiência em sistemas de Varejo e ERP, permitindo
+                        relacionar problemas técnicos aos impactos no negócio.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- FOOTER -->
+<footer class="max-w-4xl mx-auto py-12 text-center text-xs text-slate-600 border-t border-slate-800/60">
+
+    <p>
+        &copy; 2026 | Edson C Dias Filho | Suporte N3 • Sustentação • Oracle • PL/SQL • Python
+    </p>
+
+</footer>
+```
