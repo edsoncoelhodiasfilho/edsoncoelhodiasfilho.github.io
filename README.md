@@ -113,7 +113,6 @@ Entre os temas explorados estão:
 - **Oracle SQL**
 - **PL/SQL**
 - SQL Developer
-- SQL*Plus
 
 ### Desenvolvimento
 - Python
