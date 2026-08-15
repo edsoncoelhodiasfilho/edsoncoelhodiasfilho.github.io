@@ -23,7 +23,7 @@
     <a href="#contato">Contato</a>
   </nav>
 
-  <div class="nav-actions">
+  <div class="nav-actions"><a class="account-button" id="accountLink" href="#cadastro">👤 <span id="accountLabel">Meu cadastro</span></a><button class="logout-button" id="logoutButton" type="button" hidden>SAIR</button>
     <button class="icon-button" aria-label="Pesquisar">⌕</button>
     <button class="cart-button" id="openCart" aria-label="Abrir carrinho">
       🛒 <span id="cartCount">0</span>
@@ -40,7 +40,7 @@
     <p class="kicker">BEM-VINDO À ERALIS</p>
     <h1>JOGUE<span>.</span><br>PENSE<span class="blue">.</span><br>DECIDA<span class="red">.</span></h1>
     <p class="hero-text">
-      Criamos jogos criativos e miniaturas impressas em 3D,
+      Criamos jogos de tabuleiro e miniaturas impressas em 3D,
       onde estratégia, diversão e imaginação se encontram.
     </p>
 
@@ -103,7 +103,7 @@
   </article>
   <article>
     <div class="benefit-icon">◇</div>
-    <div><h3>Design Personalizado</h3><p>Criamos do seu jeito.</p></div>
+    <div><h3>Design Exclusivo</h3><p>Jogos originais da ERALIS.</p></div>
   </article>
   <article>
     <div class="benefit-icon">♟</div>
@@ -130,6 +130,36 @@
   </div>
 </section>
 
+<section class="account-section" id="cadastro">
+  <div class="account-card">
+    <div class="account-copy">
+      <p class="kicker">MINHA CONTA</p>
+      <h2>Cadastre-se na ERALIS.</h2>
+      <p>Salve seus dados para agilizar futuros pedidos. Nesta versão, o cadastro funciona sem banco de dados.</p>
+      
+    </div>
+    <form id="registerForm" class="register-form">
+      <div class="form-row">
+        <label>Nome completo<input id="regName" required autocomplete="name" placeholder="Seu nome"></label>
+        <label>WhatsApp<input id="regPhone" required autocomplete="tel" inputmode="tel" maxlength="14" placeholder="(79) 9999-9999"></label>
+      </div>
+      <label>E-mail<input id="regEmail" type="email" required autocomplete="email" placeholder="voce@email.com"></label>
+      <div class="form-row">
+        <label>CEP<input id="regCep" autocomplete="postal-code" inputmode="numeric" maxlength="9" placeholder="00000-000"></label>
+        <label>Cidade/UF<input id="regCity" autocomplete="address-level2" placeholder="Cidade / UF"></label>
+      </div>
+      <label>Endereço <span class="optional-label">(Complete se necessário)</span><input id="regAddress" autocomplete="street-address" placeholder="Rua, número, complemento"></label>
+<label>Bairro<input id="regNeighborhood" autocomplete="address-level3" placeholder="Bairro"></label>
+      <label class="check-line"><input id="regMarketing" type="checkbox"> Quero receber novidades da ERALIS.</label>
+      <button class="btn btn-yellow full" type="submit">CRIAR CADASTRO →</button>
+      <p id="registerMessage" class="form-message"></p>
+    </form>
+  </div>
+  <div class="account-preview" id="accountPreview" hidden
+    <div><p class="kicker">CADASTRO LOCAL</p><h3 id="accountGreeting"></h3><p id="accountDetails"></p></div>
+    <div class="account-actions"><button class="btn btn-outline" id="editAccount">EDITAR</button><button class="btn btn-danger" id="deleteAccount">APAGAR DADOS</button></div>
+  </div>
+</section>
 <section class="contact-section" id="contato">
   <p class="kicker">FALE CONOSCO</p>
   <h2>Pronto para jogar?</h2>
@@ -154,7 +184,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
     <button class="btn btn-yellow full" id="checkoutButton">FINALIZAR NO WHATSAPP</button>
-    <p class="cart-note">O pedido será confirmado pelo WhatsApp, incluindo disponibilidade, pagamento e entrega.</p>
+    <p class="cart-note">O pedido será confirmado pelo WhatsApp, incluindo disponibilidade, frete e pagamento.</p>
   </aside>
 </div>
 

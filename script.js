@@ -57,13 +57,13 @@ function closeCart(){document.getElementById("cartOverlay").hidden=true}
 
 function checkout(){
   if(!cart.length){alert("Adicione um produto ao carrinho.");return}
-  const phone="5579998080301"; // ALTERE PARA O WHATSAPP DA ERALIS
+  const phone="5579999999999"; // ALTERE PARA O WHATSAPP DA ERALIS
   const lines=cart.map(x=>{
     const p=products.find(y=>y.id===x.id);
     return `• ${p.name} — ${x.qty} un. — ${money(p.price*x.qty)}`;
   }).join("\n");
   const total=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0);
-  const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nTotal estimado: ${money(total)}\n\nGostaria de confirmar disponibilidade, pagamento e entrega.`;
+  const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nTotal estimado: ${money(total)}\n\nGostaria de confirmar disponibilidade, frete e pagamento.`;
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,"_blank");
 }
 
@@ -72,7 +72,7 @@ document.getElementById("closeCart").onclick=closeCart;
 document.getElementById("checkoutButton").onclick=checkout;
 document.getElementById("cartOverlay").addEventListener("click",e=>{if(e.target.id==="cartOverlay")closeCart()});
 
-const whatsapp="5579998080301"; // ALTERE PARA O WHATSAPP DA ERALIS
+const whatsapp="5579999999999"; // ALTERE PARA O WHATSAPP DA ERALIS
 document.getElementById("whatsappLink").href=`https://wa.me/${whatsapp}?text=${encodeURIComponent("Olá! Quero conhecer os produtos da ERALIS.")}`;
 document.getElementById("year").textContent=new Date().getFullYear();
 
@@ -119,3 +119,162 @@ function animateOrbits(now){
   requestAnimationFrame(animateOrbits);
 }
 requestAnimationFrame(animateOrbits);
+
+
+/* =========================================================
+   ERALIS — CADASTRO LOCAL + SESSÃO
+   CEP: ViaCEP
+   Telefone: (79) 9999-9999
+   ========================================================= */
+
+const ACCOUNT_KEY = "eralisCustomer";
+const SESSION_KEY = "eralisLoggedIn";
+
+const form = document.getElementById("registerForm");
+const preview = document.getElementById("accountPreview");
+const message = document.getElementById("registerMessage");
+const greeting = document.getElementById("accountGreeting");
+const details = document.getElementById("accountDetails");
+const accountLabel = document.getElementById("accountLabel");
+const accountLink = document.getElementById("accountLink");
+const logoutButton = document.getElementById("logoutButton");
+const phoneInput = document.getElementById("regPhone");
+const cepInput = document.getElementById("regCep");
+const addressInput = document.getElementById("regAddress");
+const neighborhoodInput = document.getElementById("regNeighborhood");
+
+function getAccount() {
+  try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY)); }
+  catch { return null; }
+}
+function isLoggedIn() {
+  return localStorage.getItem(SESSION_KEY) === "true" && !!getAccount();
+}
+function esc(v) {
+  return String(v || "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+function maskPhone(value) {
+  const d = value.replace(/\D/g, "").slice(0, 11);
+  if (!d) return "";
+  if (d.length <= 2) return `(${d}`;
+  if (d.length <= 6) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+  if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6,10)}`;
+  return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7,11)}`;
+}
+function maskCep(value) {
+  const d = value.replace(/\D/g, "").slice(0,8);
+  return d.length > 5 ? `${d.slice(0,5)}-${d.slice(5)}` : d;
+}
+
+phoneInput?.addEventListener("input", e => {
+  e.target.value = maskPhone(e.target.value);
+});
+
+cepInput?.addEventListener("input", e => {
+  e.target.value = maskCep(e.target.value);
+});
+
+let cepTimer;
+cepInput?.addEventListener("input", () => {
+  clearTimeout(cepTimer);
+  const cep = cepInput.value.replace(/\D/g,"");
+  if (cep.length !== 8) return;
+
+  cepTimer = setTimeout(() => buscarCep(cep), 150);
+});
+
+async function buscarCep(cep) {
+  addressInput.value = "Consultando...";
+  neighborhoodInput.value = "";
+  const city = document.getElementById("regCity");
+  city.value = "";
+
+  try {
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    if (!response.ok) throw new Error("Falha na consulta");
+
+    const data = await response.json();
+
+    if (data.erro) {
+      addressInput.value = "";
+      message.textContent = "CEP não encontrado.";
+      message.className = "form-message";
+      return;
+    }
+
+    addressInput.value = data.logradouro || "";
+    neighborhoodInput.value = data.bairro || "";
+    city.value = data.localidade && data.uf
+      ? `${data.localidade} / ${data.uf}`
+      : (data.localidade || data.uf || "");
+
+    message.textContent = "";
+    message.className = "form-message";
+  } catch {
+    addressInput.value = "";
+    message.textContent = "Não foi possível consultar o CEP agora. Você pode preencher o endereço manualmente.";
+    message.className = "form-message";
+  }
+}
+
+function renderAccount() {
+  const account = getAccount();
+  const logged = isLoggedIn();
+
+  if (logged && account) {
+    form.hidden = true;
+    if (preview) preview.hidden = true;
+
+    accountLabel.textContent = account.name.split(" ")[0];
+    accountLink.href = "#cadastro";
+    logoutButton.hidden = false;
+    return;
+  }
+
+  form.hidden = false;
+  if (preview) preview.hidden = true;
+  accountLabel.textContent = "Meu cadastro";
+  logoutButton.hidden = true;
+}
+
+form?.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const account = {
+    name: document.getElementById("regName").value.trim(),
+    phone: phoneInput.value.trim(),
+    email: document.getElementById("regEmail").value.trim(),
+    cep: cepInput.value.trim(),
+    city: document.getElementById("regCity").value.trim(),
+    address: addressInput.value.trim(),
+    neighborhood: neighborhoodInput.value.trim(),
+    marketing: document.getElementById("regMarketing").checked,
+    updatedAt: new Date().toISOString()
+  };
+
+  localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
+  localStorage.setItem(SESSION_KEY, "true");
+
+  message.textContent = `Cadastro criado. Olá, ${account.name.split(" ")[0]}!`;
+  message.className = "form-message success";
+
+  renderAccount();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+logoutButton?.addEventListener("click", () => {
+  localStorage.removeItem(SESSION_KEY);
+  renderAccount();
+  document.getElementById("cadastro")?.scrollIntoView({behavior:"smooth"});
+});
+
+accountLink?.addEventListener("click", e => {
+  if (isLoggedIn()) {
+    e.preventDefault();
+    document.getElementById("cadastro")?.scrollIntoView({behavior:"smooth"});
+  }
+});
+
+renderAccount();

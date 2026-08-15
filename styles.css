@@ -247,254 +247,28 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
   footer{flex-direction:column;align-items:flex-start;gap:10px}
 }
 
-/* =========================================================
-   ERALIS — MOBILE RESPONSIVE OVERRIDES
-   ========================================================= */
+.account-button{color:#fff;font-size:.8rem;font-weight:800;white-space:nowrap}.account-button:hover{color:var(--yellow)}
+.account-section{width:min(1230px,calc(100% - 40px));margin:0 auto;padding:0 0 70px}.account-card{display:grid;grid-template-columns:.85fr 1.15fr;gap:45px;padding:40px;border:1px solid #1a477d;border-radius:24px;background:linear-gradient(135deg,#071a3a,#061128)}.account-copy h2{font-size:2.8rem;line-height:1;margin:0 0 18px}.account-copy>p:not(.kicker){color:#b3bfd5;line-height:1.7}.account-note{margin-top:22px;padding:15px;border:1px solid rgba(255,201,40,.25);border-radius:12px;color:#aebbd1;font-size:.75rem;line-height:1.5}.register-form{display:flex;flex-direction:column;gap:13px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}.register-form label{display:flex;flex-direction:column;gap:6px;color:#dbe5f6;font-size:.74rem;font-weight:800}.register-form input{height:45px;padding:0 12px;border-radius:9px;border:1px solid #28527f;background:#06142e;color:#fff;outline:none}.register-form input:focus{border-color:var(--blue)}.check-line{flex-direction:row!important;align-items:center;gap:7px!important;color:#aebbd1!important;font-weight:500!important}.check-line input{width:17px;height:17px}.form-message{min-height:18px;margin:0;font-size:.75rem;color:#9db0cd}.form-message.success{color:#4fe09d}.account-preview{margin-top:15px;padding:24px 28px;border:1px solid #1a477d;border-radius:20px;background:#071733;display:flex;justify-content:space-between;align-items:center;gap:20px}.account-preview h3{margin:0 0 7px}.account-preview p:not(.kicker){color:#9fb0ca;line-height:1.6;font-size:.82rem}.account-actions{display:flex;gap:9px}.btn-danger{border:1px solid #773b4a;color:#ffb8c0;background:transparent}
+@media(max-width:760px){.account-button span{display:none}.account-section{width:calc(100% - 30px)}.account-card{grid-template-columns:1fr;padding:28px 20px;gap:25px}.account-copy h2{font-size:2.3rem}.form-row{grid-template-columns:1fr}.account-preview{flex-direction:column;align-items:flex-start}.account-actions{width:100%}.account-actions .btn{flex:1;justify-content:center}}
 
-html { overflow-x: hidden; }
-body { overflow-x: hidden; }
-
-@media (max-width: 900px) {
-  .navbar {
-    width: calc(100% - 24px);
-    height: 58px;
-    top: 7px;
-    padding: 0 16px;
-  }
-
-  .desktop-nav { display: none; }
-
-  .hero {
-    min-height: auto;
-    padding: 80px 20px 45px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-  }
-
-  .hero-copy {
-    width: 100%;
-    max-width: 620px;
-    padding: 0;
-    flex: none;
-  }
-
-  .hero h1 {
-    font-size: clamp(3.3rem, 13vw, 5.2rem);
-    line-height: .84;
-    margin-bottom: 24px;
-  }
-
-  .hero-text {
-    max-width: 520px;
-    margin: 0 auto;
-    font-size: .98rem;
-  }
-
-  .hero-buttons {
-    justify-content: center;
-    margin-top: 24px;
-  }
-
-  .orbit-stage {
-    width: min(100%, 560px);
-    height: 430px;
-    flex: none;
-    min-width: 0;
-    margin: 0 auto;
-    transform: scale(.72);
-    transform-origin: center center;
-  }
-
-  .slider-dots {
-    display: none;
-  }
-
-  .products-section,
-  .benefits,
-  .about-section {
-    width: calc(100% - 30px);
-  }
-
-  .products-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .benefits {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-  }
-
-  .about-card {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
+/* Cadastro: máscara, sessão e logout */
+.account-button{display:inline-flex;align-items:center;gap:5px;color:#fff;font-size:.8rem;font-weight:800;white-space:nowrap}
+.account-button:hover{color:var(--yellow)}
+.logout-button{border:1px solid #8b4250;background:transparent;color:#ffb9c0;border-radius:999px;padding:7px 11px;font-size:.65rem;font-weight:900;cursor:pointer}
+.logout-button:hover{background:rgba(255,70,90,.1)}
+.account-preview{display:none!important}
+#regAddress,#regNeighborhood,#regCity{transition:border-color .2s}
+@media(max-width:760px){
+  .account-button span{display:inline}
+  .logout-button{padding:6px 9px}
+}
+@media(max-width:430px){
+  .account-button span{display:none}
+  .logout-button{font-size:.58rem;padding:6px 8px}
 }
 
-@media (max-width: 600px) {
-  .navbar {
-    width: calc(100% - 16px);
-    padding: 0 13px;
-  }
-
-  .logo {
-    font-size: 1.08rem;
-  }
-
-  .logo-moon {
-    font-size: 1.55rem;
-  }
-
-  .nav-actions {
-    gap: 8px;
-  }
-
-  .icon-button {
-    display: none;
-  }
-
-  .hero {
-    padding: 82px 16px 25px;
-  }
-
-  .hero .kicker {
-    font-size: .62rem;
-    letter-spacing: .16em;
-  }
-
-  .hero h1 {
-    font-size: clamp(3.05rem, 15vw, 4.4rem);
-    margin-bottom: 22px;
-  }
-
-  .hero-text {
-    font-size: .91rem;
-    line-height: 1.5;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-    width: min(100%, 330px);
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-buttons .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .orbit-stage {
-    width: 100%;
-    height: 390px;
-    transform: scale(.57);
-    margin-top: -5px;
-  }
-
-  .moon {
-    width: 260px;
-    height: 260px;
-  }
-
-  .orbit-a { width: 570px; }
-  .orbit-b { width: 620px; }
-  .orbit-c { width: 470px; }
-
-  .products-section {
-    padding-top: 45px;
-  }
-
-  .section-head {
-    display: block;
-  }
-
-  .section-head h2 {
-    font-size: 1.9rem;
-  }
-
-  .view-all {
-    display: inline-flex;
-    margin-top: 16px;
-  }
-
-  .products-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .product-image {
-    height: 165px;
-  }
-
-  .benefits {
-    width: calc(100% - 30px);
-    grid-template-columns: 1fr;
-    padding-bottom: 55px;
-  }
-
-  .about-section {
-    padding-bottom: 55px;
-  }
-
-  .about-card {
-    padding: 30px 24px;
-  }
-
-  .about-card h2,
-  .contact-section h2 {
-    font-size: 2.35rem;
-  }
-
-  .about-card > p {
-    font-size: .92rem;
-    line-height: 1.65;
-  }
-
-  .contact-section {
-    padding: 65px 18px;
-  }
-
-  footer {
-    padding: 25px 20px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .cart-panel {
-    width: 100%;
-    padding: 20px;
-  }
-}
-
-@media (max-width: 380px) {
-  .hero h1 {
-    font-size: 2.8rem;
-  }
-
-  .hero-text {
-    font-size: .86rem;
-  }
-
-  .orbit-stage {
-    transform: scale(.49);
-    height: 340px;
-    margin-top: -20px;
-  }
-
-  .products-section,
-  .benefits,
-  .about-section {
-    width: calc(100% - 22px);
-  }
-}
-
-/* Touch devices: remove hover lift that can feel unstable on mobile. */
-@media (hover: none) {
-  .product-card:hover,
-  .btn:hover {
-    transform: none;
-  }
+.optional-label{
+  color:#7f91ad;
+  font-weight:500;
+  font-size:.68rem;
 }
