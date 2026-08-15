@@ -449,3 +449,16 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
 .account-section{
   scroll-margin-top:105px;
 }
+
+/* =========================================================
+   ERALIS — ESPAÇAMENTO DAS ÂNCORAS DO MENU
+   =========================================================
+   Ao clicar em Início, Produtos, Sobre ou Meu Cadastro,
+   o título da seção não fica colado à barra superior.
+*/
+#produtos,
+#sobre,
+#cadastro,
+#inicio {
+  scroll-margin-top: 28px;
+}

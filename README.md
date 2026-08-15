@@ -1,7 +1,10 @@
-# ERALIS — espaçamento ao abrir Minha Conta
+# ERALIS — espaçamento das seções do menu
 
-Ao clicar em "Meu cadastro" no menu superior, a seção de cadastro agora
-respeita uma margem superior de 105px no scroll. Isso deixa a seção visualmente
-afastada da navbar sticky, evitando que o quadro fique colado ao menu.
+Ajustado o deslocamento das âncoras do menu superior para:
+- Produtos
+- Sobre
+- Meu Cadastro
+- Início
 
-O restante do site foi preservado.
+As seções agora recebem o mesmo respiro visual ao serem acessadas
+pelo menu, evitando que o conteúdo fique colado à barra superior.
