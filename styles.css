@@ -568,3 +568,40 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
     border-top:1px solid rgba(159,176,202,.28);
   }
 }
+
+/* ERALIS — modal de resumo do pedido */
+.order-message-overlay{
+  position:fixed; inset:0; z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px; background:rgba(1,6,20,.82);
+  backdrop-filter:blur(7px);
+}
+.order-message-overlay[hidden]{display:none}
+.order-message-modal{
+  position:relative; width:min(620px,100%);
+  max-height:calc(100vh - 40px); overflow:auto;
+  padding:30px; border:1px solid #1a477d; border-radius:22px;
+  background:linear-gradient(145deg,#071a3a,#061128);
+  box-shadow:0 25px 80px rgba(0,0,0,.45);
+}
+.order-message-modal h3{margin:4px 0 8px;font-size:1.8rem}
+.order-message-help{color:#aebbd0;line-height:1.55;font-size:.84rem}
+.order-message-close{
+  position:absolute;top:12px;right:15px;width:34px;height:34px;
+  border:0;border-radius:50%;background:rgba(255,255,255,.06);
+  color:#fff;font-size:1.5rem;cursor:pointer;
+}
+#orderMessageText{
+  width:100%;min-height:245px;box-sizing:border-box;resize:vertical;
+  border:1px solid #274c7d;border-radius:13px;padding:15px;
+  background:#040d20;color:#e7eefb;font:.84rem/1.55 system-ui,sans-serif;
+}
+.order-message-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.order-message-actions .btn{min-height:39px;font-size:.65rem}
+@media(max-width:600px){
+  .order-message-overlay{padding:12px}
+  .order-message-modal{padding:23px 18px 18px;border-radius:18px}
+  #orderMessageText{min-height:220px}
+  .order-message-actions{flex-direction:column}
+  .order-message-actions .btn{width:100%;justify-content:center}
+}

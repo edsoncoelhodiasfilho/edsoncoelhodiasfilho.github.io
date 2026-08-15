@@ -141,8 +141,8 @@
       <p>
         Estamos começando nossa jornada e, neste primeiro momento, 
 		os pedidos são feitos diretamente pelo WhatsApp ou Instagram. 
-		Em breve, você também poderá pagar com cartão de crédito, deixando
-		a sua experiência com a ERALIS ainda mais fácil.
+		Em breve, você também poderá pagar com cartão de crédito 
+		para deixar sua experiência com a ERALIS ainda mais fácil.
       </p>
     </div>
   </div>
@@ -251,5 +251,21 @@
 </div>
 
 <script src="script.js"></script>
+
+<div class="order-message-overlay" id="orderMessageOverlay" hidden>
+  <div class="order-message-modal" role="dialog" aria-modal="true" aria-labelledby="orderMessageTitle">
+    <button class="order-message-close" id="orderMessageClose" type="button" aria-label="Fechar">×</button>
+    <p class="kicker">SEU PEDIDO</p>
+    <h3 id="orderMessageTitle">Confira sua mensagem</h3>
+    <p class="order-message-help" id="orderMessageHelp"></p>
+    <textarea id="orderMessageText" readonly></textarea>
+    <div class="order-message-actions">
+      <button class="btn btn-yellow" id="copyOrderMessage" type="button">COPIAR MENSAGEM</button>
+      <button class="btn btn-outline" id="continueWhatsapp" type="button" hidden>ABRIR WHATSAPP</button>
+      <button class="btn btn-outline" id="continueInstagram" type="button" hidden>ABRIR INSTAGRAM</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
