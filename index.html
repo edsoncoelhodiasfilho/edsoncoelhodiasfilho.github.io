@@ -1,247 +1,163 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Edson C Dias Filho | Analista de Sistemas N3 | Oracle PL/SQL</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <meta
-        name="description"
-        content="Edson C Dias Filho - Analista de Sistemas N3, Suporte e Sustentação, Oracle SQL, PL/SQL, Python, Linux e Automação."
-    >
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ERALIS — Jogue. Pense. Decida. Jogos de tabuleiro criativos e produtos 3D.">
+  <title>ERALIS — Jogue. Pense. Decida.</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+<body>
 
-<body class="bg-slate-950 text-slate-300">
+<header class="navbar">
+  <a href="#inicio" class="logo">
+    <span class="logo-moon">☾</span>
+    <span>ERALIS</span>
+  </a>
 
-<!-- HEADER -->
-<header class="max-w-4xl mx-auto pt-20 px-6">
-    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+  <nav class="desktop-nav">
+    <a class="active" href="#inicio">Início</a>
+    <a href="#produtos">Produtos</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#como-funciona">Como Funciona</a>
+    <a href="#contato">Contato</a>
+  </nav>
 
-        <!-- Container da Foto de Perfil -->
-        <div class="flex-shrink-0">
-            <img
-                src="./foto.png"
-                alt="Foto de Edson C Dias Filho"
-                class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-teal-500 object-cover shadow-lg shadow-teal-900/20"
-            >
-        </div>
-
-        <!-- Informações Principais -->
-        <div class="text-center sm:text-left">
-
-            <h1 class="text-4xl font-extrabold text-white tracking-tight sm:text-5xl">
-                EDSON C DIAS FILHO
-            </h1>
-
-            <p class="text-xl text-teal-400 mt-2 font-semibold">
-                Analista de Sistemas N3 | Suporte e Sustentação & Oracle PL/SQL
-            </p>
-
-            <p class="text-slate-400 text-sm mt-1">
-                📍 Disponibilidade 100% Remota (Brasil)
-            </p>
-
-        </div>
-    </div>
-
-    <p class="text-slate-300 mt-6 max-w-3xl text-lg leading-relaxed text-justify sm:text-left">
-        Profissional com mais de 18 anos de experiência em TI, com sólida atuação em
-        <b>suporte N3, sustentação de sistemas corporativos, ERP e bancos de dados Oracle</b>.
-        Experiência na investigação e resolução de incidentes complexos, análise de logs,
-        diagnóstico de problemas, execução e desenvolvimento de rotinas
-        <b>SQL e PL/SQL</b>, além de automação de processos com
-        <b>Python e Shell Script</b>. Atuação em ambientes críticos de Varejo,
-        com foco na disponibilidade dos sistemas, integridade dos dados e continuidade operacional.
-    </p>
-
-    <div class="flex flex-wrap justify-center sm:justify-start gap-4 mt-8">
-
-        <!-- Botão de Destaque do Currículo -->
-        <a
-            href="./curriculo.pdf"
-            download="curriculo.pdf"
-            class="bg-teal-600 hover:bg-teal-500 text-white font-semibold px-5 py-2.5 rounded transition-all duration-200 shadow-lg shadow-teal-900/40 flex items-center gap-2"
-        >
-            <span>📥</span> Baixar Currículo (PDF)
-        </a>
-
-        <!-- LinkedIn -->
-        <a
-            href="https://www.linkedin.com/in/edson-coelho-65213829"
-            target="_blank"
-            class="bg-teal-600 hover:bg-teal-500 text-white font-medium px-5 py-2.5 rounded transition-all duration-200"
-        >
-            LinkedIn
-        </a>
-
-        <!-- GitHub -->
-        <a
-            href="https://github.com/edsoncoelhodiasfilho"
-            target="_blank"
-            class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-5 py-2.5 rounded border border-slate-700 transition-all duration-200"
-        >
-            GitHub
-        </a>
-
-    </div>
+  <div class="nav-actions">
+    <button class="icon-button" aria-label="Pesquisar">⌕</button>
+    <button class="cart-button" id="openCart" aria-label="Abrir carrinho">
+      🛒 <span id="cartCount">0</span>
+    </button>
+  </div>
 </header>
 
+<main>
 
-<!-- COMPETÊNCIAS -->
-<main class="max-w-4xl mx-auto my-16 px-6 space-y-16">
+<section class="hero" id="inicio">
+  <div class="hero-stars"></div>
 
-    <section>
+  <div class="hero-copy">
+    <p class="kicker">BEM-VINDO À ERALIS</p>
+    <h1>JOGUE<span>.</span><br>PENSE<span class="blue">.</span><br>DECIDA<span class="red">.</span></h1>
+    <p class="hero-text">
+      Criamos jogos criativos e miniaturas impressas em 3D,
+      onde estratégia, diversão e imaginação se encontram.
+    </p>
 
-        <h2 class="text-2xl font-bold text-white mb-6 border-b border-slate-800 pb-2">
-            ⚡ Competências Técnicas
-        </h2>
+    <div class="hero-buttons">
+      <a href="#produtos" class="btn btn-yellow">🛍 &nbsp; VER PRODUTOS <b>→</b></a>
+      <a href="#sobre" class="btn btn-outline">▷ &nbsp; CONHEÇA A ERALIS</a>
+    </div>
+  </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+  <div class="orbit-stage" aria-label="Lua ERALIS com peças orbitando">
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
 
-            <!-- SUPORTE N3 -->
-            <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
+    <div class="orbit orbit-a"></div>
+    <div class="orbit orbit-b"></div>
+    <div class="orbit orbit-c"></div>
 
-                <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">
-                    Suporte N3 & Sustentação
-                </h3>
+    <div class="moon">
+      <div class="moon-craters">
+        <i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="moon-logo">☾</div>
+      <div class="moon-name">ERALIS</div>
+    </div>
 
-                <ul class="space-y-2 text-slate-300 text-sm">
-                    <li>• Suporte técnico N3</li>
-                    <li>• Sustentação de sistemas críticos</li>
-                    <li>• Análise de incidentes e problemas</li>
-                    <li>• Troubleshooting e causa raiz</li>
-                    <li>• Análise de logs e erros</li>
-                </ul>
+    <div class="orbit-object object-die o1">⚄</div>
+    <div class="orbit-object object-meeple red-piece o2">♟</div>
+    <div class="orbit-object object-meeple green-piece o3">♟</div>
+    <div class="orbit-object object-meeple blue-piece o4">♟</div>
+    <div class="orbit-object object-meeple yellow-piece o5">♟</div>
+    <div class="orbit-object object-gem o6">◆</div>
+    <div class="orbit-object object-gem red-gem o7">◆</div>
+    <div class="orbit-object object-token o8">✦</div>
+    <div class="orbit-object object-chest o9">▣</div>
+    <div class="orbit-object object-tower o10">♜</div>
+  </div>
 
-            </div>
+  <div class="slider-dots" aria-hidden="true">
+    <span class="selected"></span><span></span><span></span>
+  </div>
+</section>
 
+<section class="products-section" id="produtos">
+  <div class="section-head">
+    <div>
+      <p class="kicker">NOSSOS JOGOS</p>
+      <h2>Em destaque</h2>
+      <p>Conheça nossa linha de jogos e miniaturas.</p>
+    </div>
+    <a href="#produtos" class="view-all">VER TODOS →</a>
+  </div>
 
-            <!-- ORACLE / PL SQL -->
-            <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
+  <div class="products-grid" id="productGrid"></div>
+</section>
 
-                <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">
-                    Oracle & PL/SQL
-                </h3>
+<section class="benefits" id="como-funciona">
+  <article>
+    <div class="benefit-icon">♙</div>
+    <div><h3>Impressão 3D de Alta Qualidade</h3><p>Detalhes que fazem a diferença.</p></div>
+  </article>
+  <article>
+    <div class="benefit-icon">◇</div>
+    <div><h3>Design Personalizado</h3><p>Criamos do seu jeito.</p></div>
+  </article>
+  <article>
+    <div class="benefit-icon">♟</div>
+    <div><h3>Para Todas as Idades</h3><p>Diversão em família e com amigos.</p></div>
+  </article>
+  <article>
+    <div class="benefit-icon">📦</div>
+    <div><h3>Entrega em Todo o Brasil</h3><p>Receba no conforto da sua casa.</p></div>
+  </article>
+</section>
 
-                <ul class="space-y-2 text-slate-300 text-sm">
-                    <li>• Oracle Database</li>
-                    <li>• SQL e PL/SQL</li>
-                    <li>• Procedures e Functions</li>
-                    <li>• Packages e Triggers</li>
-                    <li>• Cursors e Exceptions</li>
-                    <li>• MERGE e processamento em lote</li>
-                </ul>
+<section class="about-section" id="sobre">
+  <div class="about-card">
+    <div>
+      <p class="kicker">SOBRE A ERALIS</p>
+      <h2>Ideias que cabem<br>na mesa.</h2>
+    </div>
+    <p>
+      A ERALIS cria jogos compactos, criativos e acessíveis, combinando
+      design, impressão 3D e mecânicas que colocam os jogadores diante
+      de escolhas. Cada jogo nasce para provocar uma pergunta:
+      <strong>qual é a sua próxima decisão?</strong>
+    </p>
+  </div>
+</section>
 
-            </div>
-
-
-            <!-- AUTOMAÇÃO -->
-            <div class="bg-slate-800 p-5 rounded-lg border border-slate-800">
-
-                <h3 class="font-bold text-teal-400 mb-3 text-sm tracking-wider uppercase">
-                    Automação & Infraestrutura
-                </h3>
-
-                <ul class="space-y-2 text-slate-300 text-sm">
-                    <li>• Python</li>
-                    <li>• Bash / Shell Script</li>
-                    <li>• Linux</li>
-                    <li>• Automação de rotinas</li>
-                    <li>• Monitoramento de processos</li>
-                    <li>• Integração Python + Oracle</li>
-                </ul>
-
-            </div>
-
-        </div>
-    </section>
-
-
-    <!-- REPOSITÓRIOS -->
-    <section>
-
-        <h2 class="text-2xl font-bold text-white mb-6 border-b border-slate-800 pb-2">
-            📁 Repositórios de Destaque
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <!-- ORACLE / PL SQL -->
-            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700/60 hover:border-teal-500/50 transition-all duration-300 flex flex-col justify-between">
-
-                <div>
-
-                    <h3 class="text-xl font-bold text-white">
-                        oracle-sql-plsql
-                    </h3>
-
-                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-                        Laboratório de scripts Oracle SQL e PL/SQL com exemplos de
-                        Procedures, Functions, Packages, Triggers, cursores,
-                        tratamento de exceções, processamento de dados, MERGE
-                        e rotinas voltadas a cenários corporativos.
-                    </p>
-
-                </div>
-
-                <a
-                    href="https://github.com/edsoncoelhodiasfilho/oracle-sql-plsql"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-teal-400 hover:text-teal-300 text-sm font-semibold inline-block mt-6"
-                >
-                    Ver código no GitHub →
-                </a>
-
-            </div>
-
-
-            <!-- AUTOMAÇÃO -->
-            <div class="bg-slate-800 p-6 rounded-lg border border-slate-700/60 hover:border-teal-500/50 transition-all duration-300 flex flex-col justify-between">
-
-                <div>
-
-                    <h3 class="text-xl font-bold text-white">
-                        infra-and-database-automations
-                    </h3>
-
-                    <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-                        Scripts Python e Shell Script para automação de tarefas,
-                        integração com Oracle, processamento de dados,
-                        monitoramento de logs e apoio à sustentação de ambientes
-                        corporativos e sistemas críticos.
-                    </p>
-
-                </div>
-
-                <a
-                    href="https://github.com/edsoncoelhodiasfilho/infra-and-database-automations"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-teal-400 hover:text-teal-300 text-sm font-semibold inline-block mt-6"
-                >
-                    Ver código no GitHub →
-                </a>
-
-            </div>
-
-        </div>
-    </section>
+<section class="contact-section" id="contato">
+  <p class="kicker">FALE CONOSCO</p>
+  <h2>Pronto para jogar?</h2>
+  <p>Consulte disponibilidade, tire dúvidas ou faça seu pedido.</p>
+  <a class="btn btn-yellow" id="whatsappLink" href="#" target="_blank" rel="noopener">FALAR NO WHATSAPP →</a>
+</section>
 
 </main>
 
-
-<!-- FOOTER -->
-<footer class="max-w-4xl mx-auto py-12 text-center text-xs text-slate-600 border-t border-slate-800/60">
-
-    <p>
-        &copy; 2026 | Hospedado via GitHub Pages no domínio próprio.
-    </p>
-
+<footer>
+  <div class="footer-brand"><span class="logo-moon">☾</span> ERALIS</div>
+  <span>Jogue. Pense. Decida.</span>
+  <span>© <span id="year"></span> ERALIS</span>
 </footer>
 
+<div class="cart-overlay" id="cartOverlay" hidden>
+  <aside class="cart-panel">
+    <div class="cart-header">
+      <h2>Seu carrinho</h2>
+      <button id="closeCart" aria-label="Fechar">×</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
+    <button class="btn btn-yellow full" id="checkoutButton">FINALIZAR NO WHATSAPP</button>
+    <p class="cart-note">O pedido será confirmado pelo WhatsApp, incluindo disponibilidade, pagamento e entrega.</p>
+  </aside>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
