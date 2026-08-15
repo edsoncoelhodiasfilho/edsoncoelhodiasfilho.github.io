@@ -1,10 +1,6 @@
-# ERALIS — Como Funciona
+# ERALIS — versão sem Como Funciona
 
-A seção Como Funciona foi ajustada para ter o mesmo estilo visual do quadro Sobre.
-
-Layout desktop:
-- esquerda: título "Como funciona";
-- direita: texto explicativo sobre pedidos e pagamentos.
-
-O botão de expansão foi removido.
-A seção permanece responsiva no mobile.
+Alterações realizadas sobre o arquivo enviado:
+- removido o link "Como Funciona" do menu superior;
+- removida a seção "Como Funciona" do corpo do site;
+- preservado o restante do site e das alterações existentes.
