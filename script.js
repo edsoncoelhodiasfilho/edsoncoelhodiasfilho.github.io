@@ -378,7 +378,7 @@ renderAccount();
    ERALIS — FINALIZAÇÃO PELO INSTAGRAM
    ========================================================= */
 
-const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/eralis.oficial/";
+const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/edson.cdiasfilho";
 const instagramCheckout = document.getElementById("instagramCheckout");
 
 if (instagramCheckout) {
