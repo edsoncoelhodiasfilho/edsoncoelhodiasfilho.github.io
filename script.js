@@ -440,7 +440,21 @@ document.addEventListener("click", function (event) {
    ========================================================= */
 
 const ERALIS_WHATSAPP_NUMBER = "5579998080301";
-const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/edson.cdiasfilho/";
+
+/*
+ * Instagram da ERALIS.
+ *
+ * ATENÇÃO:
+ * O Instagram não fornece um link web confiável para abrir um
+ * Direct já preenchido com uma mensagem personalizada.
+ *
+ * O link ig.me/m/usuario abre a conversa diretamente.
+ * A mensagem do pedido é copiada para o clipboard para que
+ * o cliente possa colá-la no Direct.
+ */
+const ERALIS_INSTAGRAM_USERNAME = "edson.cdiasfilho";
+const ERALIS_INSTAGRAM_DM_URL =
+  `https://ig.me/m/${ERALIS_INSTAGRAM_USERNAME}`;
 
 function eralisGetCustomer() {
   try {
@@ -451,13 +465,24 @@ function eralisGetCustomer() {
 }
 
 function eralisRegistered() {
-  const c = eralisGetCustomer();
-  return !!(c && c.name?.trim() && c.email?.trim() && c.phone?.trim());
+  const customer = eralisGetCustomer();
+
+  return !!(
+    customer &&
+    typeof customer.name === "string" &&
+    customer.name.trim() &&
+    typeof customer.email === "string" &&
+    customer.email.trim() &&
+    typeof customer.phone === "string" &&
+    customer.phone.trim()
+  );
 }
 
 function eralisBuildOrderMessage() {
   if (!eralisRegistered()) {
-    throw new Error("Para finalizar o pedido, faça seu cadastro na ERALIS.");
+    throw new Error(
+      "Para finalizar o pedido, faça seu cadastro na ERALIS."
+    );
   }
 
   if (!cart.length) {
@@ -478,23 +503,78 @@ function eralisBuildOrderMessage() {
 
   cart.forEach(item => {
     const product = products.find(p => p.id === item.id);
+
     if (!product) return;
 
     const subtotal = product.price * item.qty;
     total += subtotal;
 
     lines.push(`• ${product.name}`);
-    lines.push(`  ${item.qty}x ${money(product.price)} = ${money(subtotal)}`);
+    lines.push(
+      `  ${item.qty}x ${money(product.price)} = ${money(subtotal)}`
+    );
     lines.push("");
   });
 
   lines.push(`TOTAL: ${money(total)}`);
   lines.push("");
-  lines.push("Aguardo as orientações para finalizar o pedido. Obrigado!");
+  lines.push(
+    "Aguardo as orientações para finalizar o pedido. Obrigado!"
+  );
 
   return lines.join("\n");
 }
 
+/*
+ * Copia a mensagem de forma síncrona quando possível.
+ * Isso evita depender de uma Promise antes de navegar.
+ */
+function eralisCopyOrderMessage(message) {
+  try {
+    const textarea = document.createElement("textarea");
+
+    textarea.value = message;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    textarea.style.top = "0";
+
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    const copied = document.execCommand("copy");
+
+    textarea.remove();
+
+    if (copied) return true;
+  } catch {}
+
+  /*
+   * Fallback moderno.
+   * Não esperamos a Promise, pois a navegação para o Instagram
+   * deve acontecer imediatamente.
+   */
+  try {
+    navigator.clipboard?.writeText(message);
+  } catch {}
+
+  return false;
+}
+
+/*
+ * FINALIZAR PELO INSTAGRAM
+ *
+ * IMPORTANTE:
+ * - não usa window.open();
+ * - não abre uma segunda aba;
+ * - não testa se a aba foi bloqueada;
+ * - não usa instagram.com/perfil;
+ * - vai diretamente para ig.me/m/usuario.
+ *
+ * A navegação ocorre na própria aba para evitar completamente
+ * o problema de popup bloqueado.
+ */
 function eralisOpenInstagram() {
   let message;
 
@@ -505,39 +585,17 @@ function eralisOpenInstagram() {
     return;
   }
 
-  // Abre o Instagram imediatamente, evitando bloqueio de popup.
-  const instagramWindow = window.open(
-    ERALIS_INSTAGRAM_URL,
-    "_blank",
-    "noopener,noreferrer"
-  );
+  eralisCopyOrderMessage(message);
 
-  // Copia a mensagem para o cliente colar no Direct.
-  if (navigator.clipboard?.writeText) {
-    navigator.clipboard.writeText(message).catch(() => {});
-  } else {
-    const temporary = document.createElement("textarea");
-    temporary.value = message;
-    temporary.style.position = "fixed";
-    temporary.style.left = "-9999px";
-    document.body.appendChild(temporary);
-    temporary.select();
-
-    try {
-      document.execCommand("copy");
-    } catch {}
-
-    temporary.remove();
-  }
-
-  if (!instagramWindow) {
-    alert(
-      "O navegador bloqueou a abertura do Instagram. " +
-      "Permita pop-ups para este site e tente novamente."
-    );
-  }
+  /*
+   * Uma única navegação.
+   */
+  window.location.href = ERALIS_INSTAGRAM_DM_URL;
 }
 
+/*
+ * FINALIZAR PELO WHATSAPP
+ */
 function eralisOpenWhatsApp() {
   let message;
 
@@ -550,60 +608,85 @@ function eralisOpenWhatsApp() {
 
   const number = ERALIS_WHATSAPP_NUMBER.replace(/\D/g, "");
 
-  window.open(
-    `https://wa.me/${number}?text=${encodeURIComponent(message)}`,
-    "_blank",
-    "noopener,noreferrer"
-  );
+  window.location.href =
+    `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
-// Instagram — por ID, classe ou atributo.
-document.addEventListener("click", event => {
-  const target = event.target.closest(
-    "#instagramCheckout, .checkout-instagram, [data-instagram-checkout]"
-  );
+/*
+ * Instagram:
+ * usamos CAPTURE=true para interceptar o clique antes de
+ * qualquer onclick/href antigo do HTML.
+ *
+ * stopImmediatePropagation() impede que outro listener
+ * abra uma segunda aba.
+ */
+document.addEventListener(
+  "click",
+  event => {
+    const target = event.target.closest(
+      "#instagramCheckout, .checkout-instagram, [data-instagram-checkout]"
+    );
 
-  if (!target) return;
+    if (!target) return;
 
-  event.preventDefault();
-  event.stopPropagation();
-  eralisOpenInstagram();
-}, true);
-
-// WhatsApp — por ID ou atributo.
-document.addEventListener("click", event => {
-  const target = event.target.closest(
-    "#checkoutButton, [data-whatsapp-checkout]"
-  );
-
-  if (!target) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-  eralisOpenWhatsApp();
-}, true);
-
-// Fallback pelo texto do botão.
-document.addEventListener("click", event => {
-  const target = event.target.closest("a, button");
-  if (!target) return;
-
-  const text = (target.textContent || "").trim().toLowerCase();
-
-  if (text.includes("finalizar pelo instagram")) {
     event.preventDefault();
-    event.stopPropagation();
+    event.stopImmediatePropagation();
+
     eralisOpenInstagram();
-    return;
-  }
+  },
+  true
+);
 
-  if (
-    text.includes("finalizar pelo whatsapp") ||
-    text.includes("finalizar no whatsapp")
-  ) {
+/*
+ * Fallback para botão sem ID/classe específica.
+ */
+document.addEventListener(
+  "click",
+  event => {
+    const target = event.target.closest("a, button");
+
+    if (!target) return;
+
+    if (
+      target.id === "instagramCheckout" ||
+      target.classList.contains("checkout-instagram")
+    ) {
+      return;
+    }
+
+    const text = (target.textContent || "")
+      .trim()
+      .toLowerCase();
+
+    if (!text.includes("finalizar pelo instagram")) return;
+
     event.preventDefault();
-    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    eralisOpenInstagram();
+  },
+  true
+);
+
+/*
+ * WhatsApp:
+ * também interceptamos o botão para usar a mensagem completa
+ * com os itens e total.
+ */
+document.addEventListener(
+  "click",
+  event => {
+    const target = event.target.closest(
+      "#checkoutButton, [data-whatsapp-checkout]"
+    );
+
+    if (!target) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
     eralisOpenWhatsApp();
-  }
-}, true);
+  },
+  true
+);
 
