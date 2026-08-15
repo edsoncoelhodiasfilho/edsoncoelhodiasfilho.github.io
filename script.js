@@ -306,7 +306,7 @@ function renderAccount() {
 
   form.hidden = false;
   preview.hidden = true;
-  accountLabel.textContent = "Meu cadastro";
+  accountLabel.textContent = "Login";
   logoutButton.hidden = true;
 }
 
