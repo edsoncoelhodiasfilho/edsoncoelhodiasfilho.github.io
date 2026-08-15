@@ -436,15 +436,18 @@ document.addEventListener("click", function (event) {
 
 
 /* =========================================================
-   ERALIS — RESUMO AUTOMÁTICO DO PEDIDO
+   ERALIS — FINALIZAÇÃO DO PEDIDO
    ========================================================= */
 
-const ERALIS_WHATSAPP_NUMBER = "5579998080301"; // TROQUE pelo número oficial.
-const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/edson.cdiasfilho";
+const ERALIS_WHATSAPP_NUMBER = "5579998080301";
+const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/edson.cdiasfilho/";
 
 function eralisGetCustomer() {
-  try { return JSON.parse(localStorage.getItem("eralisCustomer")) || null; }
-  catch { return null; }
+  try {
+    return JSON.parse(localStorage.getItem("eralisCustomer")) || null;
+  } catch {
+    return null;
+  }
 }
 
 function eralisRegistered() {
@@ -452,148 +455,155 @@ function eralisRegistered() {
   return !!(c && c.name?.trim() && c.email?.trim() && c.phone?.trim());
 }
 
-function eralisItem(item) {
-  if (!item) return null;
-  return {
-    name: String(item.name ?? item.title ?? item.productName ?? item.nome ?? "Produto"),
-    quantity: Number(item.quantity ?? item.qty ?? item.quantidade ?? item.qtd ?? 1) || 1,
-    price: Number(item.price ?? item.unitPrice ?? item.valor ?? item.preco ?? 0) || 0
-  };
-}
-
-function eralisCart() {
-  const globals = [window.cart, window.cartItems, window.shoppingCart, window.carrinho, window.cartProducts];
-  for (const value of globals) {
-    if (Array.isArray(value) && value.length) return value.map(eralisItem).filter(Boolean);
+function eralisBuildOrderMessage() {
+  if (!eralisRegistered()) {
+    throw new Error("Para finalizar o pedido, faça seu cadastro na ERALIS.");
   }
 
-  const keys = ["cart","carrinho","eralisCart","eralis_cart","shoppingCart","cartItems"];
-  for (const key of keys) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) continue;
-      const parsed = JSON.parse(raw);
-      const list = Array.isArray(parsed) ? parsed : (parsed?.items || parsed?.products || parsed?.cart || []);
-      if (Array.isArray(list) && list.length) return list.map(eralisItem).filter(Boolean);
-    } catch {}
+  if (!cart.length) {
+    throw new Error("Seu carrinho está vazio.");
   }
-  return [];
-}
 
-function eralisMoney(v) {
-  return Number(v || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
-}
-
-function eralisBuildMessage() {
-  const c = eralisGetCustomer();
-  const items = eralisCart();
-  if (!c) throw new Error("Para finalizar o pedido, faça seu cadastro na ERALIS.");
-  if (!items.length) throw new Error("Seu carrinho está vazio.");
-
+  const customer = eralisGetCustomer();
   let total = 0;
+
   const lines = [
     "Olá! Gostaria de fazer um pedido na ERALIS.",
     "",
-    `Cliente: ${c.name}`,
-    `WhatsApp: ${c.phone}`,
-    `E-mail: ${c.email}`,
+    `Cliente: ${customer.name}`,
+    `WhatsApp: ${customer.phone}`,
+    `E-mail: ${customer.email}`,
     ""
   ];
 
-  items.forEach(item => {
-    const subtotal = item.price * item.quantity;
+  cart.forEach(item => {
+    const product = products.find(p => p.id === item.id);
+    if (!product) return;
+
+    const subtotal = product.price * item.qty;
     total += subtotal;
-    lines.push(`• ${item.name}`);
-    lines.push(`  ${item.quantity}x ${eralisMoney(item.price)} = ${eralisMoney(subtotal)}`);
+
+    lines.push(`• ${product.name}`);
+    lines.push(`  ${item.qty}x ${money(product.price)} = ${money(subtotal)}`);
     lines.push("");
   });
 
-  lines.push(`TOTAL: ${eralisMoney(total)}`);
+  lines.push(`TOTAL: ${money(total)}`);
   lines.push("");
   lines.push("Aguardo as orientações para finalizar o pedido. Obrigado!");
+
   return lines.join("\n");
 }
 
-const orderOverlay = document.getElementById("orderMessageOverlay");
-const orderText = document.getElementById("orderMessageText");
-const orderHelp = document.getElementById("orderMessageHelp");
-const closeOrder = document.getElementById("orderMessageClose");
-const copyOrder = document.getElementById("copyOrderMessage");
-const openWhatsApp = document.getElementById("continueWhatsapp");
-const openInstagram = document.getElementById("continueInstagram");
+function eralisOpenInstagram() {
+  let message;
 
-function eralisShowCheckout(channel) {
-  let msg;
-  try { msg = eralisBuildMessage(); }
-  catch (e) { alert(e.message); return; }
+  try {
+    message = eralisBuildOrderMessage();
+  } catch (error) {
+    alert(error.message);
+    return;
+  }
 
-  orderText.value = msg;
-  orderOverlay.hidden = false;
-  openWhatsApp.hidden = channel !== "whatsapp";
-  openInstagram.hidden = channel !== "instagram";
+  // Abre o Instagram imediatamente, evitando bloqueio de popup.
+  const instagramWindow = window.open(
+    ERALIS_INSTAGRAM_URL,
+    "_blank",
+    "noopener,noreferrer"
+  );
 
-  orderHelp.textContent = channel === "whatsapp"
-    ? "A mensagem já está pronta. Clique em “Abrir WhatsApp” para enviá-la à ERALIS."
-    : "A mensagem será copiada. Abra o Instagram e cole-a no Direct da ERALIS.";
+  // Copia a mensagem para o cliente colar no Direct.
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(message).catch(() => {});
+  } else {
+    const temporary = document.createElement("textarea");
+    temporary.value = message;
+    temporary.style.position = "fixed";
+    temporary.style.left = "-9999px";
+    document.body.appendChild(temporary);
+    temporary.select();
 
-  orderText.focus();
-  orderText.select();
+    try {
+      document.execCommand("copy");
+    } catch {}
+
+    temporary.remove();
+  }
+
+  if (!instagramWindow) {
+    alert(
+      "O navegador bloqueou a abertura do Instagram. " +
+      "Permita pop-ups para este site e tente novamente."
+    );
+  }
 }
 
-document.getElementById("checkoutButton")?.addEventListener("click", e => {
-  e.preventDefault();
-  if (!eralisRegistered()) {
-    alert("Para finalizar o pedido, faça seu cadastro na ERALIS.");
-    document.getElementById("cadastro")?.scrollIntoView({behavior:"smooth"});
-    return;
-  }
-  eralisShowCheckout("whatsapp");
-});
+function eralisOpenWhatsApp() {
+  let message;
 
-document.getElementById("instagramCheckout")?.addEventListener("click", e => {
-  e.preventDefault();
-  if (!eralisRegistered()) {
-    alert("Para finalizar o pedido, faça seu cadastro na ERALIS.");
-    document.getElementById("cadastro")?.scrollIntoView({behavior:"smooth"});
-    return;
-  }
-  eralisShowCheckout("instagram");
-});
-
-openWhatsApp?.addEventListener("click", () => {
-  const number = ERALIS_WHATSAPP_NUMBER.replace(/\D/g, "");
-  if (!number || number === "5579998080301") {
-    alert("Configure o número oficial do WhatsApp da ERALIS no script.js.");
-    return;
-  }
-  window.open(`https://wa.me/${number}?text=${encodeURIComponent(orderText.value)}`, "_blank");
-});
-
-openInstagram?.addEventListener("click", () => {
-  const done = () => window.open(ERALIS_INSTAGRAM_URL, "_blank");
-  if (navigator.clipboard?.writeText) {
-    navigator.clipboard.writeText(orderText.value).then(done).catch(done);
-  } else {
-    orderText.focus();
-    orderText.select();
-    document.execCommand("copy");
-    done();
-  }
-});
-
-copyOrder?.addEventListener("click", async () => {
   try {
-    await navigator.clipboard.writeText(orderText.value);
-    copyOrder.textContent = "COPIADO ✓";
-    setTimeout(() => copyOrder.textContent = "COPIAR MENSAGEM", 1800);
-  } catch {
-    orderText.focus();
-    orderText.select();
-    document.execCommand("copy");
+    message = eralisBuildOrderMessage();
+  } catch (error) {
+    alert(error.message);
+    return;
   }
-});
 
-closeOrder?.addEventListener("click", () => orderOverlay.hidden = true);
-orderOverlay?.addEventListener("click", e => {
-  if (e.target === orderOverlay) orderOverlay.hidden = true;
-});
+  const number = ERALIS_WHATSAPP_NUMBER.replace(/\D/g, "");
+
+  window.open(
+    `https://wa.me/${number}?text=${encodeURIComponent(message)}`,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+// Instagram — por ID, classe ou atributo.
+document.addEventListener("click", event => {
+  const target = event.target.closest(
+    "#instagramCheckout, .checkout-instagram, [data-instagram-checkout]"
+  );
+
+  if (!target) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+  eralisOpenInstagram();
+}, true);
+
+// WhatsApp — por ID ou atributo.
+document.addEventListener("click", event => {
+  const target = event.target.closest(
+    "#checkoutButton, [data-whatsapp-checkout]"
+  );
+
+  if (!target) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+  eralisOpenWhatsApp();
+}, true);
+
+// Fallback pelo texto do botão.
+document.addEventListener("click", event => {
+  const target = event.target.closest("a, button");
+  if (!target) return;
+
+  const text = (target.textContent || "").trim().toLowerCase();
+
+  if (text.includes("finalizar pelo instagram")) {
+    event.preventDefault();
+    event.stopPropagation();
+    eralisOpenInstagram();
+    return;
+  }
+
+  if (
+    text.includes("finalizar pelo whatsapp") ||
+    text.includes("finalizar no whatsapp")
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+    eralisOpenWhatsApp();
+  }
+}, true);
+
