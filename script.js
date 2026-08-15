@@ -439,8 +439,8 @@ document.addEventListener("click", function (event) {
    ERALIS — RESUMO AUTOMÁTICO DO PEDIDO
    ========================================================= */
 
-const ERALIS_WHATSAPP_NUMBER = "5579999999999"; // TROQUE pelo número oficial.
-const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/eralis.oficial/";
+const ERALIS_WHATSAPP_NUMBER = "5579998080301"; // TROQUE pelo número oficial.
+const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/edson.cdiasfilho";
 
 function eralisGetCustomer() {
   try { return JSON.parse(localStorage.getItem("eralisCustomer")) || null; }
@@ -562,7 +562,7 @@ document.getElementById("instagramCheckout")?.addEventListener("click", e => {
 
 openWhatsApp?.addEventListener("click", () => {
   const number = ERALIS_WHATSAPP_NUMBER.replace(/\D/g, "");
-  if (!number || number === "5579999999999") {
+  if (!number || number === "5579998080301") {
     alert("Configure o número oficial do WhatsApp da ERALIS no script.js.");
     return;
   }
