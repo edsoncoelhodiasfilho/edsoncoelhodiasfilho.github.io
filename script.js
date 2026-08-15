@@ -451,3 +451,21 @@ document.addEventListener("click", function (event) {
   clearAnonymousCart();
   window.addEventListener("pageshow", clearAnonymousCart);
 })();
+
+
+/* =========================================================
+   ERALIS — COMO FUNCIONA
+   ========================================================= */
+
+const howItWorksButton = document.getElementById("howItWorksButton");
+const howItWorksContent = document.getElementById("howItWorksContent");
+
+howItWorksButton?.addEventListener("click", () => {
+  const isOpen = !howItWorksContent.hidden;
+
+  howItWorksContent.hidden = isOpen;
+  howItWorksButton.setAttribute("aria-expanded", String(!isOpen));
+  howItWorksButton.textContent = isOpen
+    ? "COMO FUNCIONA →"
+    : "OCULTAR ↑";
+});
