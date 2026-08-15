@@ -1,12 +1,11 @@
-# ERALIS — cadastro final corrigido
+# ERALIS — WhatsApp + Instagram
 
-Correções:
-- Telefone: celular `(79) 99999-9999`; fixo `(79) 9999-9999`.
-- Campo aceita corretamente os 11 dígitos do celular.
-- A seção de cadastro foi reconstruída para evitar HTML malformado.
-- EDITAR e APAGAR DADOS ficam dentro do mesmo quadro visual do cadastro, ocupando a linha inferior do card.
-- CEP usa máscara e consulta ViaCEP.
-- Login automático após cadastro.
-- Nome do usuário no topo.
-- Botão SAIR.
-- Layout responsivo.
+Adicionado um botão de finalização pelo Instagram ao lado do botão de WhatsApp.
+
+O botão abre o perfil oficial configurado no código:
+`https://www.instagram.com/eralis.oficial/`
+
+IMPORTANTE:
+O Instagram não funciona como um checkout de pagamento equivalente ao WhatsApp. Nesta versão, o botão abre o perfil para o cliente iniciar o contato por Direct.
+
+Antes de publicar, substitua `ERALIS_INSTAGRAM_URL` em `script.js` pelo endereço real do Instagram da ERALIS.

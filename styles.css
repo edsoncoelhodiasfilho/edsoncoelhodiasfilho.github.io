@@ -342,3 +342,29 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
     justify-content:center !important;
   }
 }
+
+/* Finalização pelo Instagram */
+.checkout-instagram{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:1px solid rgba(225,48,108,.65);
+  background:linear-gradient(135deg,#833ab4,#e1306c 55%,#f77737);
+  color:#fff;
+  box-shadow:0 8px 22px rgba(225,48,108,.18);
+}
+.checkout-instagram:hover{
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px rgba(225,48,108,.28);
+}
+.instagram-icon{
+  font-size:1.05rem;
+  line-height:1;
+}
+@media(max-width:600px){
+  .checkout-instagram{
+    width:100%;
+  }
+}

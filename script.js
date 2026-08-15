@@ -340,3 +340,21 @@ accountLink?.addEventListener("click", event => {
 });
 
 renderAccount();
+
+/* =========================================================
+   ERALIS — FINALIZAÇÃO PELO INSTAGRAM
+   =========================================================
+   Substitua pelo perfil oficial da ERALIS.
+*/
+const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/eralis.oficial/";
+
+const instagramCheckout = document.getElementById("instagramCheckout");
+
+instagramCheckout?.addEventListener("click", event => {
+  const account = getAccount?.();
+  if (!account) return;
+
+  // O Instagram não oferece um checkout por mensagem equivalente
+  // ao WhatsApp; o botão abre o perfil para o cliente iniciar o contato.
+  instagramCheckout.href = ERALIS_INSTAGRAM_URL;
+});
