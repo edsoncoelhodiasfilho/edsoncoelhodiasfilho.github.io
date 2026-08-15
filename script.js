@@ -57,7 +57,7 @@ function closeCart(){document.getElementById("cartOverlay").hidden=true}
 
 function checkout(){
   if(!cart.length){alert("Adicione um produto ao carrinho.");return}
-  const phone="5579999999999"; // ALTERE PARA O WHATSAPP DA ERALIS
+  const phone="5579998080301"; // ALTERE PARA O WHATSAPP DA ERALIS
   const lines=cart.map(x=>{
     const p=products.find(y=>y.id===x.id);
     return `• ${p.name} — ${x.qty} un. — ${money(p.price*x.qty)}`;
@@ -72,7 +72,7 @@ document.getElementById("closeCart").onclick=closeCart;
 document.getElementById("checkoutButton").onclick=checkout;
 document.getElementById("cartOverlay").addEventListener("click",e=>{if(e.target.id==="cartOverlay")closeCart()});
 
-const whatsapp="5579999999999"; // ALTERE PARA O WHATSAPP DA ERALIS
+const whatsapp="5579998080301"; // ALTERE PARA O WHATSAPP DA ERALIS
 document.getElementById("whatsappLink").href=`https://wa.me/${whatsapp}?text=${encodeURIComponent("Olá! Quero conhecer os produtos da ERALIS.")}`;
 document.getElementById("year").textContent=new Date().getFullYear();
 
