@@ -1,10 +1,8 @@
-# ERALIS — Como Funciona
+# ERALIS — logotipo oficial
 
-A seção Como Funciona foi ajustada para ter o mesmo estilo visual do quadro Sobre.
+O logotipo enviado foi incorporado ao site como:
+`assets/Logo_eralis.png`
 
-Layout desktop:
-- esquerda: título "Como funciona";
-- direita: texto explicativo sobre pedidos e pagamentos.
+A navegação passa a utilizar a imagem oficial da ERALIS, mantendo a responsividade no desktop e mobile.
 
-O botão de expansão foi removido.
-A seção permanece responsiva no mobile.
+A versão utilizada como base é a última versão do site enviada anteriormente, incluindo a seção "Como Funciona".
