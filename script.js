@@ -1,3 +1,36 @@
+
+/* =========================================================
+   ERALIS — CARRINHO EXIGE CADASTRO
+   ========================================================= */
+
+function eralisUserIsRegistered() {
+  try {
+    const account = JSON.parse(localStorage.getItem("eralisCustomer"));
+    return !!(
+      account &&
+      typeof account.name === "string" && account.name.trim() &&
+      typeof account.email === "string" && account.email.trim() &&
+      typeof account.phone === "string" && account.phone.trim()
+    );
+  } catch {
+    return false;
+  }
+}
+
+function eralisRequireRegistration() {
+  if (eralisUserIsRegistered()) return true;
+
+  const cadastro = document.getElementById("cadastro");
+
+  alert("Para adicionar produtos ao carrinho, faça seu cadastro na ERALIS.");
+
+  if (cadastro) {
+    cadastro.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  return false;
+}
+
 const products = [
   {id:1,name:"Torres de Eralis",price:89.90,tag:"ESTRATÉGIA",tagColor:"#ffc928",visual:"♜",glow:"rgba(226,155,64,.35)",desc:"Construa, proteja e domine o tabuleiro."},
   {id:2,name:"Caminhos da Lua",price:69.90,tag:"FAMÍLIA",tagColor:"#2d9cff",visual:"♟",glow:"rgba(53,165,255,.35)",desc:"Explore, colete e vença desafios."},
@@ -358,3 +391,63 @@ instagramCheckout?.addEventListener("click", event => {
   // ao WhatsApp; o botão abre o perfil para o cliente iniciar o contato.
   instagramCheckout.href = ERALIS_INSTAGRAM_URL;
 });
+
+
+/*
+ * Intercept any "Adicionar ao carrinho" action before the existing handler.
+ * If the customer is not registered, stop the click and send them to cadastro.
+ */
+document.addEventListener("click", function (event) {
+  const target = event.target.closest(
+    '[data-action="add-to-cart"], [data-add-to-cart], .add-to-cart, .btn-add-cart, .add-cart, button'
+  );
+
+  if (!target) return;
+
+  const text = (target.textContent || "").trim().toLowerCase();
+  const isAddToCart =
+    target.matches('[data-action="add-to-cart"], [data-add-to-cart], .add-to-cart, .btn-add-cart, .add-cart') ||
+    text.includes("adicionar ao carrinho") ||
+    text === "adicionar" ||
+    text.includes("comprar");
+
+  if (!isAddToCart) return;
+
+  if (!eralisRequireRegistration()) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+}, true);
+
+
+/* Segurança adicional: impede persistência de carrinho sem cadastro. */
+(function protectCartStorage() {
+  const originalSetItem = localStorage.setItem.bind(localStorage);
+  const originalRemoveItem = localStorage.removeItem.bind(localStorage);
+
+  const isCartKey = key => {
+    const k = String(key || "").toLowerCase();
+    return k.includes("cart") || k.includes("carrinho");
+  };
+
+  localStorage.setItem = function(key, value) {
+    if (isCartKey(key) && !eralisUserIsRegistered()) {
+      return;
+    }
+    return originalSetItem(key, value);
+  };
+
+  function clearAnonymousCart() {
+    if (eralisUserIsRegistered()) return;
+
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (isCartKey(key)) keys.push(key);
+    }
+    keys.forEach(key => originalRemoveItem(key));
+  }
+
+  clearAnonymousCart();
+  window.addEventListener("pageshow", clearAnonymousCart);
+})();

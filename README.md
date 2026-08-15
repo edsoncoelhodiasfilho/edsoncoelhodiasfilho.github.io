@@ -1,7 +1,12 @@
-# ERALIS — checkout lado a lado
+# ERALIS — carrinho condicionado ao cadastro
 
-Os botões FINALIZAR NO WHATSAPP e FINALIZAR PELO INSTAGRAM ficam agora lado a lado, pequenos e compactos.
+Esta versão foi construída diretamente a partir do site enviado pelo usuário.
 
-- WhatsApp: verde.
-- Instagram: mantém a cor original.
-- Mobile: ambos continuam lado a lado com tamanho reduzido.
+Regra implementada:
+- visitante sem cadastro: não consegue adicionar produtos ao carrinho;
+- ao tentar adicionar, recebe orientação para fazer o cadastro e é levado à seção "Minha conta";
+- usuário cadastrado: pode adicionar normalmente;
+- carrinho não é persistido no localStorage enquanto não houver cadastro;
+- qualquer carrinho anônimo existente é removido ao carregar a página.
+
+O restante dos arquivos e alterações manuais existentes no site foram preservados.

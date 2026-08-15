@@ -404,3 +404,10 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
     font-size:.55rem !important;
   }
 }
+
+/* Cadastro obrigatório para adicionar ao carrinho */
+.cart-registration-note{
+  font-size:.72rem;
+  color:#9fb0ca;
+  margin-top:8px;
+}
