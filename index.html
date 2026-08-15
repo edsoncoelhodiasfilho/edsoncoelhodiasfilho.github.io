@@ -23,7 +23,7 @@
     <a href="#contato">Contato</a>
   </nav>
 
-  <div class="nav-actions"><a class="account-button" id="accountLink" href="#cadastro">👤 <span id="accountLabel">Login</span></a><button class="logout-button" id="logoutButton" type="button" hidden>SAIR</button>
+  <div class="nav-actions"><a class="account-button" id="accountLink" href="#cadastro">👤 <span id="accountLabel">Meu cadastro</span></a><button class="logout-button" id="logoutButton" type="button" hidden>SAIR</button>
     <button class="icon-button" aria-label="Pesquisar">⌕</button>
     <button class="cart-button" id="openCart" aria-label="Abrir carrinho">
       🛒 <span id="cartCount">0</span>
@@ -251,21 +251,5 @@
 </div>
 
 <script src="script.js"></script>
-
-<div class="order-message-overlay" id="orderMessageOverlay" hidden>
-  <div class="order-message-modal" role="dialog" aria-modal="true" aria-labelledby="orderMessageTitle">
-    <button class="order-message-close" id="orderMessageClose" type="button" aria-label="Fechar">×</button>
-    <p class="kicker">SEU PEDIDO</p>
-    <h3 id="orderMessageTitle">Confira sua mensagem</h3>
-    <p class="order-message-help" id="orderMessageHelp"></p>
-    <textarea id="orderMessageText" readonly></textarea>
-    <div class="order-message-actions">
-      <button class="btn btn-yellow" id="copyOrderMessage" type="button">COPIAR MENSAGEM</button>
-      <button class="btn btn-outline" id="continueWhatsapp" type="button" hidden>ABRIR WHATSAPP</button>
-      <button class="btn btn-outline" id="continueInstagram" type="button" hidden>ABRIR INSTAGRAM</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
