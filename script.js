@@ -440,19 +440,18 @@ document.addEventListener("click", function (event) {
    ========================================================= */
 
 const ERALIS_WHATSAPP_NUMBER = "5579998080301";
+const ERALIS_INSTAGRAM_USERNAME = "edson.cdfilho";
 
 /*
- * Instagram da ERALIS.
+ * O Instagram não oferece, para um site estático comum,
+ * um link web confiável que preencha automaticamente o
+ * campo do Direct com uma mensagem personalizada.
  *
- * ATENÇÃO:
- * O Instagram não fornece um link web confiável para abrir um
- * Direct já preenchido com uma mensagem personalizada.
- *
- * O link ig.me/m/usuario abre a conversa diretamente.
- * A mensagem do pedido é copiada para o clipboard para que
- * o cliente possa colá-la no Direct.
+ * Portanto:
+ * 1. copiamos a mensagem completa do pedido;
+ * 2. abrimos UMA única vez o Direct da conta;
+ * 3. o cliente cola a mensagem no Direct.
  */
-const ERALIS_INSTAGRAM_USERNAME = "edson.cdiasfilho";
 const ERALIS_INSTAGRAM_DM_URL =
   `https://ig.me/m/${ERALIS_INSTAGRAM_USERNAME}`;
 
@@ -525,10 +524,6 @@ function eralisBuildOrderMessage() {
   return lines.join("\n");
 }
 
-/*
- * Copia a mensagem de forma síncrona quando possível.
- * Isso evita depender de uma Promise antes de navegar.
- */
 function eralisCopyOrderMessage(message) {
   try {
     const textarea = document.createElement("textarea");
@@ -550,11 +545,6 @@ function eralisCopyOrderMessage(message) {
     if (copied) return true;
   } catch {}
 
-  /*
-   * Fallback moderno.
-   * Não esperamos a Promise, pois a navegação para o Instagram
-   * deve acontecer imediatamente.
-   */
   try {
     navigator.clipboard?.writeText(message);
   } catch {}
@@ -565,15 +555,10 @@ function eralisCopyOrderMessage(message) {
 /*
  * FINALIZAR PELO INSTAGRAM
  *
- * IMPORTANTE:
- * - não usa window.open();
- * - não abre uma segunda aba;
- * - não testa se a aba foi bloqueada;
- * - não usa instagram.com/perfil;
- * - vai diretamente para ig.me/m/usuario.
- *
- * A navegação ocorre na própria aba para evitar completamente
- * o problema de popup bloqueado.
+ * Não usa window.open(), portanto:
+ * - não abre duas abas;
+ * - não dispara bloqueador de popup;
+ * - não mostra mensagem de popup bloqueado.
  */
 function eralisOpenInstagram() {
   let message;
@@ -585,11 +570,10 @@ function eralisOpenInstagram() {
     return;
   }
 
+  // Copia o pedido antes de sair da página.
   eralisCopyOrderMessage(message);
 
-  /*
-   * Uma única navegação.
-   */
+  // Uma única navegação para o Direct da conta correta.
   window.location.href = ERALIS_INSTAGRAM_DM_URL;
 }
 
@@ -613,12 +597,7 @@ function eralisOpenWhatsApp() {
 }
 
 /*
- * Instagram:
- * usamos CAPTURE=true para interceptar o clique antes de
- * qualquer onclick/href antigo do HTML.
- *
- * stopImmediatePropagation() impede que outro listener
- * abra uma segunda aba.
+ * Intercepta o botão do Instagram antes do href antigo.
  */
 document.addEventListener(
   "click",
@@ -638,7 +617,7 @@ document.addEventListener(
 );
 
 /*
- * Fallback para botão sem ID/classe específica.
+ * Fallback para o botão caso ele não tenha ID/classe específica.
  */
 document.addEventListener(
   "click",
@@ -669,9 +648,7 @@ document.addEventListener(
 );
 
 /*
- * WhatsApp:
- * também interceptamos o botão para usar a mensagem completa
- * com os itens e total.
+ * Intercepta o botão do WhatsApp.
  */
 document.addEventListener(
   "click",
