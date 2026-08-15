@@ -1,12 +1,11 @@
-# ERALIS — carrinho condicionado ao cadastro
+# ERALIS — Instagram corrigido
 
-Esta versão foi construída diretamente a partir do site enviado pelo usuário.
+O botão de Instagram foi corrigido para apontar diretamente para:
 
-Regra implementada:
-- visitante sem cadastro: não consegue adicionar produtos ao carrinho;
-- ao tentar adicionar, recebe orientação para fazer o cadastro e é levado à seção "Minha conta";
-- usuário cadastrado: pode adicionar normalmente;
-- carrinho não é persistido no localStorage enquanto não houver cadastro;
-- qualquer carrinho anônimo existente é removido ao carregar a página.
+https://www.instagram.com/eralis.oficial/
 
-O restante dos arquivos e alterações manuais existentes no site foram preservados.
+A URL fica definida diretamente no HTML e também é reforçada pelo JavaScript.
+O botão abre o Instagram em uma nova aba e não redireciona para o site ERALIS.
+
+Se o perfil real da marca tiver outro nome, altere `ERALIS_INSTAGRAM_URL` em `script.js`
+e o `href` do botão em `index.html`.

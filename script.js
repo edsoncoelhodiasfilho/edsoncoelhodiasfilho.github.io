@@ -376,22 +376,22 @@ renderAccount();
 
 /* =========================================================
    ERALIS — FINALIZAÇÃO PELO INSTAGRAM
-   =========================================================
-   Substitua pelo perfil oficial da ERALIS.
-*/
-const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/edson.cdiasfilho/";
+   ========================================================= */
 
+const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/eralis.oficial/";
 const instagramCheckout = document.getElementById("instagramCheckout");
 
-instagramCheckout?.addEventListener("click", event => {
-  const account = getAccount?.();
-  if (!account) return;
+if (instagramCheckout) {
+  instagramCheckout.setAttribute("href", ERALIS_INSTAGRAM_URL);
+  instagramCheckout.setAttribute("target", "_blank");
+  instagramCheckout.setAttribute("rel", "noopener noreferrer");
 
-  // O Instagram não oferece um checkout por mensagem equivalente
-  // ao WhatsApp; o botão abre o perfil para o cliente iniciar o contato.
-  instagramCheckout.href = ERALIS_INSTAGRAM_URL;
-});
-
+  instagramCheckout.addEventListener("click", function(event) {
+    // O link é deliberadamente direto para o Instagram.
+    // Não alteramos window.location e não redirecionamos para a ERALIS.
+    this.href = ERALIS_INSTAGRAM_URL;
+  });
+}
 
 /*
  * Intercept any "Adicionar ao carrinho" action before the existing handler.
