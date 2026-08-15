@@ -444,21 +444,15 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
 }
 
 
-/* Espaçamento elegante ao navegar pelo menu para Minha Conta.
-   Mantém a seção abaixo da navbar sticky, sem ficar colada ao menu. */
-.account-section{
-  scroll-margin-top:105px;
-}
-
 /* =========================================================
    ERALIS — ESPAÇAMENTO DAS ÂNCORAS DO MENU
    =========================================================
-   Ao clicar em Início, Produtos, Sobre ou Meu Cadastro,
-   o título da seção não fica colado à barra superior.
+   A navbar é sticky (top:14px + 64px de altura).
+   Ao navegar por Produtos, Sobre ou Meu Cadastro, a seção
+   fica posicionada abaixo da navbar com um respiro visual.
 */
 #produtos,
 #sobre,
-#cadastro,
-#inicio {
-  scroll-margin-top: 28px;
+#cadastro {
+  scroll-margin-top: 100px;
 }
