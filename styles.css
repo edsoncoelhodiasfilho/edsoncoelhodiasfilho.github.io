@@ -368,3 +368,39 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
     width:100%;
   }
 }
+
+/* WhatsApp + Instagram: pequenos e lado a lado */
+.checkout-actions{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:100%;
+  margin-top:8px;
+}
+.checkout-actions .btn{
+  width:auto !important;
+  min-width:0 !important;
+  height:36px !important;
+  padding:0 12px !important;
+  border-radius:8px !important;
+  font-size:.62rem !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+.checkout-actions #checkoutButton{
+  background:#25D366 !important;
+  border-color:#25D366 !important;
+  color:#062713 !important;
+}
+.checkout-actions .checkout-instagram{
+  color:#fff !important;
+}
+@media(max-width:420px){
+  .checkout-actions{gap:6px}
+  .checkout-actions .btn{
+    padding:0 9px !important;
+    font-size:.55rem !important;
+  }
+}

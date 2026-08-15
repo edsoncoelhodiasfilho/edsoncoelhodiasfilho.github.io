@@ -1,11 +1,7 @@
-# ERALIS — WhatsApp + Instagram
+# ERALIS — checkout lado a lado
 
-Adicionado um botão de finalização pelo Instagram ao lado do botão de WhatsApp.
+Os botões FINALIZAR NO WHATSAPP e FINALIZAR PELO INSTAGRAM ficam agora lado a lado, pequenos e compactos.
 
-O botão abre o perfil oficial configurado no código:
-`https://www.instagram.com/eralis.oficial/`
-
-IMPORTANTE:
-O Instagram não funciona como um checkout de pagamento equivalente ao WhatsApp. Nesta versão, o botão abre o perfil para o cliente iniciar o contato por Direct.
-
-Antes de publicar, substitua `ERALIS_INSTAGRAM_URL` em `script.js` pelo endereço real do Instagram da ERALIS.
+- WhatsApp: verde.
+- Instagram: mantém a cor original.
+- Mobile: ambos continuam lado a lado com tamanho reduzido.
