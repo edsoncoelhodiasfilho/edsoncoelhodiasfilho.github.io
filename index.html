@@ -135,35 +135,64 @@
     <div class="account-copy">
       <p class="kicker">MINHA CONTA</p>
       <h2>Cadastre-se na ERALIS.</h2>
-      <p>Salve seus dados para agilizar futuros pedidos. Nesta versão, o cadastro funciona sem banco de dados.</p>
-      
+      <p>Salve seus dados para agilizar futuros pedidos.</p>
     </div>
+
     <form id="registerForm" class="register-form">
       <div class="form-row">
-        <label>Nome completo<input id="regName" required autocomplete="name" placeholder="Seu nome"></label>
-        <label>WhatsApp<input id="regPhone" required autocomplete="tel" inputmode="tel" maxlength="15" placeholder="(79) 99999-9999"></label>
+        <label>Nome completo
+          <input id="regName" required autocomplete="name" placeholder="Seu nome">
+        </label>
+        <label>WhatsApp
+          <input id="regPhone" required autocomplete="tel" inputmode="tel"
+                 maxlength="15" placeholder="(79) 99999-9999">
+        </label>
       </div>
-      <label>E-mail<input id="regEmail" type="email" required autocomplete="email" placeholder="voce@email.com"></label>
+
+      <label>E-mail
+        <input id="regEmail" type="email" required autocomplete="email"
+               placeholder="voce@email.com">
+      </label>
+
       <div class="form-row">
-        <label>CEP<input id="regCep" autocomplete="postal-code" inputmode="numeric" maxlength="9" placeholder="00000-000"></label>
-        <label>Cidade/UF<input id="regCity" autocomplete="address-level2" placeholder="Cidade / UF"></label>
+        <label>CEP
+          <input id="regCep" autocomplete="postal-code" inputmode="numeric"
+                 maxlength="9" placeholder="00000-000">
+        </label>
+        <label>Cidade/UF
+          <input id="regCity" autocomplete="address-level2" placeholder="Cidade / UF">
+        </label>
       </div>
-      <label>Endereço <span class="optional-label">(Complete se necessário)</span><input id="regAddress" autocomplete="street-address" placeholder="Rua, número, complemento"></label>
-<label>Bairro<input id="regNeighborhood" autocomplete="address-level3" placeholder="Bairro"></label>
-      <label class="check-line"><input id="regMarketing" type="checkbox"> Quero receber novidades da ERALIS.</label>
+
+      <label>Endereço <span class="optional-label">(Complete se necessário)</span>
+        <input id="regAddress" autocomplete="street-address"
+               placeholder="Rua, número, complemento">
+      </label>
+
+      <label>Bairro
+        <input id="regNeighborhood" autocomplete="address-level3" placeholder="Bairro">
+      </label>
+
+      <label class="check-line">
+        <input id="regMarketing" type="checkbox">
+        Quero receber novidades da ERALIS.
+      </label>
+
       <button class="btn btn-yellow full" type="submit">CRIAR CADASTRO →</button>
       <p id="registerMessage" class="form-message"></p>
     </form>
 
+    <!-- Este bloco faz parte do MESMO account-card -->
     <div class="account-preview" id="accountPreview" hidden>
-      <div>
+      <div class="account-summary">
         <p class="kicker">CADASTRO LOCAL</p>
         <h3 id="accountGreeting"></h3>
         <p id="accountDetails"></p>
       </div>
+
       <div class="account-actions">
-        <button class="btn btn-outline" id="editAccount">EDITAR</button>
-        <button class="btn btn-danger" id="deleteAccount">APAGAR DADOS</button>
+        <button class="btn btn-outline" id="editAccount" type="button">EDITAR</button>
+        <button class="btn btn-danger" id="deleteAccount" type="button">APAGAR DADOS</button>
       </div>
     </div>
   </div>

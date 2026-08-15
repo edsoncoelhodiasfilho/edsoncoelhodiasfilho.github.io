@@ -280,3 +280,65 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
   .account-card{grid-template-columns:1fr}
   .account-card .account-preview{grid-column:1}
 }
+
+/* =========================================================
+   ERALIS — CADASTRO: LAYOUT FINAL
+   ========================================================= */
+
+.account-card{
+  display:grid !important;
+  grid-template-columns:minmax(0, .85fr) minmax(0, 1.15fr) !important;
+  column-gap:45px !important;
+  row-gap:25px !important;
+  align-items:start !important;
+}
+
+.account-card .account-preview{
+  grid-column:1 / -1 !important;
+  width:100% !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+  padding:20px 24px !important;
+  border-radius:16px !important;
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  gap:20px !important;
+}
+
+.account-summary{
+  min-width:0;
+}
+
+.account-actions{
+  display:flex !important;
+  flex-shrink:0 !important;
+  gap:9px !important;
+}
+
+.optional-label{
+  color:#7f91ad;
+  font-size:.68rem;
+  font-weight:500;
+}
+
+@media(max-width:760px){
+  .account-card{
+    grid-template-columns:1fr !important;
+  }
+
+  .account-card .account-preview{
+    grid-column:1 !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+  }
+
+  .account-actions{
+    width:100% !important;
+  }
+
+  .account-actions .btn{
+    flex:1 !important;
+    justify-content:center !important;
+  }
+}

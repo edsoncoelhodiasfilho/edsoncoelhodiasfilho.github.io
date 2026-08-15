@@ -121,10 +121,9 @@ function animateOrbits(now){
 requestAnimationFrame(animateOrbits);
 
 
+
 /* =========================================================
    ERALIS — CADASTRO LOCAL + SESSÃO
-   CEP: ViaCEP
-   Telefone: (79) 9999-9999
    ========================================================= */
 
 const ACCOUNT_KEY = "eralisCustomer";
@@ -133,121 +132,160 @@ const SESSION_KEY = "eralisLoggedIn";
 const form = document.getElementById("registerForm");
 const preview = document.getElementById("accountPreview");
 const message = document.getElementById("registerMessage");
-const greeting = document.getElementById("accountGreeting");
-const details = document.getElementById("accountDetails");
+const accountGreeting = document.getElementById("accountGreeting");
+const accountDetails = document.getElementById("accountDetails");
 const accountLabel = document.getElementById("accountLabel");
 const accountLink = document.getElementById("accountLink");
 const logoutButton = document.getElementById("logoutButton");
+
 const phoneInput = document.getElementById("regPhone");
 const cepInput = document.getElementById("regCep");
 const addressInput = document.getElementById("regAddress");
 const neighborhoodInput = document.getElementById("regNeighborhood");
+const cityInput = document.getElementById("regCity");
 
 function getAccount() {
-  try { return JSON.parse(localStorage.getItem(ACCOUNT_KEY)); }
-  catch { return null; }
+  try {
+    return JSON.parse(localStorage.getItem(ACCOUNT_KEY));
+  } catch {
+    return null;
+  }
 }
-function isLoggedIn() {
+
+function loggedIn() {
   return localStorage.getItem(SESSION_KEY) === "true" && !!getAccount();
 }
-function esc(v) {
-  return String(v || "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
   }[c]));
 }
-function maskPhone(value) {
-  const d = value.replace(/\\D/g, "").slice(0, 11);
-  if (!d) return "";
-  if (d.length <= 2) return `(${d}`;
-  if (d.length <= 6) return `(${d.slice(0,2)}) ${d.slice(2)}`;
-  if (d.length <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6,10)}`;
-  return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7,11)}`;
-}
-function maskCep(value) {
-  const d = value.replace(/\D/g, "").slice(0,8);
-  return d.length > 5 ? `${d.slice(0,5)}-${d.slice(5)}` : d;
+
+/*
+ * Telefone brasileiro:
+ * 10 dígitos -> (79) 9999-9999
+ * 11 dígitos -> (79) 99999-9999
+ *
+ * A função nunca adiciona números e nunca perde o último dígito.
+ */
+function formatPhone(value) {
+  const digits = String(value || "").replace(/\D/g, "").slice(0, 11);
+
+  if (digits.length === 0) return "";
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+
+  const ddd = digits.slice(0, 2);
+  const number = digits.slice(2);
+
+  if (number.length <= 4) {
+    return `(${ddd}) ${number}`;
+  }
+
+  if (digits.length <= 10) {
+    return `(${ddd}) ${number.slice(0, 4)}-${number.slice(4)}`;
+  }
+
+  return `(${ddd}) ${number.slice(0, 5)}-${number.slice(5)}`;
 }
 
-phoneInput?.addEventListener("input", e => {
-  e.target.value = maskPhone(e.target.value);
+function formatCep(value) {
+  const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
+  return digits.length > 5
+    ? `${digits.slice(0, 5)}-${digits.slice(5)}`
+    : digits;
+}
+
+phoneInput?.addEventListener("input", event => {
+  event.target.value = formatPhone(event.target.value);
 });
 
-cepInput?.addEventListener("input", e => {
-  e.target.value = maskCep(e.target.value);
+cepInput?.addEventListener("input", event => {
+  event.target.value = formatCep(event.target.value);
 });
 
-let cepTimer;
+let cepTimer = null;
+
 cepInput?.addEventListener("input", () => {
   clearTimeout(cepTimer);
-  const cep = cepInput.value.replace(/\D/g,"");
+
+  const cep = cepInput.value.replace(/\D/g, "");
+
   if (cep.length !== 8) return;
 
-  cepTimer = setTimeout(() => buscarCep(cep), 150);
+  cepTimer = setTimeout(() => lookupCep(cep), 150);
 });
 
-async function buscarCep(cep) {
-  addressInput.value = "Consultando...";
-  neighborhoodInput.value = "";
-  const city = document.getElementById("regCity");
-  city.value = "";
-
+async function lookupCep(cep) {
   try {
     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    if (!response.ok) throw new Error("Falha na consulta");
+
+    if (!response.ok) throw new Error("CEP request failed");
 
     const data = await response.json();
 
     if (data.erro) {
       addressInput.value = "";
-      message.textContent = "CEP não encontrado.";
-      message.className = "form-message";
+      neighborhoodInput.value = "";
+      cityInput.value = "";
       return;
     }
 
     addressInput.value = data.logradouro || "";
     neighborhoodInput.value = data.bairro || "";
-    city.value = data.localidade && data.uf
+    cityInput.value = data.localidade && data.uf
       ? `${data.localidade} / ${data.uf}`
       : (data.localidade || data.uf || "");
 
     message.textContent = "";
     message.className = "form-message";
   } catch {
-    addressInput.value = "";
-    message.textContent = "Não foi possível consultar o CEP agora. Você pode preencher o endereço manualmente.";
-    message.className = "form-message";
+    // Não exibe mensagem ao usuário; permite preenchimento manual.
   }
 }
 
 function renderAccount() {
   const account = getAccount();
-  const logged = isLoggedIn();
 
-  if (logged && account) {
+  if (loggedIn() && account) {
     form.hidden = true;
-    if (preview) preview.hidden = true;
+    preview.hidden = false;
 
     accountLabel.textContent = account.name.split(" ")[0];
-    accountLink.href = "#cadastro";
     logoutButton.hidden = false;
+
+    accountGreeting.textContent = `Olá, ${account.name.split(" ")[0]}!`;
+    accountDetails.innerHTML =
+      `<strong>E-mail:</strong> ${escapeHtml(account.email)}<br>` +
+      `<strong>WhatsApp:</strong> ${escapeHtml(account.phone)}<br>` +
+      (account.cep ? `<strong>CEP:</strong> ${escapeHtml(account.cep)}<br>` : "") +
+      (account.address ? `<strong>Endereço:</strong> ${escapeHtml(account.address)}<br>` : "") +
+      (account.neighborhood ? `<strong>Bairro:</strong> ${escapeHtml(account.neighborhood)}<br>` : "") +
+      (account.city ? `<strong>Cidade/UF:</strong> ${escapeHtml(account.city)}` : "");
+
     return;
   }
 
   form.hidden = false;
-  if (preview) preview.hidden = true;
+  preview.hidden = true;
   accountLabel.textContent = "Meu cadastro";
   logoutButton.hidden = true;
 }
 
-form?.addEventListener("submit", e => {
-  e.preventDefault();
+form?.addEventListener("submit", event => {
+  event.preventDefault();
 
   const account = {
     name: document.getElementById("regName").value.trim(),
     phone: phoneInput.value.trim(),
     email: document.getElementById("regEmail").value.trim(),
     cep: cepInput.value.trim(),
-    city: document.getElementById("regCity").value.trim(),
+    city: cityInput.value.trim(),
     address: addressInput.value.trim(),
     neighborhood: neighborhoodInput.value.trim(),
     marketing: document.getElementById("regMarketing").checked,
@@ -257,23 +295,47 @@ form?.addEventListener("submit", e => {
   localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
   localStorage.setItem(SESSION_KEY, "true");
 
-  message.textContent = `Cadastro criado. Olá, ${account.name.split(" ")[0]}!`;
-  message.className = "form-message success";
-
+  message.textContent = "";
   renderAccount();
   window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+document.getElementById("editAccount")?.addEventListener("click", () => {
+  const account = getAccount();
+  if (!account) return;
+
+  document.getElementById("regName").value = account.name || "";
+  phoneInput.value = formatPhone(account.phone || "");
+  document.getElementById("regEmail").value = account.email || "";
+  cepInput.value = formatCep(account.cep || "");
+  cityInput.value = account.city || "";
+  addressInput.value = account.address || "";
+  neighborhoodInput.value = account.neighborhood || "";
+  document.getElementById("regMarketing").checked = !!account.marketing;
+
+  preview.hidden = true;
+  form.hidden = false;
+  document.getElementById("regName").focus();
+});
+
+document.getElementById("deleteAccount")?.addEventListener("click", () => {
+  if (!confirm("Apagar o cadastro deste navegador?")) return;
+
+  localStorage.removeItem(ACCOUNT_KEY);
+  localStorage.removeItem(SESSION_KEY);
+  form.reset();
+  renderAccount();
 });
 
 logoutButton?.addEventListener("click", () => {
   localStorage.removeItem(SESSION_KEY);
   renderAccount();
-  document.getElementById("cadastro")?.scrollIntoView({behavior:"smooth"});
 });
 
-accountLink?.addEventListener("click", e => {
-  if (isLoggedIn()) {
-    e.preventDefault();
-    document.getElementById("cadastro")?.scrollIntoView({behavior:"smooth"});
+accountLink?.addEventListener("click", event => {
+  if (loggedIn()) {
+    event.preventDefault();
+    document.getElementById("cadastro")?.scrollIntoView({ behavior: "smooth" });
   }
 });
 

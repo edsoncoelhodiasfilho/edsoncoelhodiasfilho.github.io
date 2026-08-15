@@ -1,5 +1,12 @@
-# ERALIS — cadastro
+# ERALIS — cadastro final corrigido
 
-Os botões EDITAR e APAGAR DADOS agora ficam dentro do mesmo quadro visual do cadastro, na linha inferior.
-
-Foram preservados telefone, CEP/ViaCEP, login automático, nome no topo, logout e responsividade.
+Correções:
+- Telefone: celular `(79) 99999-9999`; fixo `(79) 9999-9999`.
+- Campo aceita corretamente os 11 dígitos do celular.
+- A seção de cadastro foi reconstruída para evitar HTML malformado.
+- EDITAR e APAGAR DADOS ficam dentro do mesmo quadro visual do cadastro, ocupando a linha inferior do card.
+- CEP usa máscara e consulta ViaCEP.
+- Login automático após cadastro.
+- Nome do usuário no topo.
+- Botão SAIR.
+- Layout responsivo.
