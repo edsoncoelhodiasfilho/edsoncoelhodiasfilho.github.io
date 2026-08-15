@@ -306,7 +306,7 @@ function renderAccount() {
 
   form.hidden = false;
   preview.hidden = true;
-  accountLabel.textContent = "Login";
+  accountLabel.textContent = "Meu cadastro";
   logoutButton.hidden = true;
 }
 
@@ -451,3 +451,144 @@ document.addEventListener("click", function (event) {
   clearAnonymousCart();
   window.addEventListener("pageshow", clearAnonymousCart);
 })();
+
+
+/* =========================================================
+   ERALIS — FINALIZAÇÃO PELO WHATSAPP
+   ========================================================= */
+
+const ERALIS_WHATSAPP_NUMBER = "5579998080301";
+
+function eralisGetCustomerForOrder() {
+  try {
+    return JSON.parse(localStorage.getItem("eralisCustomer")) || null;
+  } catch {
+    return null;
+  }
+}
+
+function eralisRegisteredForOrder() {
+  const customer = eralisGetCustomerForOrder();
+
+  return !!(
+    customer &&
+    typeof customer.name === "string" && customer.name.trim() &&
+    typeof customer.email === "string" && customer.email.trim() &&
+    typeof customer.phone === "string" && customer.phone.trim()
+  );
+}
+
+function eralisBuildWhatsAppOrderMessage() {
+  if (!eralisRegisteredForOrder()) {
+    throw new Error("Para finalizar o pedido, faça seu cadastro na ERALIS.");
+  }
+
+  if (!Array.isArray(cart) || !cart.length) {
+    throw new Error("Seu carrinho está vazio.");
+  }
+
+  const customer = eralisGetCustomerForOrder();
+  let total = 0;
+
+  const lines = [
+    "Olá! Gostaria de fazer um pedido na ERALIS.",
+    "",
+    "DADOS DO CLIENTE",
+    `Nome: ${customer.name}`,
+    `E-mail: ${customer.email}`,
+    `WhatsApp: ${customer.phone}`
+  ];
+
+  if (customer.cep) lines.push(`CEP: ${customer.cep}`);
+  if (customer.address) lines.push(`Endereço: ${customer.address}`);
+  if (customer.number) lines.push(`Número: ${customer.number}`);
+  if (customer.complement) lines.push(`Complemento: ${customer.complement}`);
+  if (customer.neighborhood) lines.push(`Bairro: ${customer.neighborhood}`);
+  if (customer.city) lines.push(`Cidade: ${customer.city}`);
+  if (customer.state) lines.push(`UF: ${customer.state}`);
+
+  lines.push("", "ITENS DO PEDIDO");
+
+  cart.forEach(item => {
+    const product = products.find(p => p.id === item.id);
+    if (!product) return;
+
+    const subtotal = Number(product.price) * Number(item.qty);
+    total += subtotal;
+
+    lines.push(`• ${product.name}`);
+    lines.push(
+      `  ${item.qty}x ${money(product.price)} = ${money(subtotal)}`
+    );
+    lines.push("");
+  });
+
+  lines.push(`TOTAL: ${money(total)}`);
+  lines.push("");
+  lines.push("Aguardo as orientações para finalizar o pedido. Obrigado!");
+
+  return lines.join("\n");
+}
+
+function eralisOpenWhatsAppOrder() {
+  let message;
+
+  try {
+    message = eralisBuildWhatsAppOrderMessage();
+  } catch (error) {
+    alert(error.message);
+    return;
+  }
+
+  const number = ERALIS_WHATSAPP_NUMBER.replace(/\D/g, "");
+
+  if (!number) {
+    alert("Configure o número de WhatsApp da ERALIS.");
+    return;
+  }
+
+  window.location.href =
+    `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+}
+
+/*
+ * Intercepta o botão atual de WhatsApp e substitui qualquer
+ * comportamento anterior, mantendo somente uma finalização.
+ */
+document.addEventListener("click", event => {
+  const target = event.target.closest(
+    "#checkoutButton, [data-whatsapp-checkout]"
+  );
+
+  if (!target) return;
+
+  event.preventDefault();
+  event.stopImmediatePropagation();
+
+  eralisOpenWhatsAppOrder();
+}, true);
+
+/*
+ * Fallback para versões do botão identificadas apenas pelo texto.
+ */
+document.addEventListener("click", event => {
+  const target = event.target.closest("a, button");
+  if (!target) return;
+
+  if (
+    target.id === "checkoutButton" ||
+    target.matches("[data-whatsapp-checkout]")
+  ) return;
+
+  const text = (target.textContent || "").trim().toLowerCase();
+
+  if (
+    text.includes("finalizar pelo whatsapp") ||
+    text.includes("finalizar no whatsapp")
+  ) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    eralisOpenWhatsAppOrder();
+  }
+}, true);

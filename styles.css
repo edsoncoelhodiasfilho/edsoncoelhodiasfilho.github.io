@@ -251,160 +251,6 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
 .account-section{width:min(1230px,calc(100% - 40px));margin:0 auto;padding:0 0 70px}.account-card{display:grid;grid-template-columns:.85fr 1.15fr;gap:45px;padding:40px;border:1px solid #1a477d;border-radius:24px;background:linear-gradient(135deg,#071a3a,#061128)}.account-copy h2{font-size:2.8rem;line-height:1;margin:0 0 18px}.account-copy>p:not(.kicker){color:#b3bfd5;line-height:1.7}.account-note{margin-top:22px;padding:15px;border:1px solid rgba(255,201,40,.25);border-radius:12px;color:#aebbd1;font-size:.75rem;line-height:1.5}.register-form{display:flex;flex-direction:column;gap:13px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}.register-form label{display:flex;flex-direction:column;gap:6px;color:#dbe5f6;font-size:.74rem;font-weight:800}.register-form input{height:45px;padding:0 12px;border-radius:9px;border:1px solid #28527f;background:#06142e;color:#fff;outline:none}.register-form input:focus{border-color:var(--blue)}.check-line{flex-direction:row!important;align-items:center;gap:7px!important;color:#aebbd1!important;font-weight:500!important}.check-line input{width:17px;height:17px}.form-message{min-height:18px;margin:0;font-size:.75rem;color:#9db0cd}.form-message.success{color:#4fe09d}.account-preview{margin-top:15px;padding:24px 28px;border:1px solid #1a477d;border-radius:20px;background:#071733;display:flex;justify-content:space-between;align-items:center;gap:20px}.account-preview h3{margin:0 0 7px}.account-preview p:not(.kicker){color:#9fb0ca;line-height:1.6;font-size:.82rem}.account-actions{display:flex;gap:9px}.btn-danger{border:1px solid #773b4a;color:#ffb8c0;background:transparent}
 @media(max-width:760px){.account-button span{display:none}.account-section{width:calc(100% - 30px)}.account-card{grid-template-columns:1fr;padding:28px 20px;gap:25px}.account-copy h2{font-size:2.3rem}.form-row{grid-template-columns:1fr}.account-preview{flex-direction:column;align-items:flex-start}.account-actions{width:100%}.account-actions .btn{flex:1;justify-content:center}}
 
-/* Cadastro: máscara, sessão e logout */
-.account-button{display:inline-flex;align-items:center;gap:5px;color:#fff;font-size:.8rem;font-weight:800;white-space:nowrap}
-.account-button:hover{color:var(--yellow)}
-.logout-button{border:1px solid #8b4250;background:transparent;color:#ffb9c0;border-radius:999px;padding:7px 11px;font-size:.65rem;font-weight:900;cursor:pointer}
-.logout-button:hover{background:rgba(255,70,90,.1)}
-.account-preview{display:none!important}
-#regAddress,#regNeighborhood,#regCity{transition:border-color .2s}
-@media(max-width:760px){
-  .account-button span{display:inline}
-  .logout-button{padding:6px 9px}
-}
-@media(max-width:430px){
-  .account-button span{display:none}
-  .logout-button{font-size:.58rem;padding:6px 8px}
-}
-
-.optional-label{
-  color:#7f91ad;
-  font-weight:500;
-  font-size:.68rem;
-}
-
-/* Botões de conta dentro do mesmo quadro do cadastro */
-.account-card{grid-template-columns:.85fr 1.15fr;column-gap:45px;row-gap:25px}
-.account-card .account-preview{grid-column:1 / -1;width:100%;margin:0;box-sizing:border-box;padding:20px 24px;border-radius:16px}
-@media(max-width:760px){
-  .account-card{grid-template-columns:1fr}
-  .account-card .account-preview{grid-column:1}
-}
-
-/* =========================================================
-   ERALIS — CADASTRO: LAYOUT FINAL
-   ========================================================= */
-
-.account-card{
-  display:grid !important;
-  grid-template-columns:minmax(0, .85fr) minmax(0, 1.15fr) !important;
-  column-gap:45px !important;
-  row-gap:25px !important;
-  align-items:start !important;
-}
-
-.account-card .account-preview{
-  grid-column:1 / -1 !important;
-  width:100% !important;
-  margin:0 !important;
-  box-sizing:border-box !important;
-  padding:20px 24px !important;
-  border-radius:16px !important;
-  display:flex !important;
-  justify-content:space-between !important;
-  align-items:center !important;
-  gap:20px !important;
-}
-
-.account-summary{
-  min-width:0;
-}
-
-.account-actions{
-  display:flex !important;
-  flex-shrink:0 !important;
-  gap:9px !important;
-}
-
-.optional-label{
-  color:#7f91ad;
-  font-size:.68rem;
-  font-weight:500;
-}
-
-@media(max-width:760px){
-  .account-card{
-    grid-template-columns:1fr !important;
-  }
-
-  .account-card .account-preview{
-    grid-column:1 !important;
-    flex-direction:column !important;
-    align-items:stretch !important;
-  }
-
-  .account-actions{
-    width:100% !important;
-  }
-
-  .account-actions .btn{
-    flex:1 !important;
-    justify-content:center !important;
-  }
-}
-
-/* Finalização pelo Instagram */
-.checkout-instagram{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  border:1px solid rgba(225,48,108,.65);
-  background:linear-gradient(135deg,#833ab4,#e1306c 55%,#f77737);
-  color:#fff;
-  box-shadow:0 8px 22px rgba(225,48,108,.18);
-}
-.checkout-instagram:hover{
-  color:#fff;
-  transform:translateY(-2px);
-  box-shadow:0 12px 28px rgba(225,48,108,.28);
-}
-.instagram-icon{
-  font-size:1.05rem;
-  line-height:1;
-}
-@media(max-width:600px){
-  .checkout-instagram{
-    width:100%;
-  }
-}
-
-/* WhatsApp + Instagram: pequenos e lado a lado */
-.checkout-actions{
-  display:flex !important;
-  flex-direction:row !important;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  width:100%;
-  margin-top:8px;
-}
-.checkout-actions .btn{
-  width:auto !important;
-  min-width:0 !important;
-  height:36px !important;
-  padding:0 12px !important;
-  border-radius:8px !important;
-  font-size:.62rem !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-}
-.checkout-actions #checkoutButton{
-  background:#25D366 !important;
-  border-color:#25D366 !important;
-  color:#062713 !important;
-}
-.checkout-actions .checkout-instagram{
-  color:#fff !important;
-}
-@media(max-width:420px){
-  .checkout-actions{gap:6px}
-  .checkout-actions .btn{
-    padding:0 9px !important;
-    font-size:.55rem !important;
-  }
-}
-
 /* Cadastro obrigatório para adicionar ao carrinho */
 .cart-registration-note{
   font-size:.72rem;
@@ -413,4 +259,158 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
 }
 
 
+/* =========================================================
+   ERALIS — COMO FUNCIONA
+   ========================================================= */
 
+.how-it-works-section{
+  width:min(1230px,calc(100% - 40px));
+  margin:0 auto;
+  padding:0 0 75px;
+}
+
+.how-it-works-card{
+  border:1px solid #1a477d;
+  border-radius:24px;
+  padding:34px 40px;
+  background:
+    radial-gradient(circle at 85% 10%,rgba(40,132,255,.16),transparent 32%),
+    linear-gradient(135deg,#071a3a,#061128);
+}
+
+.how-it-works-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+}
+
+.how-it-works-heading h2{
+  margin:4px 0 0;
+  font-size:2.5rem;
+  line-height:1;
+  letter-spacing:-.04em;
+}
+
+.how-it-works-button{
+  flex-shrink:0;
+  min-height:40px;
+  padding:0 17px;
+  font-size:.7rem;
+}
+
+.how-it-works-content{
+  margin-top:25px;
+  padding:22px 24px;
+  border-left:3px solid var(--yellow);
+  border-radius:0 14px 14px 0;
+  background:rgba(255,255,255,.035);
+}
+
+.how-it-works-content p{
+  margin:0;
+  color:#c2cee2;
+  font-size:.95rem;
+  line-height:1.75;
+  max-width:1050px;
+}
+
+@media(max-width:760px){
+  .how-it-works-section{
+    width:calc(100% - 30px);
+    padding-bottom:55px;
+  }
+
+  .how-it-works-card{
+    padding:28px 22px;
+  }
+
+  .how-it-works-heading{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:18px;
+  }
+
+  .how-it-works-heading h2{
+    font-size:2.2rem;
+  }
+
+  .how-it-works-button{
+    width:100%;
+    justify-content:center;
+  }
+
+  .how-it-works-content{
+    padding:18px;
+  }
+
+  .how-it-works-content p{
+    font-size:.9rem;
+  }
+}
+
+/* =========================================================
+   ERALIS — COMO FUNCIONA / mesmo padrão visual de SOBRE
+   ========================================================= */
+
+.how-it-works-section{
+  width:min(1230px,calc(100% - 40px));
+  margin:0 auto;
+  padding:0 0 75px;
+}
+
+.how-it-works-card{
+  display:grid;
+  grid-template-columns:.85fr 1.15fr;
+  align-items:center;
+  gap:45px;
+  padding:40px;
+  border:1px solid #1a477d;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 85% 10%,rgba(40,132,255,.16),transparent 32%),
+    linear-gradient(135deg,#071a3a,#061128);
+}
+
+.how-it-works-title h2{
+  margin:4px 0 0;
+  font-size:2.8rem;
+  line-height:1;
+  letter-spacing:-.05em;
+}
+
+.how-it-works-text{
+  padding-left:30px;
+  border-left:1px solid rgba(159,176,202,.28);
+}
+
+.how-it-works-text p{
+  margin:0;
+  color:#b3bfd5;
+  font-size:.95rem;
+  line-height:1.8;
+}
+
+@media(max-width:760px){
+  .how-it-works-section{
+    width:calc(100% - 30px);
+    padding-bottom:55px;
+  }
+
+  .how-it-works-card{
+    grid-template-columns:1fr;
+    gap:22px;
+    padding:30px 22px;
+  }
+
+  .how-it-works-title h2{
+    font-size:2.3rem;
+  }
+
+  .how-it-works-text{
+    padding-left:0;
+    padding-top:20px;
+    border-left:0;
+    border-top:1px solid rgba(159,176,202,.28);
+  }
+}

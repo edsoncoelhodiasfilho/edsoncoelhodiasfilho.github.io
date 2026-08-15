@@ -19,11 +19,11 @@
     <a class="active" href="#inicio">Início</a>
     <a href="#produtos">Produtos</a>
     <a href="#sobre">Sobre</a>
-    
+    <a href="#como-funciona">Como Funciona</a>
     <a href="#contato">Contato</a>
   </nav>
 
-  <div class="nav-actions"><a class="account-button" id="accountLink" href="#cadastro">👤 <span id="accountLabel">Login</span></a><button class="logout-button" id="logoutButton" type="button" hidden>SAIR</button>
+  <div class="nav-actions"><a class="account-button" id="accountLink" href="#cadastro">👤 <span id="accountLabel">Meu cadastro</span></a><button class="logout-button" id="logoutButton" type="button" hidden>SAIR</button>
     <button class="icon-button" aria-label="Pesquisar">⌕</button>
     <button class="cart-button" id="openCart" aria-label="Abrir carrinho">
       🛒 <span id="cartCount">0</span>
@@ -96,7 +96,24 @@
   <div class="products-grid" id="productGrid"></div>
 </section>
 
-
+<section class="benefits" id="como-funciona">
+  <article>
+    <div class="benefit-icon">♙</div>
+    <div><h3>Impressão 3D de Alta Qualidade</h3><p>Detalhes que fazem a diferença.</p></div>
+  </article>
+  <article>
+    <div class="benefit-icon">◇</div>
+    <div><h3>Design Personalizado</h3><p>Criamos do seu jeito.</p></div>
+  </article>
+  <article>
+    <div class="benefit-icon">♟</div>
+    <div><h3>Para Todas as Idades</h3><p>Diversão em família e com amigos.</p></div>
+  </article>
+  <article>
+    <div class="benefit-icon">📦</div>
+    <div><h3>Entrega em Todo o Brasil</h3><p>Receba no conforto da sua casa.</p></div>
+  </article>
+</section>
 
 <section class="about-section" id="sobre">
   <div class="about-card">
@@ -142,10 +159,10 @@
 
     <form id="registerForm" class="register-form">
       <div class="form-row">
-        <label>Nome de usuário
+        <label>Nome completo
           <input id="regName" required autocomplete="name" placeholder="Seu nome">
         </label>
-        <label>Telefone(WhatsApp)
+        <label>WhatsApp
           <input id="regPhone" required autocomplete="tel" inputmode="tel"
                  maxlength="15" placeholder="(79) 99999-9999">
         </label>
@@ -166,7 +183,7 @@
         </label>
       </div>
 
-      <label>Endereço
+      <label>Endereço <span class="optional-label">(Complete se necessário)</span>
         <input id="regAddress" autocomplete="street-address"
                placeholder="Rua, número, complemento">
       </label>
@@ -223,9 +240,7 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div><div class="checkout-actions">
   <button class="btn btn-yellow full" id="checkoutButton">FINALIZAR NO WHATSAPP</button>
-  <a class="btn btn-instagram checkout-instagram" id="instagramCheckout" href="https://www.instagram.com/eralis.oficial/" target="_blank" rel="noopener"
-  <span class="instagram-icon">◎</span> FINALIZAR PELO INSTAGRAM
-</a>
+  
 </div>
     
 
