@@ -1,8 +1,10 @@
-# ERALIS — seção Como Funciona
+# ERALIS — Como Funciona
 
-Adicionada uma nova seção abaixo de Sobre.
+A seção Como Funciona foi ajustada para ter o mesmo estilo visual do quadro Sobre.
 
-Ao clicar em "COMO FUNCIONA →", o texto sobre o modelo atual de pedidos é exibido.
-O botão muda para "OCULTAR ↑" e permite fechar novamente o conteúdo.
+Layout desktop:
+- esquerda: título "Como funciona";
+- direita: texto explicativo sobre pedidos e pagamentos.
 
-O texto utilizado é o fornecido pelo usuário.
+O botão de expansão foi removido.
+A seção permanece responsiva no mobile.
