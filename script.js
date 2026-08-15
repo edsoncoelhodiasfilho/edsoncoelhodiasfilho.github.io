@@ -440,20 +440,18 @@ document.addEventListener("click", function (event) {
    ========================================================= */
 
 const ERALIS_WHATSAPP_NUMBER = "5579998080301";
-const ERALIS_INSTAGRAM_USERNAME = "edson.cdfilho";
+const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/edson.cdfilho/";
 
 /*
- * O Instagram não oferece, para um site estático comum,
- * um link web confiável que preencha automaticamente o
- * campo do Direct com uma mensagem personalizada.
+ * O Instagram não permite, de forma confiável, que um site
+ * estático abra um Direct já preenchido com uma mensagem.
  *
- * Portanto:
- * 1. copiamos a mensagem completa do pedido;
- * 2. abrimos UMA única vez o Direct da conta;
- * 3. o cliente cola a mensagem no Direct.
+ * Fluxo da ERALIS:
+ * 1. montar o pedido;
+ * 2. copiar a mensagem automaticamente;
+ * 3. abrir UMA única vez o perfil do Instagram;
+ * 4. o cliente entra no Direct e cola a mensagem.
  */
-const ERALIS_INSTAGRAM_DM_URL =
-  `https://ig.me/m/${ERALIS_INSTAGRAM_USERNAME}`;
 
 function eralisGetCustomer() {
   try {
@@ -524,7 +522,11 @@ function eralisBuildOrderMessage() {
   return lines.join("\n");
 }
 
-function eralisCopyOrderMessage(message) {
+function eralisCopyMessage(message) {
+  /*
+   * Tenta primeiro o método síncrono, que funciona bem no
+   * clique do usuário e não depende de uma Promise.
+   */
   try {
     const textarea = document.createElement("textarea");
 
@@ -533,6 +535,7 @@ function eralisCopyOrderMessage(message) {
     textarea.style.position = "fixed";
     textarea.style.left = "-9999px";
     textarea.style.top = "0";
+    textarea.style.opacity = "0";
 
     document.body.appendChild(textarea);
     textarea.focus();
@@ -545,21 +548,110 @@ function eralisCopyOrderMessage(message) {
     if (copied) return true;
   } catch {}
 
+  /*
+   * Fallback para navegadores modernos.
+   */
   try {
-    navigator.clipboard?.writeText(message);
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(message).catch(() => {});
+      return true;
+    }
   } catch {}
 
   return false;
 }
 
-/*
- * FINALIZAR PELO INSTAGRAM
- *
- * Não usa window.open(), portanto:
- * - não abre duas abas;
- * - não dispara bloqueador de popup;
- * - não mostra mensagem de popup bloqueado.
- */
+function eralisShowInstagramConfirmation(message, copied) {
+  /*
+   * Não dependemos de modal existente no HTML.
+   * Criamos uma confirmação simples e temporária.
+   */
+  const old = document.getElementById("eralisInstagramNotice");
+  old?.remove();
+
+  const notice = document.createElement("div");
+  notice.id = "eralisInstagramNotice";
+
+  notice.innerHTML = `
+    <strong>Pedido preparado ✓</strong>
+    <span>${
+      copied
+        ? "A mensagem do seu pedido foi copiada. No Instagram, abra o Direct da ERALIS e cole a mensagem."
+        : "Abra o Direct da ERALIS e copie a mensagem abaixo."
+    }</span>
+    <textarea readonly>${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</textarea>
+    <button type="button" id="eralisCopyAgain">COPIAR MENSAGEM</button>
+    <button type="button" id="eralisCloseNotice">FECHAR</button>
+  `;
+
+  Object.assign(notice.style, {
+    position: "fixed",
+    left: "50%",
+    bottom: "22px",
+    transform: "translateX(-50%)",
+    zIndex: "99999",
+    width: "min(520px, calc(100% - 28px))",
+    padding: "20px",
+    borderRadius: "18px",
+    border: "1px solid #28568d",
+    background: "#071a3a",
+    color: "#fff",
+    boxShadow: "0 18px 55px rgba(0,0,0,.45)",
+    fontFamily: "system-ui, sans-serif"
+  });
+
+  const span = notice.querySelector("span");
+  Object.assign(span.style, {
+    display: "block",
+    marginTop: "8px",
+    color: "#b8c6dc",
+    lineHeight: "1.5",
+    fontSize: "14px"
+  });
+
+  const textarea = notice.querySelector("textarea");
+  Object.assign(textarea.style, {
+    width: "100%",
+    boxSizing: "border-box",
+    minHeight: "150px",
+    marginTop: "12px",
+    padding: "12px",
+    borderRadius: "10px",
+    border: "1px solid #315d91",
+    background: "#040d20",
+    color: "#eaf1ff",
+    resize: "vertical"
+  });
+
+  notice.querySelectorAll("button").forEach(button => {
+    Object.assign(button.style, {
+      marginTop: "10px",
+      marginRight: "7px",
+      padding: "9px 13px",
+      border: "0",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontWeight: "700"
+    });
+  });
+
+  document.body.appendChild(notice);
+
+  notice.querySelector("#eralisCopyAgain").addEventListener("click", () => {
+    eralisCopyMessage(message);
+    notice.querySelector("#eralisCopyAgain").textContent = "COPIADO ✓";
+
+    setTimeout(() => {
+      notice.querySelector("#eralisCopyAgain").textContent =
+        "COPIAR MENSAGEM";
+    }, 1600);
+  });
+
+  notice.querySelector("#eralisCloseNotice").addEventListener("click", () => {
+    notice.remove();
+  });
+}
+
 function eralisOpenInstagram() {
   let message;
 
@@ -570,16 +662,28 @@ function eralisOpenInstagram() {
     return;
   }
 
-  // Copia o pedido antes de sair da página.
-  eralisCopyOrderMessage(message);
+  /*
+   * Copia a mensagem antes de sair da página.
+   */
+  const copied = eralisCopyMessage(message);
 
-  // Uma única navegação para o Direct da conta correta.
-  window.location.href = ERALIS_INSTAGRAM_DM_URL;
+  /*
+   * Mostra instrução ao usuário antes da navegação.
+   * A confirmação também deixa a mensagem disponível para
+   * copiar novamente caso o navegador bloqueie o clipboard.
+   */
+  eralisShowInstagramConfirmation(message, copied);
+
+  /*
+   * Abre SOMENTE o perfil oficial da ERALIS.
+   * Não usamos ig.me porque ele não está iniciando o Direct
+   * de forma confiável no navegador.
+   */
+  setTimeout(() => {
+    window.location.href = ERALIS_INSTAGRAM_URL;
+  }, 250);
 }
 
-/*
- * FINALIZAR PELO WHATSAPP
- */
 function eralisOpenWhatsApp() {
   let message;
 
@@ -597,7 +701,10 @@ function eralisOpenWhatsApp() {
 }
 
 /*
- * Intercepta o botão do Instagram antes do href antigo.
+ * UM único tratamento para Instagram.
+ *
+ * stopImmediatePropagation evita que handlers antigos do
+ * HTML/JS executem uma segunda navegação.
  */
 document.addEventListener(
   "click",
@@ -617,7 +724,7 @@ document.addEventListener(
 );
 
 /*
- * Fallback para o botão caso ele não tenha ID/classe específica.
+ * Fallback pelo texto do botão.
  */
 document.addEventListener(
   "click",
@@ -633,9 +740,7 @@ document.addEventListener(
       return;
     }
 
-    const text = (target.textContent || "")
-      .trim()
-      .toLowerCase();
+    const text = (target.textContent || "").trim().toLowerCase();
 
     if (!text.includes("finalizar pelo instagram")) return;
 
@@ -648,7 +753,7 @@ document.addEventListener(
 );
 
 /*
- * Intercepta o botão do WhatsApp.
+ * WhatsApp.
  */
 document.addEventListener(
   "click",
