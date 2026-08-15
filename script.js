@@ -368,7 +368,7 @@ logoutButton?.addEventListener("click", () => {
 accountLink?.addEventListener("click", event => {
   if (loggedIn()) {
     event.preventDefault();
-    document.getElementById("cadastro")?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("cadastro")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 });
 

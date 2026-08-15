@@ -1,11 +1,7 @@
-# ERALIS — botão WhatsApp
+# ERALIS — espaçamento ao abrir Minha Conta
 
-O botão de finalização pelo WhatsApp foi atualizado com uma aparência inspirada
-na identidade visual do WhatsApp:
-- verde #25D366;
-- texto branco;
-- hover em verde mais escuro;
-- sombra sutil;
-- pequena elevação no hover.
+Ao clicar em "Meu cadastro" no menu superior, a seção de cadastro agora
+respeita uma margem superior de 105px no scroll. Isso deixa a seção visualmente
+afastada da navbar sticky, evitando que o quadro fique colado ao menu.
 
 O restante do site foi preservado.

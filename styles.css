@@ -442,3 +442,10 @@ footer{padding:30px 6vw;border-top:1px solid #10294d;display:flex;justify-conten
   border-color:#1daa50 !important;
   transform:translateY(0);
 }
+
+
+/* Espaçamento elegante ao navegar pelo menu para Minha Conta.
+   Mantém a seção abaixo da navbar sticky, sem ficar colada ao menu. */
+.account-section{
+  scroll-margin-top:105px;
+}
