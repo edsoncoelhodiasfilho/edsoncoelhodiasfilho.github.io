@@ -1,10 +1,13 @@
-# ERALIS — cadastro corrigido
+# ERALIS — telefone revisado
 
-Alterações:
-- Máscara de telefone corrigida:
-  - `(79) 9999-9999` para números com 10 dígitos;
-  - `(79) 99999-9999` para números móveis com 11 dígitos.
-- Campo exibido como `Endereço (Complete se necessário)`.
-- Removido o aviso sobre armazenamento local.
-- Removida a mensagem `Endereço preenchido pelo CEP`.
-- Consulta ViaCEP continua preenchendo endereço, bairro e cidade/UF automaticamente.
+A máscara do telefone foi corrigida.
+
+Para celular com DDD:
+`(79) 99999-9999`
+
+O campo agora aceita 11 dígitos e 15 caracteres visuais, necessários para a máscara completa.
+
+Também continua aceitando telefone de 10 dígitos:
+`(79) 9999-9999`
+
+A versão mobile e a consulta ViaCEP permanecem preservadas.
