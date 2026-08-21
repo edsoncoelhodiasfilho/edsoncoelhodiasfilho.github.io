@@ -257,12 +257,12 @@ if (quoteModal) {
 
 if (quoteForm) {
   quoteForm.addEventListener("submit", () => {
-    // FormSubmit exige que _next seja uma URL completa (http/https).
-    // Calculamos a URL da página de agradecimento no próprio navegador,
-    // funcionando tanto no domínio publicado quanto no servidor local.
+    // O retorno do formulário deve sempre ir para a página de produção.
+    // Não usamos window.location.href para evitar enviar URLs locais
+    // (ex.: http://localhost:8000) ao FormSubmit.
     const nextField = document.querySelector("#quoteNext");
     if (nextField) {
-      nextField.value = new URL("obrigado.html", window.location.href).href;
+      nextField.value = "https://www.eralis.com.br/obrigado.html";
     }
 
     const submitButton = quoteForm.querySelector('button[type="submit"]');
@@ -317,11 +317,12 @@ if (emailModal) {
 
 if (emailForm) {
   emailForm.addEventListener("submit", () => {
-    // FormSubmit precisa receber um POST válido. O _next deve ser uma URL
-    // absoluta; construímos a URL a partir do endereço atual do site.
+    // O retorno do formulário deve sempre ir para a página de produção.
+    // Não usamos window.location.href para evitar enviar URLs locais
+    // (ex.: http://localhost:8000) ao FormSubmit.
     const nextField = document.querySelector("#emailNext");
     if (nextField) {
-      nextField.value = new URL("obrigado-email.html", window.location.href).href;
+      nextField.value = "https://www.eralis.com.br/obrigado-email.html";
     }
 
     // O FormSubmit utiliza _subject como assunto real do e-mail.
