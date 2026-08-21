@@ -272,9 +272,20 @@ if (quoteForm) {
         body: new FormData(quoteForm)
       });
 
-      if (!response.ok) {
-        throw new Error("Formspree HTTP " + response.status);
-      }
+     // if (!response.ok) {
+     //   throw new Error("Formspree HTTP " + response.status);
+     // }
+	 
+	 if (!response.ok) {
+    const errorText = await response.text();
+
+    console.error("Formspree HTTP:", response.status);
+    console.error("Resposta do Formspree:", errorText);
+
+    throw new Error(
+        "Formspree HTTP " + response.status + ": " + errorText
+    );
+}
 
       window.location.href = "obrigado.html";
     } catch (error) {
