@@ -242,6 +242,7 @@ const quoteBtn = document.querySelector("#quoteBtn");
 const quoteClose = document.querySelector("#quoteClose");
 const quoteCancel = document.querySelector("#quoteCancel");
 const quoteForm = document.querySelector("#quoteForm");
+const FORMINIT_FORM_ID = "r8qgx4ovcp0";
 
 if (quoteBtn && quoteModal) quoteBtn.addEventListener("click", () => quoteModal.showModal());
 if (quoteClose) quoteClose.addEventListener("click", () => quoteModal.close());
@@ -256,8 +257,41 @@ if (quoteModal) {
 }
 
 if (quoteForm) {
-  // FormSubmit: envio nativo POST para preservar multipart/form-data e o arquivo.
-  // O campo _next no HTML controla a página de agradecimento.
+  quoteForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const submitButton = quoteForm.querySelector('button[type="submit"]');
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Enviando...";
+    }
+
+    try {
+      const formData = new FormData(quoteForm);
+
+      const { error } = await forminit.submit(FORMINIT_FORM_ID, formData);
+
+      if (error) {
+        console.error("Erro ao enviar orçamento pelo Forminit:", error);
+        throw new Error(error.message || "Erro ao enviar o orçamento.");
+      }
+
+      window.location.href = "obrigado.html";
+    } catch (error) {
+      console.error("Erro ao enviar orçamento:", error);
+
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Enviar solicitação →";
+      }
+
+      alert(
+        "Não foi possível enviar o orçamento. " +
+        (error?.message ? "\n\n" + error.message : "Tente novamente.")
+      );
+    }
+  });
 }
 
 // Modal de e-mail
@@ -303,8 +337,41 @@ if (emailModal) {
 }
 
 if (emailForm) {
-  // FormSubmit: envio nativo POST.
-  // O campo _next no HTML controla a página de agradecimento.
+  emailForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const submitButton = emailForm.querySelector('button[type="submit"]');
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Enviando...";
+    }
+
+    try {
+      const formData = new FormData(emailForm);
+
+      const { error } = await forminit.submit(FORMINIT_FORM_ID, formData);
+
+      if (error) {
+        console.error("Erro ao enviar e-mail pelo Forminit:", error);
+        throw new Error(error.message || "Erro ao enviar o e-mail.");
+      }
+
+      window.location.href = "obrigado-email.html";
+    } catch (error) {
+      console.error("Erro ao enviar e-mail:", error);
+
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Enviar e-mail →";
+      }
+
+      alert(
+        "Não foi possível enviar o e-mail. " +
+        (error?.message ? "\n\n" + error.message : "Tente novamente.")
+      );
+    }
+  });
 }
 
 // Upload da imagem de referência

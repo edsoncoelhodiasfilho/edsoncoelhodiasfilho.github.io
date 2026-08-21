@@ -102,17 +102,15 @@
   </div>
 
   <form
-    id="quoteForm" action="https://formsubmit.co/eralis3d@gmail.com"
+    id="quoteForm"
     method="POST"
     enctype="multipart/form-data"
 >
-    <input type="hidden" name="_subject" value="Novo pedido de orçamento — ERALIS">
-    <!--<input type="hidden" name="_captcha" value="false">-->
-    <input type="hidden" name="_next" value="https://www.eralis.com.br/obrigado.html">
+    <input type="hidden" name="fi-text-form-subject" value="Novo pedido de orçamento — ERALIS">
 
 <div class="form-group">
       <label for="quoteDescription">Fale sobre o que precisa:</label>
-      <textarea id="quoteDescription" name="description" rows="5"
+      <textarea id="quoteDescription" name="fi-text-description" rows="5"
         placeholder="Descreva sua ideia, produto, personalização ou projeto..." required></textarea>
     </div>
 
@@ -122,25 +120,25 @@
       <div class="dimensions-grid">
         <div class="form-group">
           <label for="quoteHeight">Altura</label>
-          <input id="quoteHeight" name="height" type="number" min="0" step="0.1"
+          <input id="quoteHeight" name="fi-number-height" type="number" min="0" step="0.1"
             placeholder="Ex.: 10">
         </div>
 
         <div class="form-group">
           <label for="quoteWidth">Largura</label>
-          <input id="quoteWidth" name="width" type="number" min="0" step="0.1"
+          <input id="quoteWidth" name="fi-number-width" type="number" min="0" step="0.1"
             placeholder="Ex.: 8">
         </div>
 
         <div class="form-group">
           <label for="quoteLength">Comprimento</label>
-          <input id="quoteLength" name="length" type="number" min="0" step="0.1"
+          <input id="quoteLength" name="fi-number-length" type="number" min="0" step="0.1"
             placeholder="Ex.: 15">
         </div>
 
         <div class="form-group">
           <label for="quoteDepth">Profundidade</label>
-          <input id="quoteDepth" name="depth" type="number" min="0" step="0.1"
+          <input id="quoteDepth" name="fi-number-depth" type="number" min="0" step="0.1"
             placeholder="Ex.: 5">
         </div>
       </div>
@@ -150,7 +148,7 @@
     <div class="form-group reference-group">
       <label for="quoteReference">Tem alguma foto ou imagem de referência? Se sim, mande para nós.</label>
       <div class="upload-box" id="uploadBox">
-        <input id="quoteReference" name="reference" type="file"
+        <input id="quoteReference" name="fi-file-reference" type="file"
           accept="image/jpeg,image/png,image/webp,image/gif">
         <div class="upload-content">
           <span class="upload-icon">↑</span>
@@ -179,22 +177,20 @@
     <p>Informe seu nome e o assunto para que possamos identificar sua mensagem.</p>
   </div>
 
-  <form id="emailForm" action="https://formsubmit.co/eralis3d@gmail.com" method="POST">
-    <input type="hidden" name="_subject" value="Contato pelo site — ERALIS">
-    <!--<input type="hidden" name="_captcha" value="false">-->
-    <input type="hidden" name="_next" value="https://www.eralis.com.br/obrigado-email.html">
+  <form id="emailForm" method="POST">
+    <input type="hidden" name="fi-text-form-type" value="email">
 
 <!--
 -->
 <div class="form-group">
       <label for="emailName">Seu nome:</label>
-      <input id="emailName" name="name" type="text"
+      <input id="emailName" name="fi-text-name" type="text"
         placeholder="Digite seu nome" autocomplete="name" required>
     </div>
 
     <div class="form-group">
       <label for="emailSubject">Assunto:</label>
-      <input id="emailSubject" name="subject" type="text"
+      <input id="emailSubject" name="fi-text-subject" type="text"
         placeholder="Digite o assunto do e-mail" required>
     </div>
 
@@ -210,6 +206,7 @@
 <dialog id="modal"><button id="close">×</button><div id="modalBody"></div></dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
+<script src="https://forminit.com/sdk/v1/forminit.js"></script>
 <script src="script.js?v=20260821-emailredirect1"></script>
 <script src="public-supabase.js?v=20260821-cards1"></script>
 
