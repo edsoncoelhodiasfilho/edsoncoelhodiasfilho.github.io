@@ -101,7 +101,7 @@
     <p>Preencha as informações abaixo para que possamos entender melhor o que você precisa.</p>
   </div>
 
-  <form id="quoteForm" action="https://formsubmit.co/eralis3d@gmail.com" method="POST" enctype="multipart/form-data">
+  <form id="quoteForm" action="https://formsubmit.co/eralis3d@gmail.com" method="POST" enctype="multipart/form-data" target="formSubmitFrame">
     <input type="hidden" name="_subject" value="Novo pedido de orçamento — ERALIS">
     <input type="hidden" name="_captcha" value="false">
     <input type="hidden" name="_template" value="table">
@@ -177,7 +177,7 @@
     <p>Informe seu nome e o assunto para que possamos responder o mais rápido possível.</p>
   </div>
 
-  <form id="emailForm" action="https://formsubmit.co/eralis3d@gmail.com" method="POST">
+  <form id="emailForm" action="https://formsubmit.co/eralis3d@gmail.com" method="POST" target="formSubmitEmailFrame">
 
     <input type="hidden" name="_subject" id="emailSubjectHidden" value="Contato pelo site — ERALIS">
     <input type="hidden" name="_next" id="emailNext" value="https://www.eralis.com.br/obrigado-email.html">
@@ -209,7 +209,14 @@
 <dialog id="modal"><button id="close">×</button><div id="modalBody"></div></dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="script.js?v=20260821-emailredirect1"></script>
+<script src="script.js?v=20260821-formsubmit-mobile-robust1"></script>
 <script src="public-supabase.js?v=20260821-cards1"></script>
+
+
+<!-- FormSubmit targets: keep FormSubmit's response out of the visible page. -->
+<iframe name="formSubmitFrame" id="formSubmitFrame" title="" aria-hidden="true"
+  style="display:none;width:0;height:0;border:0"></iframe>
+<iframe name="formSubmitEmailFrame" id="formSubmitEmailFrame" title="" aria-hidden="true"
+  style="display:none;width:0;height:0;border:0"></iframe>
 
 </body></html>
