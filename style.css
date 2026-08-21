@@ -1303,3 +1303,53 @@ footer .brand-name strong{
     min-width:0;
   }
 }
+
+
+/* ============================================================
+   AJUSTE MOBILE — Cards "Tecnologia 3D", "Personalizados",
+   "Entrega" e "Facilidade"
+   ============================================================ */
+@media (max-width: 768px) {
+  .features-grid,
+  .benefits-grid,
+  .feature-cards {
+    gap: 10px !important;
+  }
+
+  .features-grid > *,
+  .benefits-grid > *,
+  .feature-cards > * {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 14px 10px !important;
+    border-radius: 12px !important;
+  }
+
+  .features-grid h3,
+  .benefits-grid h3,
+  .feature-cards h3 {
+    font-size: 0.88rem !important;
+    line-height: 1.15 !important;
+    margin: 7px 0 0 !important;
+  }
+
+  .features-grid p,
+  .benefits-grid p,
+  .feature-cards p {
+    font-size: 0.72rem !important;
+    line-height: 1.3 !important;
+    margin: 5px 0 0 !important;
+  }
+
+  .features-grid svg,
+  .benefits-grid svg,
+  .feature-cards svg,
+  .features-grid img,
+  .benefits-grid img,
+  .feature-cards img {
+    width: 34px !important;
+    height: 34px !important;
+    max-width: 34px !important;
+    max-height: 34px !important;
+  }
+}
