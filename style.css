@@ -1525,3 +1525,34 @@ footer .brand-name strong{
     border-bottom: 0 !important;
   }
 }
+
+
+/* =========================================================
+   PERSONALIZE SUA IDEIA — engrenagem giratória
+   ========================================================= */
+.custom .star{
+  font-size:0;
+  position:relative;
+  color:#cda04a;
+}
+
+.custom .star::after{
+  content:"⚙︎";
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Arial,"Segoe UI Symbol",sans-serif;
+  font-size:150px;
+  line-height:1;
+  color:#cda04a;
+  transform:rotate(0deg);
+}
+
+/* Mantém a mesma animação de rotação da estrela anterior. */
+@media (max-width:560px){
+  .custom .star::after{
+    font-size:90px;
+  }
+}
