@@ -256,47 +256,8 @@ if (quoteModal) {
 }
 
 if (quoteForm) {
-  quoteForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const submitButton = quoteForm.querySelector('button[type="submit"]');
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = "Enviando...";
-    }
-
-    try {
-      const response = await fetch("https://formspree.io/f/meajdegw", {
-        method: "POST",
-        headers: { "Accept": "application/json" },
-        body: new FormData(quoteForm)
-      });
-
-     // if (!response.ok) {
-     //   throw new Error("Formspree HTTP " + response.status);
-     // }
-	 
-	 if (!response.ok) {
-    const errorText = await response.text();
-
-    console.error("Formspree HTTP:", response.status);
-    console.error("Resposta do Formspree:", errorText);
-
-    throw new Error(
-        "Formspree HTTP " + response.status + ": " + errorText
-    );
-}
-
-      window.location.href = "obrigado.html";
-    } catch (error) {
-      console.error("Erro ao enviar orçamento:", error);
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = "Enviar solicitação →";
-      }
-      alert("Não foi possível enviar o orçamento. Tente novamente.");
-    }
-  });
+  // FormSubmit: envio nativo POST para preservar multipart/form-data e o arquivo.
+  // O campo _next no HTML controla a página de agradecimento.
 }
 
 // Modal de e-mail
@@ -342,41 +303,8 @@ if (emailModal) {
 }
 
 if (emailForm) {
-  emailForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    if (emailSubjectHidden && emailSubject) {
-      emailSubjectHidden.value =
-        emailSubject.value.trim() || "Contato pelo site — ERALIS";
-    }
-
-    const submitButton = emailForm.querySelector('button[type="submit"]');
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = "Enviando...";
-    }
-
-    try {
-      const response = await fetch("https://formspree.io/f/xoeabjdo", {
-        method: "POST",
-        headers: { "Accept": "application/json" },
-        body: new FormData(emailForm)
-      });
-
-      if (!response.ok) {
-        throw new Error("Formspree HTTP " + response.status);
-      }
-
-      window.location.href = "obrigado-email.html";
-    } catch (error) {
-      console.error("Erro ao enviar e-mail:", error);
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = "Enviar e-mail →";
-      }
-      alert("Não foi possível enviar o e-mail. Tente novamente.");
-    }
-  });
+  // FormSubmit: envio nativo POST.
+  // O campo _next no HTML controla a página de agradecimento.
 }
 
 // Upload da imagem de referência

@@ -102,18 +102,15 @@
   </div>
 
   <form
-    id="quoteForm"
-    action="https://formspree.io/f/meajdegw"
+    id="quoteForm" action="https://formsubmit.co/eralis3d@gmail.com"
     method="POST"
     enctype="multipart/form-data"
 >
-    <input
-        type="hidden"
-        name="_subject"
-        value="Novo pedido de orçamento — ERALIS"
-    >
+    <input type="hidden" name="_subject" value="Novo pedido de orçamento — ERALIS">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://www.eralis.com.br/obrigado.html">
 
-    <div class="form-group">
+<div class="form-group">
       <label for="quoteDescription">Fale sobre o que precisa:</label>
       <textarea id="quoteDescription" name="description" rows="5"
         placeholder="Descreva sua ideia, produto, personalização ou projeto..." required></textarea>
@@ -182,14 +179,14 @@
     <p>Informe seu nome e o assunto para que possamos identificar sua mensagem.</p>
   </div>
 
-  <form id="emailForm" action="https://formspree.io/f/xoeabjdo" method="POST">
+  <form id="emailForm" action="https://formsubmit.co/eralis3d@gmail.com" method="POST">
+    <input type="hidden" name="_subject" value="Contato pelo site — ERALIS">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://www.eralis.com.br/obrigado-email.html">
 
-    <input type="hidden" name="_subject" id="emailSubjectHidden" value="Contato pelo site — ERALIS">
-    <!--<input type="hidden" name="_captcha" value="false">-->
-    <input type="hidden" name="_template" value="table">
-    <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
-
-    <div class="form-group">
+<!--
+-->
+<div class="form-group">
       <label for="emailName">Seu nome:</label>
       <input id="emailName" name="name" type="text"
         placeholder="Digite seu nome" autocomplete="name" required>
