@@ -295,7 +295,6 @@ const quoteBtn = document.querySelector("#quoteBtn");
 const quoteClose = document.querySelector("#quoteClose");
 const quoteCancel = document.querySelector("#quoteCancel");
 const quoteForm = document.querySelector("#quoteForm");
-const FORMINIT_FORM_ID = "r8qgx4ovcp0";
 
 if (quoteBtn && quoteModal) quoteBtn.addEventListener("click", () => quoteModal.showModal());
 if (quoteClose) quoteClose.addEventListener("click", () => quoteModal.close());
@@ -342,9 +341,7 @@ if (quoteForm) {
 
       alert(
         "Não foi possível enviar o orçamento. " +
-        (error?.message ? "
-
-" + error.message : "Tente novamente.")
+        (error?.message ? "\n\n" + error.message : "Tente novamente.")
       );
     }
   });
@@ -425,9 +422,7 @@ if (emailForm) {
 
       alert(
         "Não foi possível enviar o e-mail. " +
-        (error?.message ? "
-
-" + error.message : "Tente novamente.")
+        (error?.message ? "\n\n" + error.message : "Tente novamente.")
       );
     }
   });
