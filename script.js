@@ -215,6 +215,38 @@ if(isCarousel){
     updateCarousel();
   }
 
+  function previous(){
+    current = current <= 0 ? maxIndex() : current-1;
+    updateCarousel();
+  }
+
+  function resetAutoScroll(){
+    start();
+  }
+
+  // Setas de navegação: criadas via JS para não exigir alteração no HTML.
+  // Elas aparecem somente no mobile através do CSS.
+  const existingMobileArrows = viewport.querySelector(".mobile-carousel-arrows");
+  if(!existingMobileArrows){
+    const arrows=document.createElement("div");
+    arrows.className="mobile-carousel-arrows";
+    arrows.innerHTML=`
+      <button type="button" class="mobile-carousel-arrow mobile-carousel-prev" aria-label="Produto anterior">‹</button>
+      <button type="button" class="mobile-carousel-arrow mobile-carousel-next" aria-label="Próximo produto">›</button>
+    `;
+    viewport.appendChild(arrows);
+
+    arrows.querySelector(".mobile-carousel-prev").addEventListener("click",()=>{
+      previous();
+      resetAutoScroll();
+    });
+
+    arrows.querySelector(".mobile-carousel-next").addEventListener("click",()=>{
+      next();
+      resetAutoScroll();
+    });
+  }
+
   function start(){
     clearInterval(timer);
     timer=setInterval(next,6000);

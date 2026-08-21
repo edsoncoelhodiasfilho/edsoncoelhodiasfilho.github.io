@@ -1637,3 +1637,54 @@ footer .brand-name strong{
     border-width:7px;
   }
 }
+
+
+/* =========================================================
+   SETAS DO CARROSSEL DE PRODUTOS — SOMENTE MOBILE
+   ========================================================= */
+.mobile-carousel-arrows{
+  display:none;
+}
+
+@media (max-width:560px){
+  .carousel-viewport{
+    position:relative;
+  }
+
+  .mobile-carousel-arrows{
+    display:flex;
+    position:absolute;
+    inset:0;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 4px;
+    pointer-events:none;
+    z-index:4;
+  }
+
+  .mobile-carousel-arrow{
+    pointer-events:auto;
+    width:38px;
+    height:38px;
+    padding:0;
+    border:1px solid rgba(7,59,45,.16);
+    border-radius:50%;
+    background:rgba(255,253,249,.94);
+    color:var(--g);
+    box-shadow:0 4px 14px rgba(0,0,0,.14);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:Arial,sans-serif;
+    font-size:29px;
+    line-height:1;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+
+  .mobile-carousel-arrow:active{
+    transform:scale(.94);
+    background:#fff;
+  }
+}
