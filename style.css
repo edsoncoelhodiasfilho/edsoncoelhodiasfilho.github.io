@@ -438,7 +438,7 @@ body{overflow-x:hidden}
   .hero-art{min-height:280px}
   .keyring{transform:scale(.58) rotate(-12deg)}
   .benefits{
-    grid-template-columns:1fr;
+    grid-template-columns:repeat(2,minmax(0,1fr));
     padding:16px 5%;
   }
   .benefits div,
@@ -1464,4 +1464,20 @@ footer .brand-name strong{
 }
 .custom .star{
   color:#6fa3ff;
+}
+
+/* Ajuste final — benefícios em 2 colunas no celular */
+@media (max-width: 480px){
+  .benefits{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:0;
+    padding:16px 4%;
+  }
+  .benefits div{
+    padding:12px 8px;
+    border-right:1px solid #ffffff22;
+    border-bottom:1px solid #ffffff22;
+  }
+  .benefits div:nth-child(2n){border-right:0}
+  .benefits div:nth-last-child(-n+2){border-bottom:0}
 }
