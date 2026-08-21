@@ -1,594 +1,542 @@
 
-/* =========================================================
-   ERALIS — CARRINHO EXIGE CADASTRO
-   ========================================================= */
-
-function eralisUserIsRegistered() {
-  try {
-    const account = JSON.parse(localStorage.getItem("eralisCustomer"));
-    return !!(
-      account &&
-      typeof account.name === "string" && account.name.trim() &&
-      typeof account.email === "string" && account.email.trim() &&
-      typeof account.phone === "string" && account.phone.trim()
-    );
-  } catch {
-    return false;
-  }
-}
-
-function eralisRequireRegistration() {
-  if (eralisUserIsRegistered()) return true;
-
-  const cadastro = document.getElementById("cadastro");
-
-  alert("Para adicionar produtos ao carrinho, faça seu cadastro na ERALIS.");
-
-  if (cadastro) {
-    cadastro.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  return false;
-}
-
-const products = [
-  {id:1,name:"Torres de Eralis",price:89.90,tag:"ESTRATÉGIA",tagColor:"#ffc928",visual:"♜",glow:"rgba(226,155,64,.35)",desc:"Construa, proteja e domine o tabuleiro."},
-  {id:2,name:"Caminhos da Lua",price:69.90,tag:"FAMÍLIA",tagColor:"#2d9cff",visual:"♟",glow:"rgba(53,165,255,.35)",desc:"Explore, colete e vença desafios."},
-  {id:3,name:"Dragão Escarlate",price:49.90,tag:"AVENTURA",tagColor:"#ff594e",visual:"🐉",glow:"rgba(255,57,57,.35)",desc:"Miniatura premium impressa em 3D."},
-  {id:4,name:"Kit Aventureiro",price:59.90,tag:"COLECIONÁVEL",tagColor:"#a85cff",visual:"◆",glow:"rgba(160,75,255,.35)",desc:"Dados, tokens e marcadores."}
+const products=[
+ {id:1,name:"Chaveiro ERALIS",price:24.90,type:"keyring",desc:"Chaveiro exclusivo com identidade ERALIS, produzido em impressão 3D."},
+ {id:2,name:"Cacto — Coleção Encanto",price:29.90,type:"cactus",desc:"Peça decorativa inspirada no crochê para trazer personalidade ao ambiente."},
+ {id:3,name:"Suporte para Celular",price:19.90,type:"holder",desc:"Suporte compacto e funcional para deixar o celular organizado."},
+ {id:4,name:"Mini Figura Decorativa",price:34.90,type:"figure",desc:"Miniatura produzida em 3D para colecionar, decorar ou presentear."},
+ {id:5,name:"Coelhinho — Encanto Crochê",price:39.90,type:"bunny",desc:"Peça decorativa delicada, inspirada no charme artesanal do crochê."},
+ {id:6,name:"Gatinho — Encanto Crochê",price:39.90,type:"cat",desc:"Miniatura decorativa com visual acolhedor e acabamento inspirado em crochê."},
+ {id:7,name:"Darth Vader — Coleção Encanto",price:59.90,type:"figure",desc:"Peça decorativa inspirada no universo de ficção científica."},
+ {id:8,name:"Organizador de Mesa",price:32.90,type:"holder",desc:"Organizador compacto para deixar pequenos objetos sempre à mão."},
+ {id:9,name:"Porta-Canetas Minimalista",price:27.90,type:"holder",desc:"Design minimalista para organizar canetas e acessórios de escritório."},
+ {id:10,name:"Vaso Decorativo Geométrico",price:42.90,type:"cactus",desc:"Vaso de design geométrico para decoração de ambientes."},
+ {id:11,name:"Porta-Celular de Mesa",price:24.90,type:"holder",desc:"Base funcional para apoiar o celular com praticidade."},
+ {id:12,name:"Chaveiro Personalizado",price:29.90,type:"keyring",desc:"Chaveiro personalizado com nome, logo ou identidade visual."},
+ {id:13,name:"Suporte para Fones",price:31.90,type:"holder",desc:"Suporte compacto para manter seus fones organizados."},
+ {id:14,name:"Porta-Controle",price:44.90,type:"holder",desc:"Organizador para controles e pequenos acessórios."},
+ {id:15,name:"Mini Planeta Decorativo",price:36.90,type:"shape",desc:"Peça decorativa para compor mesas, estantes e nichos."},
+ {id:16,name:"Dragão Decorativo",price:49.90,type:"figure",desc:"Miniatura fantástica para colecionadores e decoração."},
+ {id:17,name:"Caveira Decorativa",price:34.90,type:"shape",desc:"Peça decorativa com visual marcante e moderno."},
+ {id:18,name:"Suporte para Controle",price:39.90,type:"holder",desc:"Suporte para manter controles organizados e acessíveis."},
+ {id:19,name:"Vaso Mini Cacto",price:26.90,type:"cactus",desc:"Pequeno vaso decorativo para ambientes compactos."},
+ {id:20,name:"Marcador de Página",price:14.90,type:"shape",desc:"Marcador leve e criativo para acompanhar sua leitura."},
+ {id:21,name:"Porta-Joias",price:38.90,type:"shape",desc:"Peça compacta para organizar pequenos acessórios."},
+ {id:22,name:"Luminária Decorativa",price:69.90,type:"figure",desc:"Peça decorativa com design diferenciado para ambientes."},
+ {id:23,name:"Kit Organizadores",price:54.90,type:"holder",desc:"Conjunto de organizadores para mesa e pequenos objetos."},
+ {id:24,name:"Trofeu Personalizado",price:79.90,type:"figure",desc:"Trofeu personalizado para eventos, equipes e ocasiões especiais."}
 ];
 
-let cart=JSON.parse(localStorage.getItem("eralisCart")||"[]");
+// Troque pelos seus links reais do Mercado Pago.
+const paymentLinks={};
+products.forEach(p=>paymentLinks[p.id]="https://mpago.la/SEU_LINK_"+p.id);
 
-const money=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const grid=document.querySelector("#grid");
+const modal=document.querySelector("#modal");
+const body=document.querySelector("#modalBody");
+const money=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 
-function renderProducts(){
-  document.getElementById("productGrid").innerHTML=products.map(p=>`
-    <article class="product-card">
-      <div class="product-image" style="--product-glow:${p.glow}">
-        <span class="product-tag" style="--tag:${p.tagColor}">${p.tag}</span>
-        <div class="product-visual">${p.visual}</div>
-      </div>
-      <div class="product-body">
+function image(type, imageUrl){
+  if(imageUrl){
+    return `<div class="pic real-image"><img src="${imageUrl}" alt="" loading="lazy"></div>`;
+  }
+  const content=type==="keyring"?"E":"";
+  return `<div class="pic"><div class="shape ${type}">${content}</div></div>`;
+}
+
+function render(list){
+  if(!grid) return;
+  grid.innerHTML=list.map(p=>`
+    <article class="card">
+      ${image(p.type,p.image_url)}
+      <div class="info">
         <h3>${p.name}</h3>
-        <p>${p.desc}</p>
-        <div class="product-bottom">
+        <p>${p.desc || p.description || ""}</p>
+        <div class="row">
           <span class="price">${money(p.price)}</span>
-          <button class="add-product" onclick="addToCart(${p.id})" aria-label="Adicionar ${p.name}">🛒</button>
+          <button class="buy" data-id="${p.id}">Comprar</button>
         </div>
       </div>
     </article>`).join("");
+  document.querySelectorAll(".buy").forEach(b=>b.onclick=()=>openProduct(+b.dataset.id));
 }
 
-function addToCart(id){
-  const item=cart.find(x=>x.id===id);
-  if(item)item.qty++;
-  else cart.push({id,qty:1});
-  saveCart();openCart();
-}
-function changeQty(id,delta){
-  const item=cart.find(x=>x.id===id);
-  if(!item)return;
-  item.qty+=delta;
-  if(item.qty<=0)cart=cart.filter(x=>x.id!==id);
-  saveCart();
-}
-function saveCart(){localStorage.setItem("eralisCart",JSON.stringify(cart));renderCart()}
-function renderCart(){
-  document.getElementById("cartCount").textContent=cart.reduce((s,x)=>s+x.qty,0);
-  const box=document.getElementById("cartItems");
-  if(!cart.length)box.innerHTML='<p class="cart-note">Seu carrinho está vazio.</p>';
-  else box.innerHTML=cart.map(x=>{
-    const p=products.find(y=>y.id===x.id);
-    return `<div class="cart-row"><div><strong>${p.name}</strong><small>${money(p.price)} cada</small></div><div class="qty"><button onclick="changeQty(${p.id},-1)">−</button><b>${x.qty}</b><button onclick="changeQty(${p.id},1)">+</button></div></div>`;
-  }).join("");
-  const total=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0);
-  document.getElementById("cartTotal").textContent=money(total);
-}
-function openCart(){document.getElementById("cartOverlay").hidden=false}
-function closeCart(){document.getElementById("cartOverlay").hidden=true}
+function openProduct(id){
+  const p=products.find(x=>x.id===id);
+  if(!p || !modal || !body) return;
 
-function checkout(){
-  if(!cart.length){alert("Adicione um produto ao carrinho.");return}
-  const phone="5579998080301"; // ALTERE PARA O WHATSAPP DA ERALIS
-  const lines=cart.map(x=>{
-    const p=products.find(y=>y.id===x.id);
-    return `• ${p.name} — ${x.qty} un. — ${money(p.price*x.qty)}`;
-  }).join("\n");
-  const total=cart.reduce((s,x)=>s+products.find(p=>p.id===x.id).price*x.qty,0);
-  const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nTotal estimado: ${money(total)}\n\nGostaria de confirmar disponibilidade, frete e pagamento.`;
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,"_blank");
-}
-
-document.getElementById("openCart").onclick=openCart;
-document.getElementById("closeCart").onclick=closeCart;
-document.getElementById("checkoutButton").onclick=checkout;
-document.getElementById("cartOverlay").addEventListener("click",e=>{if(e.target.id==="cartOverlay")closeCart()});
-
-const whatsapp="5579998080301"; // ALTERE PARA O WHATSAPP DA ERALIS
-document.getElementById("whatsappLink").href=`https://wa.me/${whatsapp}?text=${encodeURIComponent("Olá! Quero conhecer os produtos da ERALIS.")}`;
-document.getElementById("year").textContent=new Date().getFullYear();
-
-renderProducts();
-renderCart();
-
-/* Animação contínua dos objetos ao redor da lua.
-   Cada objeto percorre uma órbita elíptica diferente.
-   O efeito é feito apenas com CSS/JS e não exige bibliotecas externas. */
-const orbitObjects=[...document.querySelectorAll(".orbit-object")];
-const start=performance.now();
-
-const paths=[
-  {rx:285,ry:112,phase:0,speed:.00038},
-  {rx:310,ry:150,phase:1.3,speed:-.00031},
-  {rx:308,ry:150,phase:3.3,speed:-.00031},
-  {rx:308,ry:150,phase:4.8,speed:-.00031},
-  {rx:235,ry:178,phase:2.1,speed:.00046},
-  {rx:235,ry:178,phase:4.1,speed:.00046},
-  {rx:280,ry:112,phase:4.9,speed:.00038},
-  {rx:235,ry:178,phase:.5,speed:.00046},
-  {rx:235,ry:178,phase:5.5,speed:.00046},
-  {rx:285,ry:112,phase:2.4,speed:.00038}
-];
-
-function animateOrbits(now){
-  const stage=document.querySelector(".orbit-stage");
-  const cx=stage.clientWidth/2, cy=stage.clientHeight/2;
-  const t=now-start;
-  orbitObjects.forEach((el,i)=>{
-    const p=paths[i];
-    const a=p.phase+t*p.speed;
-    let x=Math.cos(a)*p.rx;
-    let y=Math.sin(a)*p.ry;
-    // rotate the entire orbital system for a more natural perspective
-    const rot=i%2?0.38:-0.30;
-    const xr=x*Math.cos(rot)-y*Math.sin(rot);
-    const yr=x*Math.sin(rot)+y*Math.cos(rot);
-    const scale=.82 + ((yr+p.ry)/(2*p.ry))*.25;
-    el.style.left=`${cx+xr}px`;
-    el.style.top=`${cy+yr}px`;
-    el.style.transform=`translate(-50%,-50%) scale(${scale}) rotate(${a*20}deg)`;
+  const media=[];
+  if(p.image_url) media.push({type:"image",url:p.image_url});
+  if(p.image_url_2) media.push({type:"image",url:p.image_url_2});
+  if(p.video_url) media.push({type:"video",url:p.video_url});
+  console.log("ERALIS: mídias do produto", p.name, {
+    image1: !!p.image_url,
+    image2: !!p.image_url_2,
+    video: !!p.video_url,
+    total: media.length
   });
-  requestAnimationFrame(animateOrbits);
-}
-requestAnimationFrame(animateOrbits);
 
+  const gallery = media.length ? `
+    <div class="product-modal-gallery" data-gallery>
+      <div class="product-modal-stage">
+        <button type="button" class="product-media-arrow product-media-prev" aria-label="Imagem anterior">‹</button>
+        <div class="product-modal-media-current"></div>
+        <button type="button" class="product-media-arrow product-media-next" aria-label="Próxima imagem">›</button>
+      </div>
+      <div class="product-modal-gallery-bottom">
+        <div class="product-modal-thumbs"></div>
+        <span class="product-modal-counter"></span>
+      </div>
+    </div>
+  ` : image(p.type,p.image_url);
 
+  body.innerHTML=`
+    <div class="modal">
+      ${gallery}
+      <div>
+        <label>ERALIS • PRODUTO</label>
+        <h2>${p.name}</h2>
+        <div class="price">${money(p.price)}</div>
+        <p class="modal-description">${p.desc || p.description || ""}</p>
+        <p><b>Produzido sob demanda.</b> Consulte cores e prazo.</p>
+        <a class="btn" href="${p.payment_url || paymentLinks[id] || "#"}" rel="noopener" target="_blank">Comprar via Mercado Pago →</a>
+      </div>
+    </div>`;
 
-/* =========================================================
-   ERALIS — CADASTRO LOCAL + SESSÃO
-   ========================================================= */
+  if(media.length){
+    const galleryEl=body.querySelector("[data-gallery]");
+    const stage=galleryEl.querySelector(".product-modal-stage");
+    const current=galleryEl.querySelector(".product-modal-media-current");
+    const prev=galleryEl.querySelector(".product-media-prev");
+    const next=galleryEl.querySelector(".product-media-next");
+    const thumbs=galleryEl.querySelector(".product-modal-thumbs");
+    const counter=galleryEl.querySelector(".product-modal-counter");
+    let index=0;
 
-const ACCOUNT_KEY = "eralisCustomer";
-const SESSION_KEY = "eralisLoggedIn";
+    function renderMedia(){
+      const item=media[index];
 
-const form = document.getElementById("registerForm");
-const preview = document.getElementById("accountPreview");
-const message = document.getElementById("registerMessage");
-const accountGreeting = document.getElementById("accountGreeting");
-const accountDetails = document.getElementById("accountDetails");
-const accountLabel = document.getElementById("accountLabel");
-const accountLink = document.getElementById("accountLink");
-const logoutButton = document.getElementById("logoutButton");
+      if(item.type==="video"){
+        current.innerHTML=`<video src="${item.url}" controls playsinline preload="metadata"></video>`;
+      }else{
+        current.innerHTML=`<img src="${item.url}" alt="${p.name}">`;
+      }
 
-const phoneInput = document.getElementById("regPhone");
-const cepInput = document.getElementById("regCep");
-const addressInput = document.getElementById("regAddress");
-const neighborhoodInput = document.getElementById("regNeighborhood");
-const cityInput = document.getElementById("regCity");
+      thumbs.innerHTML=media.map((m,i)=>{
+        const thumb=m.type==="video"
+          ? `<span class="product-thumb-video">▶</span>`
+          : `<img src="${m.url}" alt="Miniatura ${i+1}">`;
+        return `<button type="button" class="product-modal-thumb ${i===index?"active":""}" data-index="${i}" aria-label="Ver mídia ${i+1}">${thumb}</button>`;
+      }).join("");
 
-function getAccount() {
-  try {
-    return JSON.parse(localStorage.getItem(ACCOUNT_KEY));
-  } catch {
-    return null;
-  }
-}
+      counter.textContent=`${index+1} / ${media.length}`;
 
-function loggedIn() {
-  return localStorage.getItem(SESSION_KEY) === "true" && !!getAccount();
-}
+      // As setas ficam visíveis sempre que houver mais de uma mídia.
+      const visible=media.length>1;
+      prev.hidden=!visible;
+      next.hidden=!visible;
 
-function escapeHtml(value) {
-  return String(value || "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  }[c]));
-}
-
-/*
- * Telefone brasileiro:
- * 10 dígitos -> (79) 9999-9999
- * 11 dígitos -> (79) 99999-9999
- *
- * A função nunca adiciona números e nunca perde o último dígito.
- */
-function formatPhone(value) {
-  const digits = String(value || "").replace(/\D/g, "").slice(0, 11);
-
-  if (digits.length === 0) return "";
-  if (digits.length <= 2) return `(${digits}`;
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-
-  const ddd = digits.slice(0, 2);
-  const number = digits.slice(2);
-
-  if (number.length <= 4) {
-    return `(${ddd}) ${number}`;
-  }
-
-  if (digits.length <= 10) {
-    return `(${ddd}) ${number.slice(0, 4)}-${number.slice(4)}`;
-  }
-
-  return `(${ddd}) ${number.slice(0, 5)}-${number.slice(5)}`;
-}
-
-function formatCep(value) {
-  const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
-  return digits.length > 5
-    ? `${digits.slice(0, 5)}-${digits.slice(5)}`
-    : digits;
-}
-
-phoneInput?.addEventListener("input", event => {
-  event.target.value = formatPhone(event.target.value);
-});
-
-cepInput?.addEventListener("input", event => {
-  event.target.value = formatCep(event.target.value);
-});
-
-let cepTimer = null;
-
-cepInput?.addEventListener("input", () => {
-  clearTimeout(cepTimer);
-
-  const cep = cepInput.value.replace(/\D/g, "");
-
-  if (cep.length !== 8) return;
-
-  cepTimer = setTimeout(() => lookupCep(cep), 150);
-});
-
-async function lookupCep(cep) {
-  try {
-    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-
-    if (!response.ok) throw new Error("CEP request failed");
-
-    const data = await response.json();
-
-    if (data.erro) {
-      addressInput.value = "";
-      neighborhoodInput.value = "";
-      cityInput.value = "";
-      return;
+      thumbs.querySelectorAll(".product-modal-thumb").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          index=Number(btn.dataset.index);
+          renderMedia();
+        });
+      });
     }
 
-    addressInput.value = data.logradouro || "";
-    neighborhoodInput.value = data.bairro || "";
-    cityInput.value = data.localidade && data.uf
-      ? `${data.localidade} / ${data.uf}`
-      : (data.localidade || data.uf || "");
+    prev.addEventListener("click",()=>{
+      index=(index-1+media.length)%media.length;
+      renderMedia();
+    });
 
-    message.textContent = "";
-    message.className = "form-message";
-  } catch {
-    // Não exibe mensagem ao usuário; permite preenchimento manual.
-  }
-}
+    next.addEventListener("click",()=>{
+      index=(index+1)%media.length;
+      renderMedia();
+    });
 
-function renderAccount() {
-  const account = getAccount();
+    stage.addEventListener("keydown",event=>{
+      if(event.key==="ArrowLeft"){
+        event.preventDefault();
+        prev.click();
+      }
+      if(event.key==="ArrowRight"){
+        event.preventDefault();
+        next.click();
+      }
+    });
 
-  if (loggedIn() && account) {
-    form.hidden = true;
-    preview.hidden = false;
-
-    accountLabel.textContent = account.name.split(" ")[0];
-    logoutButton.hidden = false;
-
-    accountGreeting.textContent = `Olá, ${account.name.split(" ")[0]}!`;
-    accountDetails.innerHTML =
-      `<strong>E-mail:</strong> ${escapeHtml(account.email)}<br>` +
-      `<strong>WhatsApp:</strong> ${escapeHtml(account.phone)}<br>` +
-      (account.cep ? `<strong>CEP:</strong> ${escapeHtml(account.cep)}<br>` : "") +
-      (account.address ? `<strong>Endereço:</strong> ${escapeHtml(account.address)}<br>` : "") +
-      (account.neighborhood ? `<strong>Bairro:</strong> ${escapeHtml(account.neighborhood)}<br>` : "") +
-      (account.city ? `<strong>Cidade/UF:</strong> ${escapeHtml(account.city)}` : "");
-
-    return;
+    renderMedia();
   }
 
-  form.hidden = false;
-  preview.hidden = true;
-  accountLabel.textContent = "Login";
-  logoutButton.hidden = true;
+  modal.showModal();
 }
 
-form?.addEventListener("submit", event => {
-  event.preventDefault();
+if(document.querySelector("#close")) document.querySelector("#close").onclick=()=>modal.close();
 
-  const account = {
-    name: document.getElementById("regName").value.trim(),
-    phone: phoneInput.value.trim(),
-    email: document.getElementById("regEmail").value.trim(),
-    cep: cepInput.value.trim(),
-    city: cityInput.value.trim(),
-    address: addressInput.value.trim(),
-    neighborhood: neighborhoodInput.value.trim(),
-    marketing: document.getElementById("regMarketing").checked,
-    updatedAt: new Date().toISOString()
+const allButton=document.querySelector("#all");
+if(allButton){
+  allButton.onclick=()=>{ window.location.href="produtos.html"; };
+}
+
+const menu=document.querySelector("#menu");
+if(menu) menu.onclick=()=>document.querySelector("#nav").classList.toggle("open");
+
+// Página inicial: carrossel de produtos em destaque.
+const isCarousel=grid && grid.closest(".carousel-viewport");
+if(grid){
+  render(isCarousel ? products.slice(0,8) : products);
+}
+
+if(isCarousel){
+  let current=0;
+  let timer=null;
+
+  function visibleCount(){
+    if(window.innerWidth<=560) return 1;
+    if(window.innerWidth<=900) return 2;
+    return 4;
+  }
+
+  function maxIndex(){
+    return Math.max(0, products.slice(0,8).length-visibleCount());
+  }
+
+  function updateCarousel(){
+    const count=visibleCount();
+    const gap=window.innerWidth<=560?12:22;
+    const cardWidth=(grid.parentElement.clientWidth-(count-1)*gap)/count;
+    grid.style.setProperty("--card-width",`${cardWidth}px`);
+    grid.style.transform=`translateX(-${current*(cardWidth+gap)}px)`;
+  }
+
+  function next(){
+    current = current >= maxIndex() ? 0 : current+1;
+    updateCarousel();
+  }
+
+  function start(){
+    clearInterval(timer);
+    timer=setInterval(next,3000);
+  }
+
+  window.refreshEralisProductCarousel=function(){
+    current=0;
+    render(products.slice(0,8));
+    updateCarousel();
+    start();
   };
 
-  localStorage.setItem(ACCOUNT_KEY, JSON.stringify(account));
-  localStorage.setItem(SESSION_KEY, "true");
+  window.addEventListener("resize",()=>{ current=Math.min(current,maxIndex()); updateCarousel(); });
+  updateCarousel();
+  start();
 
-  message.textContent = "";
-  renderAccount();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+  const viewport=grid.parentElement;
+  viewport.addEventListener("mouseenter",()=>clearInterval(timer));
+  viewport.addEventListener("mouseleave",start);
+  viewport.addEventListener("touchstart",()=>clearInterval(timer),{passive:true});
+  viewport.addEventListener("touchend",start,{passive:true});
+}
 
-document.getElementById("editAccount")?.addEventListener("click", () => {
-  const account = getAccount();
-  if (!account) return;
+// Modal de solicitação de orçamento
+const quoteModal = document.querySelector("#quoteModal");
+const quoteBtn = document.querySelector("#quoteBtn");
+const quoteClose = document.querySelector("#quoteClose");
+const quoteCancel = document.querySelector("#quoteCancel");
+const quoteForm = document.querySelector("#quoteForm");
 
-  document.getElementById("regName").value = account.name || "";
-  phoneInput.value = formatPhone(account.phone || "");
-  document.getElementById("regEmail").value = account.email || "";
-  cepInput.value = formatCep(account.cep || "");
-  cityInput.value = account.city || "";
-  addressInput.value = account.address || "";
-  neighborhoodInput.value = account.neighborhood || "";
-  document.getElementById("regMarketing").checked = !!account.marketing;
+if (quoteBtn && quoteModal) quoteBtn.addEventListener("click", () => quoteModal.showModal());
+if (quoteClose) quoteClose.addEventListener("click", () => quoteModal.close());
+if (quoteCancel) quoteCancel.addEventListener("click", () => quoteModal.close());
 
-  preview.hidden = true;
-  form.hidden = false;
-  document.getElementById("regName").focus();
-});
-
-document.getElementById("deleteAccount")?.addEventListener("click", () => {
-  if (!confirm("Apagar o cadastro deste navegador?")) return;
-
-  localStorage.removeItem(ACCOUNT_KEY);
-  localStorage.removeItem(SESSION_KEY);
-  form.reset();
-  renderAccount();
-});
-
-logoutButton?.addEventListener("click", () => {
-  localStorage.removeItem(SESSION_KEY);
-  renderAccount();
-});
-
-accountLink?.addEventListener("click", event => {
-  if (loggedIn()) {
-    event.preventDefault();
-    document.getElementById("cadastro")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-});
-
-renderAccount();
-
-/* =========================================================
-   ERALIS — FINALIZAÇÃO PELO INSTAGRAM
-   ========================================================= */
-
-const ERALIS_INSTAGRAM_URL = "https://www.instagram.com/edson.cdiasfilho";
-const instagramCheckout = document.getElementById("instagramCheckout");
-
-if (instagramCheckout) {
-  instagramCheckout.setAttribute("href", ERALIS_INSTAGRAM_URL);
-  instagramCheckout.setAttribute("target", "_blank");
-  instagramCheckout.setAttribute("rel", "noopener noreferrer");
-
-  instagramCheckout.addEventListener("click", function(event) {
-    // O link é deliberadamente direto para o Instagram.
-    // Não alteramos window.location e não redirecionamos para a ERALIS.
-    this.href = ERALIS_INSTAGRAM_URL;
+if (quoteModal) {
+  quoteModal.addEventListener("click", event => {
+    const rect = quoteModal.getBoundingClientRect();
+    const inside=event.clientX>=rect.left&&event.clientX<=rect.right&&event.clientY>=rect.top&&event.clientY<=rect.bottom;
+    if (!inside) quoteModal.close();
   });
 }
 
-/*
- * Intercept any "Adicionar ao carrinho" action before the existing handler.
- * If the customer is not registered, stop the click and send them to cadastro.
- */
-document.addEventListener("click", function (event) {
-  const target = event.target.closest(
-    '[data-action="add-to-cart"], [data-add-to-cart], .add-to-cart, .btn-add-cart, .add-cart, button'
-  );
-
-  if (!target) return;
-
-  const text = (target.textContent || "").trim().toLowerCase();
-  const isAddToCart =
-    target.matches('[data-action="add-to-cart"], [data-add-to-cart], .add-to-cart, .btn-add-cart, .add-cart') ||
-    text.includes("adicionar ao carrinho") ||
-    text === "adicionar" ||
-    text.includes("comprar");
-
-  if (!isAddToCart) return;
-
-  if (!eralisRequireRegistration()) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
-}, true);
-
-
-/* Segurança adicional: impede persistência de carrinho sem cadastro. */
-(function protectCartStorage() {
-  const originalSetItem = localStorage.setItem.bind(localStorage);
-  const originalRemoveItem = localStorage.removeItem.bind(localStorage);
-
-  const isCartKey = key => {
-    const k = String(key || "").toLowerCase();
-    return k.includes("cart") || k.includes("carrinho");
-  };
-
-  localStorage.setItem = function(key, value) {
-    if (isCartKey(key) && !eralisUserIsRegistered()) {
-      return;
+if (quoteForm) {
+  quoteForm.addEventListener("submit", () => {
+    // FormSubmit exige que _next seja uma URL completa (http/https).
+    // Calculamos a URL da página de agradecimento no próprio navegador,
+    // funcionando tanto no domínio publicado quanto no servidor local.
+    const nextField = document.querySelector("#quoteNext");
+    if (nextField) {
+      nextField.value = new URL("obrigado.html", window.location.href).href;
     }
-    return originalSetItem(key, value);
-  };
 
-  function clearAnonymousCart() {
-    if (eralisUserIsRegistered()) return;
-
-    const keys = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (isCartKey(key)) keys.push(key);
+    const submitButton = quoteForm.querySelector('button[type="submit"]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Enviando...";
     }
-    keys.forEach(key => originalRemoveItem(key));
+  });
+}
+
+// Modal de e-mail
+const emailModal = document.querySelector("#emailModal");
+const emailButtons = document.querySelectorAll(".email-modal-btn");
+const emailClose = document.querySelector("#emailClose");
+const emailCancel = document.querySelector("#emailCancel");
+const emailForm = document.querySelector("#emailForm");
+const emailSubject = document.querySelector("#emailSubject");
+const emailSubjectHidden = document.querySelector("#emailSubjectHidden");
+
+emailButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    if (emailModal) {
+      emailModal.showModal();
+      setTimeout(() => {
+        const nameInput = document.querySelector("#emailName");
+        if (nameInput) nameInput.focus();
+      }, 50);
+    }
+  });
+});
+
+if (emailClose && emailModal) {
+  emailClose.addEventListener("click", () => emailModal.close());
+}
+
+if (emailCancel && emailModal) {
+  emailCancel.addEventListener("click", () => emailModal.close());
+}
+
+if (emailModal) {
+  emailModal.addEventListener("click", event => {
+    const rect = emailModal.getBoundingClientRect();
+    const inside =
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom;
+
+    if (!inside) emailModal.close();
+  });
+}
+
+if (emailForm) {
+  emailForm.addEventListener("submit", () => {
+    // FormSubmit precisa receber um POST válido. O _next deve ser uma URL
+    // absoluta; construímos a URL a partir do endereço atual do site.
+    const nextField = document.querySelector("#emailNext");
+    if (nextField) {
+      nextField.value = new URL("obrigado-email.html", window.location.href).href;
+    }
+
+    // O FormSubmit utiliza _subject como assunto real do e-mail.
+    if (emailSubjectHidden && emailSubject) {
+      emailSubjectHidden.value =
+        emailSubject.value.trim() || "Contato pelo site — ERALIS";
+    }
+
+    const submitButton = emailForm.querySelector('button[type="submit"]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Enviando...";
+    }
+  });
+}
+
+// Upload da imagem de referência
+const referenceInput=document.querySelector("#quoteReference");
+const uploadBox=document.querySelector("#uploadBox");
+const fileName=document.querySelector("#fileName");
+
+if(referenceInput){
+  referenceInput.addEventListener("change",()=>{
+    const file=referenceInput.files[0];
+    if(fileName) fileName.textContent=file?file.name:"Nenhum arquivo selecionado";
+  });
+}
+if(uploadBox){
+  ["dragenter","dragover"].forEach(eventName=>{
+    uploadBox.addEventListener(eventName,event=>{event.preventDefault();uploadBox.classList.add("dragover");});
+  });
+  ["dragleave","drop"].forEach(eventName=>{
+    uploadBox.addEventListener(eventName,event=>{event.preventDefault();uploadBox.classList.remove("dragover");});
+  });
+  uploadBox.addEventListener("drop",event=>{
+    const files=event.dataTransfer.files;
+    if(files.length&&referenceInput){
+      referenceInput.files=files;
+      if(fileName) fileName.textContent=files[0].name;
+    }
+  });
+}
+
+
+// Carrossel da área "Criamos ideias" — mesma regra do carrossel de produtos: 3 segundos.
+const ideaCarousel = document.querySelector("#ideaCarousel");
+if (ideaCarousel) {
+  const slides = Array.from(ideaCarousel.querySelectorAll(".idea-slide"));
+  const dots = Array.from(ideaCarousel.querySelectorAll(".idea-dots span"));
+  let ideaCurrent = 0;
+  let ideaTimer = null;
+
+  function showIdeaSlide(index) {
+    slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
   }
 
-  clearAnonymousCart();
-  window.addEventListener("pageshow", clearAnonymousCart);
-})();
+  function nextIdeaSlide() {
+    ideaCurrent = (ideaCurrent + 1) % slides.length;
+    showIdeaSlide(ideaCurrent);
+  }
 
+  function startIdeaCarousel() {
+    clearInterval(ideaTimer);
+    ideaTimer = setInterval(nextIdeaSlide, 3000);
+  }
+
+  showIdeaSlide(ideaCurrent);
+  startIdeaCarousel();
+
+  ideaCarousel.addEventListener("mouseenter", () => clearInterval(ideaTimer));
+  ideaCarousel.addEventListener("mouseleave", startIdeaCarousel);
+  ideaCarousel.addEventListener("touchstart", () => clearInterval(ideaTimer), {passive:true});
+  ideaCarousel.addEventListener("touchend", startIdeaCarousel, {passive:true});
+}
 
 /* =========================================================
-   ERALIS — FINALIZAÇÃO PELO WHATSAPP
+   ERALIS — sincronização pública com o Supabase
    ========================================================= */
+window.addEventListener("eralis-content-loaded", function(event){
+  const data = event.detail || {};
 
-const ERALIS_WHATSAPP_NUMBER = "5579998080301";
+  // Produtos
+  if (Array.isArray(data.products)) {
+    products.length = 0;
 
-function eralisGetCustomerForOrder() {
-  try {
-    return JSON.parse(localStorage.getItem("eralisCustomer")) || null;
-  } catch {
-    return null;
+    data.products.forEach(function(p){
+      products.push({
+        id: p.id,
+        name: p.name,
+        price: Number(p.price || 0),
+        type: p.type || "figure",
+        desc: p.description || "",
+        description: p.description || "",
+        image_url: p.image_url || "",
+        image_path: p.image_path || "",
+        image_url_2: p.image_url_2 || "",
+        image_path_2: p.image_path_2 || "",
+        video_url: p.video_url || "",
+        video_path: p.video_path || "",
+        payment_url: p.payment_url || ""
+      });
+    });
+
+    console.log("ERALIS: produtos recebidos:", products);
+
+    if (grid) {
+      render(isCarousel ? products.slice(0, 8) : products);
+    }
+
+    if (isCarousel && typeof window.refreshEralisProductCarousel === "function") {
+      window.refreshEralisProductCarousel();
+    }
   }
-}
 
-function eralisRegisteredForOrder() {
-  const customer = eralisGetCustomerForOrder();
+  // Criamos ideias
+  if (Array.isArray(data.ideas) && ideaCarousel) {
+    const ideaItems = data.ideas
+      .filter(item => item && item.active !== false && item.image_url)
+      .sort((a,b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
 
-  return !!(
-    customer &&
-    typeof customer.name === "string" && customer.name.trim() &&
-    typeof customer.email === "string" && customer.email.trim() &&
-    typeof customer.phone === "string" && customer.phone.trim()
-  );
-}
+    const track = ideaCarousel.querySelector("#ideaCarouselTrack");
+    const dotsContainer = ideaCarousel.querySelector("#ideaCarouselDots");
 
-function eralisBuildWhatsAppOrderMessage() {
-  if (!eralisRegisteredForOrder()) {
-    throw new Error("Para finalizar o pedido, faça seu cadastro na ERALIS.");
+    if (track) {
+      if (ideaItems.length) {
+        track.innerHTML = ideaItems.map((item, index) => `
+          <div class="idea-slide ${index === 0 ? "active" : ""}">
+            <img
+              src="${item.image_url}"
+              alt="${item.title || "Ideia ERALIS"}"
+              loading="${index === 0 ? "eager" : "lazy"}"
+            >
+          </div>
+        `).join("");
+      } else {
+        track.innerHTML = "";
+      }
+    }
+
+    if (dotsContainer) {
+      dotsContainer.innerHTML = ideaItems.map((_, index) =>
+        `<span class="${index === 0 ? "active" : ""}" data-index="${index}"></span>`
+      ).join("");
+    }
+
+    // Para o carrossel antigo e cria um novo sobre os elementos realmente
+    // inseridos pelo Supabase.
+    if (window.eralisIdeaTimer) {
+      clearInterval(window.eralisIdeaTimer);
+      window.eralisIdeaTimer = null;
+    }
+
+    const slides = Array.from(ideaCarousel.querySelectorAll(".idea-slide"));
+    const dots = Array.from(ideaCarousel.querySelectorAll(".idea-dots span"));
+
+    if (slides.length) {
+      let current = 0;
+
+      function showDynamicIdeaSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === index);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === index);
+        });
+      }
+
+      function nextDynamicIdeaSlide() {
+        current = (current + 1) % slides.length;
+        showDynamicIdeaSlide(current);
+      }
+
+      showDynamicIdeaSlide(0);
+
+      if (slides.length > 1) {
+        window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 3000);
+      }
+
+      dots.forEach((dot, index) => {
+        dot.onclick = () => {
+          current = index;
+          showDynamicIdeaSlide(current);
+
+          if (slides.length > 1) {
+            clearInterval(window.eralisIdeaTimer);
+            window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 3000);
+          }
+        };
+      });
+
+      slides.forEach(slide => {
+        const img = slide.querySelector("img");
+        if (img) {
+          img.addEventListener("load", () => {
+            // Força apenas uma recalculação de layout; não altera a proporção.
+            ideaCarousel.querySelector("#ideaCarouselTrack").style.height = "auto";
+          });
+        }
+      });
+
+      console.log("ERALIS: imagens de Criamos ideias exibidas:", ideaItems);
+    }
   }
+});
 
-  if (!Array.isArray(cart) || !cart.length) {
-    throw new Error("Seu carrinho está vazio.");
-  }
-
-  const customer = eralisGetCustomerForOrder();
-  let total = 0;
-
-  const lines = [
-    "Olá! Gostaria de fazer um pedido na ERALIS.",
-    "",
-    "DADOS DO CLIENTE",
-    `Nome: ${customer.name}`,
-    `E-mail: ${customer.email}`,
-    `WhatsApp: ${customer.phone}`
-  ];
-
-  if (customer.cep) lines.push(`CEP: ${customer.cep}`);
-  if (customer.address) lines.push(`Endereço: ${customer.address}`);
-  if (customer.number) lines.push(`Número: ${customer.number}`);
-  if (customer.complement) lines.push(`Complemento: ${customer.complement}`);
-  if (customer.neighborhood) lines.push(`Bairro: ${customer.neighborhood}`);
-  if (customer.city) lines.push(`Cidade: ${customer.city}`);
-  if (customer.state) lines.push(`UF: ${customer.state}`);
-
-  lines.push("", "ITENS DO PEDIDO");
-
-  cart.forEach(item => {
-    const product = products.find(p => p.id === item.id);
-    if (!product) return;
-
-    const subtotal = Number(product.price) * Number(item.qty);
-    total += subtotal;
-
-    lines.push(`• ${product.name}`);
-    lines.push(
-      `  ${item.qty}x ${money(product.price)} = ${money(subtotal)}`
-    );
-    lines.push("");
+/* Recalcula a área de Criamos ideias quando uma imagem termina de carregar.
+   Não define altura fixa: deixa o navegador respeitar a proporção original. */
+window.addEventListener("load", function(){
+  document.querySelectorAll(".idea-carousel .idea-slide img").forEach(function(img){
+    img.addEventListener("load", function(){
+      const slide = img.closest(".idea-slide");
+      if(slide){
+        slide.style.height = "auto";
+      }
+    });
   });
-
-  lines.push(`TOTAL: ${money(total)}`);
-  lines.push("");
-  lines.push("Aguardo as orientações para finalizar o pedido. Obrigado!");
-
-  return lines.join("\n");
-}
-
-function eralisOpenWhatsAppOrder() {
-  let message;
-
-  try {
-    message = eralisBuildWhatsAppOrderMessage();
-  } catch (error) {
-    alert(error.message);
-    return;
-  }
-
-  const number = ERALIS_WHATSAPP_NUMBER.replace(/\D/g, "");
-
-  if (!number) {
-    alert("Configure o número de WhatsApp da ERALIS.");
-    return;
-  }
-
-  window.location.href =
-    `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
-}
-
-/*
- * Intercepta o botão atual de WhatsApp e substitui qualquer
- * comportamento anterior, mantendo somente uma finalização.
- */
-document.addEventListener("click", event => {
-  const target = event.target.closest(
-    "#checkoutButton, [data-whatsapp-checkout]"
-  );
-
-  if (!target) return;
-
-  event.preventDefault();
-  event.stopImmediatePropagation();
-
-  eralisOpenWhatsAppOrder();
-}, true);
-
-/*
- * Fallback para versões do botão identificadas apenas pelo texto.
- */
-document.addEventListener("click", event => {
-  const target = event.target.closest("a, button");
-  if (!target) return;
-
-  if (
-    target.id === "checkoutButton" ||
-    target.matches("[data-whatsapp-checkout]")
-  ) return;
-
-  const text = (target.textContent || "").trim().toLowerCase();
-
-  if (
-    text.includes("finalizar pelo whatsapp") ||
-    text.includes("finalizar no whatsapp")
-  ) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
-    eralisOpenWhatsAppOrder();
-  }
-}, true);
+});

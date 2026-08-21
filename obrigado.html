@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="refresh" content="5;url=index.html">
+  <title>Obrigado | ERALIS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="thanks-page">
+  <main class="thanks-card">
+    <div class="thanks-logo">
+      <img src="assets/eralis-logo.png" alt="">
+      <div class="thanks-brand-name"><strong>ERALIS</strong><small>IMPRESSÃO 3D</small></div>
+    </div>
+
+    <label>ERALIS • IMPRESSÃO 3D</label>
+    <div class="check">✓</div>
+    <h1>Obrigado pelo envio!</h1>
+    <p>
+      Recebemos as informações do seu projeto e vamos analisar
+      sua solicitação com atenção.
+    </p>
+    <p class="thanks-small">
+      Você será redirecionado para o site principal em
+      <strong><span id="countdown">5</span> segundos</strong>.
+    </p>
+
+    <a class="btn" href="index.html">Voltar agora →</a>
+  </main>
+
+  <script>
+    let seconds = 5;
+    const countdown = document.getElementById("countdown");
+
+    const timer = setInterval(() => {
+      seconds--;
+      countdown.textContent = seconds;
+
+      if (seconds <= 0) {
+        clearInterval(timer);
+        window.location.href = "index.html";
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

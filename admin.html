@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ERALIS | Administração</title>
+<meta name="supabase-integration" content="v2">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-page{background:#f7f3eb;min-height:100vh}
+    .admin-wrap{max-width:1250px;margin:auto;padding:45px 5% 70px}
+    .admin-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:30px}
+    .admin-head h1{color:var(--g);margin:5px 0;font-size:34px}
+    .admin-head p{color:var(--muted);margin:0}
+    .admin-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .admin-card{background:#fffdf9;border:1px solid var(--line);border-radius:18px;padding:25px;margin-bottom:24px;box-shadow:0 8px 25px #00000008}
+    .admin-card h2{color:var(--g);font-size:21px;margin:0 0 6px}
+    .admin-card>p{color:var(--muted);font-size:13px;margin:0 0 22px}
+    .admin-toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}
+    .admin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .admin-item{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+    .admin-thumb{height:170px;background:#eee9df;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .admin-thumb img{width:100%;height:100%;object-fit:cover}
+    .admin-item-body{padding:13px}
+    .admin-item-body h3{font-size:14px;margin:0 0 5px;color:var(--g)}
+    .admin-item-body p{font-size:11px;color:var(--muted);min-height:32px;margin:0 0 10px}
+    .admin-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:10px}
+    .status{font-weight:700}
+    .status.on{color:#2d7c50}.status.off{color:#a35b4a}
+    .admin-item-actions{display:flex;gap:7px}
+    .admin-item-actions button{flex:1;padding:8px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:11px}
+    .admin-item-actions button.primary{background:var(--g);border-color:var(--g);color:#fff}
+    .admin-empty{border:1px dashed #c9c1b3;border-radius:12px;padding:35px;text-align:center;color:var(--muted)}
+    .admin-modal{width:min(650px,94%);border:0;border-radius:20px;padding:0;box-shadow:0 30px 80px #0005}
+    .admin-modal::backdrop{background:#00150fcc}
+    .admin-modal-head{padding:25px 28px 18px;border-bottom:1px solid var(--line)}
+    .admin-modal-head h2{margin:5px 0;color:var(--g)}
+    .admin-form{padding:25px 28px}
+    .admin-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .admin-form label{display:block;color:var(--g);font-size:12px;font-weight:700;margin-bottom:7px}
+    .admin-form input,.admin-form textarea,.admin-form select{width:100%;padding:11px;border:1px solid #d7d1c6;border-radius:9px;font:inherit;background:#fff;outline:none}
+    .admin-form textarea{min-height:100px;resize:vertical}
+    .admin-form .field{margin-bottom:16px}
+    .image-preview{width:100%;height:150px;border-radius:10px;background:#f1ece4;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px;color:var(--muted);font-size:12px}
+    .image-preview img{width:100%;height:100%;object-fit:cover}
+    .admin-form-actions{display:flex;justify-content:flex-end;gap:10px;padding-top:8px}
+    .notice{background:#eef5f0;border:1px solid #c9ded0;color:#315b45;border-radius:10px;padding:12px;font-size:12px;margin-bottom:20px}
+    .danger{color:#a34e43!important}
+    .admin-foot{padding:20px 5%;background:#062f25;color:#fff;display:flex;justify-content:space-between;gap:15px;align-items:center;font-size:12px}
+    @media(max-width:900px){.admin-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){
+      .admin-wrap{padding:30px 4%}.admin-head{display:block}.admin-actions{margin-top:18px}
+      .admin-grid{grid-template-columns:1fr}.admin-form .form-row{grid-template-columns:1fr}
+      .admin-toolbar{display:block}.admin-toolbar .btn{margin-top:12px}
+      .admin-foot{display:block}
+    }
+  </style>
+</head>
+<body class="admin-page">
+<header>
+  <a class="brand" href="index.html">
+    <img src="assets/eralis-logo.png" alt="ERALIS Impressão 3D" class="brand-logo">
+  </a>
+  <nav>
+    <a href="index.html">Site</a>
+    <a href="produtos.html">Produtos</a>
+  </nav>
+</header>
+
+<main class="admin-wrap">
+  <div class="admin-head">
+    <div>
+      <label>ERALIS • ADMINISTRAÇÃO</label>
+      <h1>Gerenciar conteúdo</h1>
+      <p>Gerencie produtos e imagens da área “Criamos ideias”.</p>
+    </div>
+    <div class="admin-actions">
+      <button class="btn outline" id="exportBtn" type="button">Exportar dados</button>
+      <button class="btn outline" id="logoutBtn" type="button">Sair</button>
+      <button class="btn" id="resetBtn" type="button">Restaurar exemplos</button>
+    </div>
+  </div>
+
+  <div class="notice" id="supabaseNotice">
+    <strong>Conectando ao Supabase...</strong>
+  </div>
+
+  <section class="admin-card" id="loginCard" style="display:none;max-width:520px;margin:0 auto 24px;">
+    <h2>Acesso administrativo</h2>
+    <p>Entre com o usuário administrador criado no Supabase.</p>
+    <form id="loginForm" class="admin-form" style="padding:0;">
+      <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+      <div class="admin-form-actions"><button class="btn" type="submit">Entrar</button></div>
+      <div id="loginError" style="color:#a34e43;font-size:12px;margin-top:10px;"></div>
+    </form>
+  </section>
+
+  <section class="admin-card">
+    <div class="admin-toolbar">
+      <div>
+        <h2>Produtos</h2>
+        <p>Produtos exibidos no catálogo e na página principal.</p>
+      </div>
+      <button class="btn" id="addProductBtn" type="button">+ Adicionar produto</button>
+    </div>
+    <div class="admin-grid" id="productsAdmin"></div>
+  </section>
+
+  <section class="admin-card">
+    <div class="admin-toolbar">
+      <div>
+        <h2>Criamos ideias</h2>
+        <p>Imagens utilizadas no carrossel da área principal.</p>
+      </div>
+      <button class="btn" id="addIdeaBtn" type="button">+ Adicionar imagem</button>
+    </div>
+    <div class="admin-grid" id="ideasAdmin"></div>
+  </section>
+</main>
+
+<footer class="admin-foot">
+  <span>© 2026 ERALIS Impressão 3D</span>
+  <a href="index.html">← Voltar para o site</a>
+</footer>
+
+<dialog id="productDialog" class="admin-modal">
+  <div class="admin-modal-head"><label>PRODUTO</label><h2 id="productDialogTitle">Adicionar produto</h2></div>
+  <form id="productForm" class="admin-form">
+    <input type="hidden" id="productId">
+    <div class="field">
+      <label>Imagens do produto <small>(até 2)</small></label>
+      <div class="media-grid">
+        <div>
+          <span class="media-label">Imagem 1</span>
+          <div class="image-preview media-preview" id="productPreview1">Nenhuma imagem selecionada</div>
+          <input id="productImage1" type="file" accept="image/*">
+        </div>
+        <div>
+          <span class="media-label">Imagem 2</span>
+          <div class="image-preview media-preview" id="productPreview2">Nenhuma imagem selecionada</div>
+          <input id="productImage2" type="file" accept="image/*">
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="productVideo">Vídeo <small>(1 arquivo)</small></label>
+      <div class="image-preview media-preview video-preview" id="productVideoPreview">Nenhum vídeo selecionado</div>
+      <input id="productVideo" type="file" accept="video/mp4,video/webm,video/quicktime,video/*">
+      <small class="field-help">Recomendado: MP4 (H.264), até 30 MB.</small>
+    </div>
+    <div class="field"><label for="productName">Nome</label><input id="productName" required></div>
+    <div class="field"><label for="productDescription">Descrição</label><textarea id="productDescription"></textarea></div>
+    <div class="admin-form form-row">
+      <div class="field"><label for="productPrice">Preço (R$)</label><input id="productPrice" type="number" min="0" step="0.01"></div>
+      <div class="field"><label for="productActive">Ativo</label><select id="productActive"><option value="true">SIM</option><option value="false">NÃO</option></select></div>
+    </div>
+    <div class="field"><label for="productPayment">Link Mercado Pago</label><input id="productPayment" type="url" placeholder="https://mpago.la/..."></div>
+    <div class="admin-form-actions"><button class="btn outline" type="button" data-close="productDialog">Cancelar</button><button class="btn" type="submit">Salvar produto</button></div>
+  </form>
+</dialog>
+
+<dialog id="ideaDialog" class="admin-modal">
+  <div class="admin-modal-head"><label>CRIAMOS IDEIAS</label><h2>Adicionar imagem</h2></div>
+  <form id="ideaForm" class="admin-form">
+    <div class="field">
+      <label for="ideaImage">Imagem</label>
+      <div class="image-preview" id="ideaPreview">Nenhuma imagem selecionada</div>
+      <input id="ideaImage" type="file" accept="image/*" required>
+    </div>
+    <div class="field"><label for="ideaTitle">Nome/identificação (opcional)</label><input id="ideaTitle" placeholder="Ex.: Chaveiro ERALIS"></div>
+    <div class="admin-form-actions"><button class="btn outline" type="button" data-close="ideaDialog">Cancelar</button><button class="btn" type="submit">Adicionar imagem</button></div>
+  </form>
+</dialog>
+
+<script src="supabase-config.js"></script>
+<script src="admin.js?v=20260821-multimedia2"></script>
+</body>
+</html>

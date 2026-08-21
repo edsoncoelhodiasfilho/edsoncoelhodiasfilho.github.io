@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ERALIS | Produtos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">✦ Produzido com tecnologia de impressão 3D <span>Instagram · WhatsApp</span></div>
+
+<header>
+<a class="brand" href="#inicio" aria-label="ERALIS Impressão 3D">
+  <img src="assets/eralis-logo.png" alt="" class="brand-logo">
+  <span class="brand-name"><strong>ERALIS</strong><small>IMPRESSÃO 3D</small></span>
+</a>
+<nav id="nav">
+<a href="index.html">Início</a><a href="produtos.html">Produtos</a>
+</nav>
+<button id="menu">☰</button>
+</header>
+
+<main>
+<section class="section catalog-page" id="catalogo">
+  <div class="heading">
+    <div><label>CATÁLOGO ERALIS</label><h1>Nossos produtos</h1></div>
+    <a class="btn outline" href="index.html">← Voltar para o início</a>
+  </div>
+  <p class="catalog-intro">Confira nossa seleção de produtos em impressão 3D. Escolha uma peça para conhecer os detalhes.</p>
+  <div class="grid full-catalog" id="grid"></div>
+</section>
+
+</main>
+
+<footer>
+<div><a class="brand" href="#inicio" aria-label="ERALIS Impressão 3D">
+  <img src="assets/eralis-logo.png" alt="" class="brand-logo">
+  <span class="brand-name"><strong>ERALIS</strong><small>IMPRESSÃO 3D</small></span>
+</a><p>Transformamos ideias em peças com a tecnologia da impressão 3D.</p></div>
+<div><h4>Navegação</h4><a href="admin.html">Administração</a><a href="index.html">Início</a><a href="produtos.html">Produtos</a></div>
+<div><h4>Contato</h4><a href="https://wa.me/5500000000000">WhatsApp</a><a href="mailto:contato@eralis3d.com.br">E-mail</a></div>
+<small class="copy">© 2026 ERALIS Impressão 3D. Todos os direitos reservados.</small>
+</footer>
+
+
+<dialog id="quoteModal" class="quote-modal">
+  <button class="modal-x" id="quoteClose" type="button" aria-label="Fechar">×</button>
+
+  <div class="quote-header">
+    <label>SOLICITE UM ORÇAMENTO</label>
+    <h2>Conte-nos sobre o seu projeto</h2>
+    <p>Preencha as informações abaixo para que possamos entender melhor o que você precisa.</p>
+  </div>
+
+  <form id="quoteForm"
+    action="https://formsubmit.co/eralis3d@gmail.com"
+    method="POST"
+    enctype="multipart/form-data">
+    <input type="hidden" name="_subject" value="Novo pedido de orçamento — ERALIS">
+    <input type="hidden" name="_captcha" value="true">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="http://localhost:8000/obrigado.html">
+
+    <div class="form-group">
+      <label for="quoteDescription">Fale sobre o que precisa:</label>
+      <textarea id="quoteDescription" name="description" rows="5"
+        placeholder="Descreva sua ideia, produto, personalização ou projeto..." required></textarea>
+    </div>
+
+    <fieldset>
+      <legend>Dimensões da sua peça <span>(centímetros)</span></legend>
+
+      <div class="dimensions-grid">
+        <div class="form-group">
+          <label for="quoteHeight">Altura</label>
+          <input id="quoteHeight" name="height" type="number" min="0" step="0.1"
+            placeholder="Ex.: 10">
+        </div>
+
+        <div class="form-group">
+          <label for="quoteWidth">Largura</label>
+          <input id="quoteWidth" name="width" type="number" min="0" step="0.1"
+            placeholder="Ex.: 8">
+        </div>
+
+        <div class="form-group">
+          <label for="quoteLength">Comprimento</label>
+          <input id="quoteLength" name="length" type="number" min="0" step="0.1"
+            placeholder="Ex.: 15">
+        </div>
+
+        <div class="form-group">
+          <label for="quoteDepth">Profundidade</label>
+          <input id="quoteDepth" name="depth" type="number" min="0" step="0.1"
+            placeholder="Ex.: 5">
+        </div>
+      </div>
+    </fieldset>
+
+
+    <div class="form-group reference-group">
+      <label for="quoteReference">Tem alguma foto ou imagem de referência? Se sim, mande para nós.</label>
+      <div class="upload-box" id="uploadBox">
+        <input id="quoteReference" name="reference" type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif">
+        <div class="upload-content">
+          <span class="upload-icon">↑</span>
+          <strong>Selecione uma imagem</strong>
+          <small>JPG, PNG, WEBP ou GIF</small>
+          <span class="file-name" id="fileName">Nenhum arquivo selecionado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group quantity-group">
+      <label for="quoteQuantity">Quantidade</label>
+      <input id="quoteQuantity" name="quantity" type="number" min="1" step="1"
+        value="1" required>
+    </div>
+
+    <div class="quote-actions">
+      <button class="btn outline" id="quoteCancel" type="button">Cancelar</button>
+      <button class="btn" type="submit">Enviar solicitação →</button>
+    </div>
+
+    <p class="quote-note">As dimensões são aproximadas. Caso não saiba alguma medida, você pode deixar o campo em branco.</p>
+  </form>
+</dialog>
+
+<dialog id="modal"><button id="close">×</button><div id="modalBody"></div></dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="script.js?v=20260821-formsubmitfix2"></script>
+<script src="public-supabase.js?v=20260821-cards1"></script>
+
+</body></html>
