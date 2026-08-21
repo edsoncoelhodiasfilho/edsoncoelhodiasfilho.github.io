@@ -236,6 +236,59 @@ if(isCarousel){
   viewport.addEventListener("touchend",start,{passive:true});
 }
 
+
+const FORMINIT_SDK_URL = "https://forminit.com/sdk/v1/forminit.js";
+let forminitInstance = null;
+
+function loadForminit() {
+  if (window.Forminit) {
+    forminitInstance = forminitInstance || new window.Forminit();
+    return Promise.resolve(forminitInstance);
+  }
+
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-forminit-sdk="true"]');
+
+    if (existing) {
+      existing.addEventListener("load", () => {
+        if (!window.Forminit) {
+          reject(new Error("O SDK do Forminit foi carregado, mas Forminit não está disponível."));
+          return;
+        }
+        forminitInstance = new window.Forminit();
+        resolve(forminitInstance);
+      }, { once: true });
+
+      existing.addEventListener("error", () => {
+        reject(new Error("Não foi possível carregar o SDK do Forminit."));
+      }, { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = FORMINIT_SDK_URL;
+    script.async = true;
+    script.dataset.forminitSdk = "true";
+
+    script.onload = () => {
+      if (!window.Forminit) {
+        reject(new Error("O SDK do Forminit foi carregado, mas Forminit não está disponível."));
+        return;
+      }
+      forminitInstance = new window.Forminit();
+      resolve(forminitInstance);
+    };
+
+    script.onerror = () => {
+      reject(new Error("Não foi possível carregar o SDK do Forminit."));
+    };
+
+    document.head.appendChild(script);
+  });
+}
+
+const FORMINIT_FORM_ID = "r8qgx4ovcp0";
+
 // Modal de solicitação de orçamento
 const quoteModal = document.querySelector("#quoteModal");
 const quoteBtn = document.querySelector("#quoteBtn");
@@ -268,6 +321,7 @@ if (quoteForm) {
     }
 
     try {
+      const forminit = await loadForminit();
       const formData = new FormData(quoteForm);
 
       const { error } = await forminit.submit(FORMINIT_FORM_ID, formData);
@@ -288,7 +342,9 @@ if (quoteForm) {
 
       alert(
         "Não foi possível enviar o orçamento. " +
-        (error?.message ? "\n\n" + error.message : "Tente novamente.")
+        (error?.message ? "
+
+" + error.message : "Tente novamente.")
       );
     }
   });
@@ -348,6 +404,7 @@ if (emailForm) {
     }
 
     try {
+      const forminit = await loadForminit();
       const formData = new FormData(emailForm);
 
       const { error } = await forminit.submit(FORMINIT_FORM_ID, formData);
@@ -368,7 +425,9 @@ if (emailForm) {
 
       alert(
         "Não foi possível enviar o e-mail. " +
-        (error?.message ? "\n\n" + error.message : "Tente novamente.")
+        (error?.message ? "
+
+" + error.message : "Tente novamente.")
       );
     }
   });
