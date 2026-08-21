@@ -51,6 +51,7 @@ function render(list){
       <div class="info">
         <h3>${p.name}</h3>
         <p>${p.desc || p.description || ""}</p>
+        ${p.measurements ? `<p class="product-measurements"><strong>Medidas:</strong> ${p.measurements}</p>` : ""}
         <div class="row">
           <span class="price">${money(p.price)}</span>
           <button class="buy" data-id="${p.id}">Comprar</button>

@@ -14,7 +14,7 @@
     };
 
     const productsResponse = await fetch(
-      `${url}/rest/v1/products?select=id,name,description,price,active,sort_order,payment_url,image_url,image_path,image_url_2,image_path_2,video_url,video_path&active=eq.true&order=sort_order.asc,created_at.asc`,
+      `${url}/rest/v1/products?select=id,name,description,measurements,price,active,sort_order,payment_url,image_url,image_path,image_url_2,image_path_2,video_url,video_path&active=eq.true&order=sort_order.asc,created_at.asc`,
       {headers}
     );
 
