@@ -97,6 +97,7 @@ function openProduct(id){
         <h2>${p.name}</h2>
         <div class="price">${money(p.price)}</div>
         <p class="modal-description">${p.desc || p.description || ""}</p>
+        ${p.measurements ? `<p class="modal-measurements"><strong>Medidas:</strong> ${p.measurements}</p>` : ""}
         <p><b>Produzido sob demanda.</b> Consulte cores e prazo.</p>
         <a class="btn" href="${p.payment_url || paymentLinks[id] || "#"}" rel="noopener" target="_blank">Comprar via Mercado Pago →</a>
       </div>
@@ -476,7 +477,7 @@ if (ideaCarousel) {
 
   function startIdeaCarousel() {
     clearInterval(ideaTimer);
-    ideaTimer = setInterval(nextIdeaSlide, 6000);
+    ideaTimer = setInterval(nextIdeaSlide, 4000);
   }
 
   showIdeaSlide(ideaCurrent);
@@ -506,6 +507,7 @@ window.addEventListener("eralis-content-loaded", function(event){
         type: p.type || "figure",
         desc: p.description || "",
         description: p.description || "",
+        measurements: p.measurements || "",
         image_url: p.image_url || "",
         image_path: p.image_path || "",
         image_url_2: p.image_url_2 || "",
@@ -588,7 +590,7 @@ window.addEventListener("eralis-content-loaded", function(event){
       showDynamicIdeaSlide(0);
 
       if (slides.length > 1) {
-        window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 6000);
+        window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 4000);
       }
 
       dots.forEach((dot, index) => {
@@ -598,7 +600,7 @@ window.addEventListener("eralis-content-loaded", function(event){
 
           if (slides.length > 1) {
             clearInterval(window.eralisIdeaTimer);
-            window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 6000);
+            window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 3000);
           }
         };
       });
