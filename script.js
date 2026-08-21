@@ -215,7 +215,7 @@ if(isCarousel){
 
   function start(){
     clearInterval(timer);
-    timer=setInterval(next,7000);
+    timer=setInterval(next,6000);
   }
 
   window.refreshEralisProductCarousel=function(){
@@ -386,7 +386,7 @@ if (ideaCarousel) {
 
   function startIdeaCarousel() {
     clearInterval(ideaTimer);
-    ideaTimer = setInterval(nextIdeaSlide, 7000);
+    ideaTimer = setInterval(nextIdeaSlide, 6000);
   }
 
   showIdeaSlide(ideaCurrent);
@@ -498,7 +498,7 @@ window.addEventListener("eralis-content-loaded", function(event){
       showDynamicIdeaSlide(0);
 
       if (slides.length > 1) {
-        window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 3000);
+        window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 6000);
       }
 
       dots.forEach((dot, index) => {
@@ -508,7 +508,7 @@ window.addEventListener("eralis-content-loaded", function(event){
 
           if (slides.length > 1) {
             clearInterval(window.eralisIdeaTimer);
-            window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 3000);
+            window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 6000);
           }
         };
       });
