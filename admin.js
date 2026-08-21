@@ -60,38 +60,41 @@ async function uploadImage(file,folder){
   return uploadMedia(file,folder,"image");
 }
 async function removeImage(path){if(path)await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`,{method:"DELETE",headers:headers({"Content-Type":"application/json"}),body:JSON.stringify({prefixes:[path]})});}
-function ensureProductMeasurementsField(){
-  const form=document.querySelector("#productForm");
-  if(!form)return null;
 
-  let input=document.querySelector("#productMeasurements");
-  if(input)return input;
+const productImageRemoval={1:false,2:false};
 
-  const description=document.querySelector("#productDescription");
-  const group=document.createElement("div");
-  group.className="form-group";
-  group.innerHTML=`
-    <label for="productMeasurements">Medidas</label>
-    <input id="productMeasurements" name="measurements" type="text"
-      placeholder="Ex.: 10 × 15 × 5 cm">
-  `;
+function resetProductMediaState(){
+  productImageRemoval[1]=false;
+  productImageRemoval[2]=false;
+  const b1=document.querySelector("#removeProductImage1");
+  const b2=document.querySelector("#removeProductImage2");
+  if(b1)b1.textContent="Remover";
+  if(b2)b2.textContent="Remover";
+}
 
-  const descriptionGroup=description?.closest(".form-group");
-  if(descriptionGroup?.parentNode){
-    descriptionGroup.parentNode.insertBefore(group,descriptionGroup.nextSibling);
+function setProductImageRemoval(slot,remove){
+  productImageRemoval[slot]=remove;
+  const preview=document.querySelector(`#productPreview${slot}`);
+  const input=document.querySelector(`#productImage${slot}`);
+  const button=document.querySelector(`#removeProductImage${slot}`);
+
+  if(remove){
+    if(input)input.value="";
+    if(preview)preview.textContent="Imagem será removida ao salvar";
+    if(button)button.textContent="Desfazer";
   }else{
-    const actions=form.querySelector(".quote-actions,.form-actions,button[type='submit']");
-    if(actions?.parentNode) actions.parentNode.insertBefore(group,actions);
-    else form.appendChild(group);
+    const p=products.find(x=>x.id===Number(document.querySelector("#productId").value));
+    const url=slot===1?p?.image_url:p?.image_url_2;
+    if(preview)preview.innerHTML=url?`<img src="${url}" alt="">`:"Nenhuma imagem";
+    if(button)button.textContent="Remover";
   }
-
-  return group.querySelector("#productMeasurements");
 }
 
 window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";ensureProductMeasurementsField().value=p.measurements||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);document.querySelector("#productPayment").value=p.payment_url||"";
 document.querySelector("#productImage1").value="";
 document.querySelector("#productImage2").value="";
 document.querySelector("#productVideo").value="";
+  resetProductMediaState();
 document.querySelector("#productPreview1").innerHTML=p.image_url?`<img src="${p.image_url}" alt="">`:"Nenhuma imagem";
 document.querySelector("#productPreview2").innerHTML=p.image_url_2?`<img src="${p.image_url_2}" alt="">`:"Nenhuma imagem";
 document.querySelector("#productVideoPreview").innerHTML=p.video_url?`<video src="${p.video_url}" controls muted></video>`:"Nenhum vídeo";
@@ -111,8 +114,6 @@ window.deleteProduct=async id=>{
 window.moveIdea=async(id,d)=>{const i=ideas.findIndex(x=>x.id===id),n=i+d;if(i<0||n<0||n>=ideas.length)return;try{await api(`/rest/v1/idea_images?id=eq.${ideas[i].id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({sort_order:ideas[n].sort_order})});await api(`/rest/v1/idea_images?id=eq.${ideas[n].id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({sort_order:ideas[i].sort_order})});await loadData();}catch(e){showError(e);}};
 window.deleteIdea=async id=>{if(!confirm("Excluir esta imagem do carrossel?"))return;try{const i=ideas.find(x=>x.id===id);await api(`/rest/v1/idea_images?id=eq.${id}`,{method:"DELETE"});await removeImage(i?.image_path);await loadData();}catch(e){showError(e);}};
 
-ensureProductMeasurementsField();
-
 document.querySelector("#addProductBtn").onclick=()=>{
   document.querySelector("#productForm").reset();
   ensureProductMeasurementsField().value="";
@@ -124,6 +125,10 @@ document.querySelector("#addProductBtn").onclick=()=>{
   document.querySelector("#productDialog").showModal();
 };
 document.querySelector("#addIdeaBtn").onclick=()=>{document.querySelector("#ideaForm").reset();document.querySelector("#ideaPreview").textContent="Nenhuma imagem selecionada";document.querySelector("#ideaDialog").showModal();};
+
+document.querySelector("#removeProductImage1").onclick=()=>setProductImageRemoval(1,!productImageRemoval[1]);
+document.querySelector("#removeProductImage2").onclick=()=>setProductImageRemoval(2,!productImageRemoval[2]);
+
 function bindImagePreview(inputId,previewId){
   document.querySelector("#"+inputId).onchange=e=>{
     const f=e.target.files[0];
@@ -158,6 +163,11 @@ document.querySelector("#productForm").onsubmit=async e=>{
     let image_path=old?.image_path||null;
     let image_url_2=old?.image_url_2||null;
     let image_path_2=old?.image_path_2||null;
+    const oldImagePath1=old?.image_path||null;
+    const oldImagePath2=old?.image_path_2||null;
+
+    if(productImageRemoval[1]){image_url=null;image_path=null;}
+    if(productImageRemoval[2]){image_url_2=null;image_path_2=null;}
     let video_url=old?.video_url||null;
     let video_path=old?.video_path||null;
 
@@ -177,7 +187,7 @@ document.querySelector("#productForm").onsubmit=async e=>{
     const payload={
       name:document.querySelector("#productName").value.trim(),
       description:document.querySelector("#productDescription").value.trim(),
-      measurements:ensureProductMeasurementsField().value.trim(),
+      measurements:document.querySelector("#productMeasurements").value.trim(),
       price:Number(document.querySelector("#productPrice").value||0),
       active:document.querySelector("#productActive").value==="true",
       payment_url:document.querySelector("#productPayment").value.trim(),
@@ -200,8 +210,8 @@ document.querySelector("#productForm").onsubmit=async e=>{
     }
 
     // Remove only media that was actually replaced.
-    if(file1 && old?.image_path && old.image_path!==image_path)await removeImage(old.image_path);
-    if(file2 && old?.image_path_2 && old.image_path_2!==image_path_2)await removeImage(old.image_path_2);
+    if((file1 || productImageRemoval[1]) && oldImagePath1 && oldImagePath1!==image_path)await removeImage(oldImagePath1);
+    if((file2 || productImageRemoval[2]) && oldImagePath2 && oldImagePath2!==image_path_2)await removeImage(oldImagePath2);
     if(video && old?.video_path && old.video_path!==video_path)await removeImage(old.video_path);
 
     document.querySelector("#productDialog").close();
