@@ -90,7 +90,7 @@ function setProductImageRemoval(slot,remove){
   }
 }
 
-window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";ensureProductMeasurementsField().value=p.measurements||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);document.querySelector("#productPayment").value=p.payment_url||"";
+window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";document.querySelector("#productMeasurements").value=p.measurements||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);document.querySelector("#productPayment").value=p.payment_url||"";
 document.querySelector("#productImage1").value="";
 document.querySelector("#productImage2").value="";
 document.querySelector("#productVideo").value="";
@@ -116,7 +116,8 @@ window.deleteIdea=async id=>{if(!confirm("Excluir esta imagem do carrossel?"))re
 
 document.querySelector("#addProductBtn").onclick=()=>{
   document.querySelector("#productForm").reset();
-  ensureProductMeasurementsField().value="";
+  document.querySelector("#productMeasurements").value="";
+  resetProductMediaState();
   document.querySelector("#productId").value="";
   document.querySelector("#productDialogTitle").textContent="Adicionar produto";
   document.querySelector("#productPreview1").textContent="Nenhuma imagem selecionada";
