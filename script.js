@@ -232,6 +232,45 @@ if(isCarousel){
   start();
 
   const viewport=grid.parentElement;
+
+  // Setas de navegação: criadas somente para o carrossel da página inicial.
+  // O CSS controla sua visibilidade; no desktop elas permanecem ocultas.
+  let mobilePrev=viewport.querySelector(".carousel-mobile-arrow.prev");
+  let mobileNext=viewport.querySelector(".carousel-mobile-arrow.next");
+
+  if(!mobilePrev){
+    mobilePrev=document.createElement("button");
+    mobilePrev.type="button";
+    mobilePrev.className="carousel-mobile-arrow prev";
+    mobilePrev.setAttribute("aria-label","Produto anterior");
+    mobilePrev.innerHTML="&#8249;";
+    viewport.appendChild(mobilePrev);
+  }
+
+  if(!mobileNext){
+    mobileNext=document.createElement("button");
+    mobileNext.type="button";
+    mobileNext.className="carousel-mobile-arrow next";
+    mobileNext.setAttribute("aria-label","Próximo produto");
+    mobileNext.innerHTML="&#8250;";
+    viewport.appendChild(mobileNext);
+  }
+
+  function goPrevious(){
+    current=current<=0 ? maxIndex() : current-1;
+    updateCarousel();
+    start();
+  }
+
+  function goNext(){
+    current=current>=maxIndex() ? 0 : current+1;
+    updateCarousel();
+    start();
+  }
+
+  mobilePrev.addEventListener("click",goPrevious);
+  mobileNext.addEventListener("click",goNext);
+
   viewport.addEventListener("mouseenter",()=>clearInterval(timer));
   viewport.addEventListener("mouseleave",start);
   viewport.addEventListener("touchstart",()=>clearInterval(timer),{passive:true});
