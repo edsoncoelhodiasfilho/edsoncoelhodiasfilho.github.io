@@ -1481,3 +1481,47 @@ footer .brand-name strong{
   .benefits div:nth-child(2n){border-right:0}
   .benefits div:nth-last-child(-n+2){border-bottom:0}
 }
+
+/* ERALIS - correção definitiva dos benefícios no iPhone */
+@media screen and (max-width: 768px) {
+  .benefits {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    width: 100% !important;
+  }
+
+  .benefits > div {
+    width: auto !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .benefits {
+    grid-template-columns: 1fr 1fr !important;
+    padding-left: 4% !important;
+    padding-right: 4% !important;
+  }
+
+  .benefits > div:nth-child(1),
+  .benefits > div:nth-child(2) {
+    border-bottom: 1px solid #ffffff22 !important;
+  }
+
+  .benefits > div:nth-child(1),
+  .benefits > div:nth-child(3) {
+    border-right: 1px solid #ffffff22 !important;
+  }
+
+  .benefits > div:nth-child(2),
+  .benefits > div:nth-child(4) {
+    border-right: 0 !important;
+  }
+
+  .benefits > div:nth-child(3),
+  .benefits > div:nth-child(4) {
+    border-bottom: 0 !important;
+  }
+}
