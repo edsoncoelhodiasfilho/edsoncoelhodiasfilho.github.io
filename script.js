@@ -257,7 +257,6 @@ if (quoteModal) {
 
 if (quoteForm) {
   quoteForm.addEventListener("submit", () => {
-    event.preventDefault();
     // O retorno do formulário deve sempre ir para a página de produção.
     // Não usamos window.location.href para evitar enviar URLs locais
     // (ex.: http://localhost:8000) ao FormSubmit.
@@ -271,8 +270,6 @@ if (quoteForm) {
       submitButton.disabled = true;
       submitButton.textContent = "Enviando...";
     }
-    quoteForm.target = "eralisQuoteFrame";
-    HTMLFormElement.prototype.submit.call(quoteForm);
   });
 }
 
@@ -320,7 +317,6 @@ if (emailModal) {
 
 if (emailForm) {
   emailForm.addEventListener("submit", () => {
-    event.preventDefault();
     // O retorno do formulário deve sempre ir para a página de produção.
     // Não usamos window.location.href para evitar enviar URLs locais
     // (ex.: http://localhost:8000) ao FormSubmit.
@@ -340,8 +336,6 @@ if (emailForm) {
       submitButton.disabled = true;
       submitButton.textContent = "Enviando...";
     }
-    emailForm.target = "eralisEmailFrame";
-    HTMLFormElement.prototype.submit.call(emailForm);
   });
 }
 
