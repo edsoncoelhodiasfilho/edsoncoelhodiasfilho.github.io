@@ -256,19 +256,34 @@ if (quoteModal) {
 }
 
 if (quoteForm) {
-  quoteForm.addEventListener("submit", () => {
-    // O retorno do formulário deve sempre ir para a página de produção.
-    // Não usamos window.location.href para evitar enviar URLs locais
-    // (ex.: http://localhost:8000) ao FormSubmit.
-    const nextField = document.querySelector("#quoteNext");
-    if (nextField) {
-      nextField.value = "https://www.eralis.com.br/obrigado.html";
-    }
+  quoteForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
     const submitButton = quoteForm.querySelector('button[type="submit"]');
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.textContent = "Enviando...";
+    }
+
+    try {
+      const response = await fetch("https://formspree.io/f/meajdegw", {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: new FormData(quoteForm)
+      });
+
+      if (!response.ok) {
+        throw new Error("Formspree HTTP " + response.status);
+      }
+
+      window.location.href = "obrigado.html";
+    } catch (error) {
+      console.error("Erro ao enviar orçamento:", error);
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Enviar solicitação →";
+      }
+      alert("Não foi possível enviar o orçamento. Tente novamente.");
     }
   });
 }
@@ -316,16 +331,9 @@ if (emailModal) {
 }
 
 if (emailForm) {
-  emailForm.addEventListener("submit", () => {
-    // O retorno do formulário deve sempre ir para a página de produção.
-    // Não usamos window.location.href para evitar enviar URLs locais
-    // (ex.: http://localhost:8000) ao FormSubmit.
-    const nextField = document.querySelector("#emailNext");
-    if (nextField) {
-      nextField.value = "https://www.eralis.com.br/obrigado-email.html";
-    }
+  emailForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-    // O FormSubmit utiliza _subject como assunto real do e-mail.
     if (emailSubjectHidden && emailSubject) {
       emailSubjectHidden.value =
         emailSubject.value.trim() || "Contato pelo site — ERALIS";
@@ -335,6 +343,27 @@ if (emailForm) {
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.textContent = "Enviando...";
+    }
+
+    try {
+      const response = await fetch("https://formspree.io/f/xoeabjdo", {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: new FormData(emailForm)
+      });
+
+      if (!response.ok) {
+        throw new Error("Formspree HTTP " + response.status);
+      }
+
+      window.location.href = "obrigado-email.html";
+    } catch (error) {
+      console.error("Erro ao enviar e-mail:", error);
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Enviar e-mail →";
+      }
+      alert("Não foi possível enviar o e-mail. Tente novamente.");
     }
   });
 }
