@@ -1448,3 +1448,20 @@ footer .brand-name strong{
     min-height:400px;
   }
 }
+
+
+/* Personalize suas ideias — somente mudança de cor */
+.custom{
+  background:#0b3d91;
+  color:#fff;
+}
+.custom h2{color:#fff}
+.custom p{color:#dbe7ff}
+.custom .btn.light{
+  background:#fff;
+  color:#0b3d91;
+  border-color:#fff;
+}
+.custom .star{
+  color:#6fa3ff;
+}
