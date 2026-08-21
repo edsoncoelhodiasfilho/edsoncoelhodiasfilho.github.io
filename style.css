@@ -1353,3 +1353,70 @@ footer .brand-name strong{
     max-height: 34px !important;
   }
 }
+
+/* Mobile refinement: compact benefit/feature cards */
+@media (max-width: 768px) {
+  .features,
+  .benefits,
+  .feature-section,
+  .benefits-section {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .features-grid,
+  .benefits-grid,
+  .feature-cards,
+  .features-list,
+  .benefits-list {
+    gap: 7px !important;
+  }
+
+  .features-grid > *,
+  .benefits-grid > *,
+  .feature-cards > *,
+  .features-list > *,
+  .benefits-list > * {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 9px 7px !important;
+    margin: 0 !important;
+    border-radius: 10px !important;
+  }
+
+  .features-grid h3,
+  .benefits-grid h3,
+  .feature-cards h3,
+  .features-list h3,
+  .benefits-list h3 {
+    font-size: 0.72rem !important;
+    line-height: 1.08 !important;
+    margin: 4px 0 0 !important;
+  }
+
+  .features-grid p,
+  .benefits-grid p,
+  .feature-cards p,
+  .features-list p,
+  .benefits-list p {
+    font-size: 0.62rem !important;
+    line-height: 1.18 !important;
+    margin: 3px 0 0 !important;
+  }
+
+  .features-grid svg,
+  .benefits-grid svg,
+  .feature-cards svg,
+  .features-list svg,
+  .benefits-list svg,
+  .features-grid img,
+  .benefits-grid img,
+  .feature-cards img,
+  .features-list img,
+  .benefits-list img {
+    width: 27px !important;
+    height: 27px !important;
+    max-width: 27px !important;
+    max-height: 27px !important;
+  }
+}

@@ -322,7 +322,7 @@ if (emailForm) {
     // (ex.: http://localhost:8000) ao FormSubmit.
     const nextField = document.querySelector("#emailNext");
     if (nextField) {
-      nextField.value = "https://www.eralis.com.br/obrigado-email.html";
+      nextField.value = "https://www.eralis.com.br/obrigado.html";
     }
 
     // O FormSubmit utiliza _subject como assunto real do e-mail.
