@@ -256,9 +256,10 @@ if (quoteModal) {
 }
 
 if (quoteForm) {
-  quoteForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
+  quoteForm.addEventListener("submit", () => {
+    // O retorno do formulário deve sempre ir para a página de produção.
+    // Não usamos window.location.href para evitar enviar URLs locais
+    // (ex.: http://localhost:8000) ao FormSubmit.
     const nextField = document.querySelector("#quoteNext");
     if (nextField) {
       nextField.value = "https://www.eralis.com.br/obrigado.html";
@@ -269,15 +270,29 @@ if (quoteForm) {
       submitButton.disabled = true;
       submitButton.textContent = "Enviando...";
     }
-
-    quoteForm.target = "eralisQuoteSubmitFrame";
-    HTMLFormElement.prototype.submit.call(quoteForm);
-
-    window.setTimeout(() => {
-      window.location.assign("https://www.eralis.com.br/obrigado.html");
-    }, 1800);
   });
 }
+
+// Modal de e-mail
+const emailModal = document.querySelector("#emailModal");
+const emailButtons = document.querySelectorAll(".email-modal-btn");
+const emailClose = document.querySelector("#emailClose");
+const emailCancel = document.querySelector("#emailCancel");
+const emailForm = document.querySelector("#emailForm");
+const emailSubject = document.querySelector("#emailSubject");
+const emailSubjectHidden = document.querySelector("#emailSubjectHidden");
+
+emailButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    if (emailModal) {
+      emailModal.showModal();
+      setTimeout(() => {
+        const nameInput = document.querySelector("#emailName");
+        if (nameInput) nameInput.focus();
+      }, 50);
+    }
+  });
+});
 
 if (emailClose && emailModal) {
   emailClose.addEventListener("click", () => emailModal.close());
@@ -301,32 +316,218 @@ if (emailModal) {
 }
 
 if (emailForm) {
-  emailForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
+  emailForm.addEventListener("submit", () => {
+    // O retorno do formulário deve sempre ir para a página de produção.
+    // Não usamos window.location.href para evitar enviar URLs locais
+    // (ex.: http://localhost:8000) ao FormSubmit.
     const nextField = document.querySelector("#emailNext");
     if (nextField) {
       nextField.value = "https://www.eralis.com.br/obrigado-email.html";
     }
-    if (emailSubjectHidden && emailSubject) {{
+
+    // O FormSubmit utiliza _subject como assunto real do e-mail.
+    if (emailSubjectHidden && emailSubject) {
       emailSubjectHidden.value =
         emailSubject.value.trim() || "Contato pelo site — ERALIS";
-    }}
+    }
 
     const submitButton = emailForm.querySelector('button[type="submit"]');
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.textContent = "Enviando...";
     }
-
-    emailForm.target = "eralisEmailSubmitFrame";
-    HTMLFormElement.prototype.submit.call(emailForm);
-
-    window.setTimeout(() => {
-      window.location.assign("https://www.eralis.com.br/obrigado-email.html");
-    }, 1800);
   });
 }
+
+// Upload da imagem de referência
+const referenceInput=document.querySelector("#quoteReference");
+const uploadBox=document.querySelector("#uploadBox");
+const fileName=document.querySelector("#fileName");
+
+if(referenceInput){
+  referenceInput.addEventListener("change",()=>{
+    const file=referenceInput.files[0];
+    if(fileName) fileName.textContent=file?file.name:"Nenhum arquivo selecionado";
+  });
+}
+if(uploadBox){
+  ["dragenter","dragover"].forEach(eventName=>{
+    uploadBox.addEventListener(eventName,event=>{event.preventDefault();uploadBox.classList.add("dragover");});
+  });
+  ["dragleave","drop"].forEach(eventName=>{
+    uploadBox.addEventListener(eventName,event=>{event.preventDefault();uploadBox.classList.remove("dragover");});
+  });
+  uploadBox.addEventListener("drop",event=>{
+    const files=event.dataTransfer.files;
+    if(files.length&&referenceInput){
+      referenceInput.files=files;
+      if(fileName) fileName.textContent=files[0].name;
+    }
+  });
+}
+
+
+// Carrossel da área "Criamos ideias" — mesma regra do carrossel de produtos: 3 segundos.
+const ideaCarousel = document.querySelector("#ideaCarousel");
+if (ideaCarousel) {
+  const slides = Array.from(ideaCarousel.querySelectorAll(".idea-slide"));
+  const dots = Array.from(ideaCarousel.querySelectorAll(".idea-dots span"));
+  let ideaCurrent = 0;
+  let ideaTimer = null;
+
+  function showIdeaSlide(index) {
+    slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+  }
+
+  function nextIdeaSlide() {
+    ideaCurrent = (ideaCurrent + 1) % slides.length;
+    showIdeaSlide(ideaCurrent);
+  }
+
+  function startIdeaCarousel() {
+    clearInterval(ideaTimer);
+    ideaTimer = setInterval(nextIdeaSlide, 6000);
+  }
+
+  showIdeaSlide(ideaCurrent);
+  startIdeaCarousel();
+
+  ideaCarousel.addEventListener("mouseenter", () => clearInterval(ideaTimer));
+  ideaCarousel.addEventListener("mouseleave", startIdeaCarousel);
+  ideaCarousel.addEventListener("touchstart", () => clearInterval(ideaTimer), {passive:true});
+  ideaCarousel.addEventListener("touchend", startIdeaCarousel, {passive:true});
+}
+
+/* =========================================================
+   ERALIS — sincronização pública com o Supabase
+   ========================================================= */
+window.addEventListener("eralis-content-loaded", function(event){
+  const data = event.detail || {};
+
+  // Produtos
+  if (Array.isArray(data.products)) {
+    products.length = 0;
+
+    data.products.forEach(function(p){
+      products.push({
+        id: p.id,
+        name: p.name,
+        price: Number(p.price || 0),
+        type: p.type || "figure",
+        desc: p.description || "",
+        description: p.description || "",
+        image_url: p.image_url || "",
+        image_path: p.image_path || "",
+        image_url_2: p.image_url_2 || "",
+        image_path_2: p.image_path_2 || "",
+        video_url: p.video_url || "",
+        video_path: p.video_path || "",
+        payment_url: p.payment_url || ""
+      });
+    });
+
+    console.log("ERALIS: produtos recebidos:", products);
+
+    if (grid) {
+      render(isCarousel ? products.slice(0, 8) : products);
+    }
+
+    if (isCarousel && typeof window.refreshEralisProductCarousel === "function") {
+      window.refreshEralisProductCarousel();
+    }
+  }
+
+  // Criamos ideias
+  if (Array.isArray(data.ideas) && ideaCarousel) {
+    const ideaItems = data.ideas
+      .filter(item => item && item.active !== false && item.image_url)
+      .sort((a,b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
+
+    const track = ideaCarousel.querySelector("#ideaCarouselTrack");
+    const dotsContainer = ideaCarousel.querySelector("#ideaCarouselDots");
+
+    if (track) {
+      if (ideaItems.length) {
+        track.innerHTML = ideaItems.map((item, index) => `
+          <div class="idea-slide ${index === 0 ? "active" : ""}">
+            <img
+              src="${item.image_url}"
+              alt="${item.title || "Ideia ERALIS"}"
+              loading="${index === 0 ? "eager" : "lazy"}"
+            >
+          </div>
+        `).join("");
+      } else {
+        track.innerHTML = "";
+      }
+    }
+
+    if (dotsContainer) {
+      dotsContainer.innerHTML = ideaItems.map((_, index) =>
+        `<span class="${index === 0 ? "active" : ""}" data-index="${index}"></span>`
+      ).join("");
+    }
+
+    // Para o carrossel antigo e cria um novo sobre os elementos realmente
+    // inseridos pelo Supabase.
+    if (window.eralisIdeaTimer) {
+      clearInterval(window.eralisIdeaTimer);
+      window.eralisIdeaTimer = null;
+    }
+
+    const slides = Array.from(ideaCarousel.querySelectorAll(".idea-slide"));
+    const dots = Array.from(ideaCarousel.querySelectorAll(".idea-dots span"));
+
+    if (slides.length) {
+      let current = 0;
+
+      function showDynamicIdeaSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === index);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === index);
+        });
+      }
+
+      function nextDynamicIdeaSlide() {
+        current = (current + 1) % slides.length;
+        showDynamicIdeaSlide(current);
+      }
+
+      showDynamicIdeaSlide(0);
+
+      if (slides.length > 1) {
+        window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 6000);
+      }
+
+      dots.forEach((dot, index) => {
+        dot.onclick = () => {
+          current = index;
+          showDynamicIdeaSlide(current);
+
+          if (slides.length > 1) {
+            clearInterval(window.eralisIdeaTimer);
+            window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 6000);
+          }
+        };
+      });
+
+      slides.forEach(slide => {
+        const img = slide.querySelector("img");
+        if (img) {
+          img.addEventListener("load", () => {
+            // Força apenas uma recalculação de layout; não altera a proporção.
+            ideaCarousel.querySelector("#ideaCarouselTrack").style.height = "auto";
+          });
+        }
+      });
+
+      console.log("ERALIS: imagens de Criamos ideias exibidas:", ideaItems);
+    }
+  }
+});
 
 /* Recalcula a área de Criamos ideias quando uma imagem termina de carregar.
    Não define altura fixa: deixa o navegador respeitar a proporção original. */
