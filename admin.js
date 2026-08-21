@@ -33,11 +33,11 @@ async function requireAdmin(){
 }
 async function loadData(){
   if(!await requireAdmin())return;
-  try{[products,ideas]=await Promise.all([api("/rest/v1/products?select=id,name,description,price,active,sort_order,payment_url,image_url,image_path,image_url_2,image_path_2,video_url,video_path&order=sort_order.asc,created_at.asc"),api("/rest/v1/idea_images?select=*&order=sort_order.asc,created_at.asc")]);render();}
+  try{[products,ideas]=await Promise.all([api("/rest/v1/products?select=id,name,description,measurements,price,active,sort_order,payment_url,image_url,image_path,image_url_2,image_path_2,video_url,video_path&order=sort_order.asc,created_at.asc"),api("/rest/v1/idea_images?select=*&order=sort_order.asc,created_at.asc")]);render();}
   catch(e){showError(e);}
 }
 function render(){
-  document.querySelector("#productsAdmin").innerHTML=products.length?products.map(p=>`<article class="admin-item"><div class="admin-thumb">${p.image_url?`<img src="${p.image_url}" alt="${escapeHtml(p.name)}">`:`<span style="font-size:50px;color:#c7943e;font-weight:800">✦</span>`}</div><div class="admin-item-body"><h3>${escapeHtml(p.name)}</h3><p>${escapeHtml(p.description)}</p><div class="media-status"><span>${p.image_url?"Imagem 1 ✓":"Imagem 1 —"}</span><span>${p.image_url_2?"Imagem 2 ✓":"Imagem 2 —"}</span><span>${p.video_url?"Vídeo ✓":"Vídeo —"}</span></div><div class="admin-meta"><strong>${money(p.price)}</strong><span class="status ${p.active?"on":"off"}">${p.active?"ATIVO":"INATIVO"}</span></div><div class="admin-item-actions"><button class="primary" onclick="editProduct(${p.id})">Editar</button><button onclick="toggleProduct(${p.id})">${p.active?"Desativar":"Ativar"}</button><button class="danger" onclick="deleteProduct(${p.id})">Excluir</button></div></div></article>`).join(""):`<div class="admin-empty">Nenhum produto cadastrado.</div>`;
+  document.querySelector("#productsAdmin").innerHTML=products.length?products.map(p=>`<article class="admin-item"><div class="admin-thumb">${p.image_url?`<img src="${p.image_url}" alt="${escapeHtml(p.name)}">`:`<span style="font-size:50px;color:#c7943e;font-weight:800">✦</span>`}</div><div class="admin-item-body"><h3>${escapeHtml(p.name)}</h3><p>${escapeHtml(p.description)}</p>${p.measurements?`<p><strong>Medidas:</strong> ${escapeHtml(p.measurements)}</p>`:""}<div class="media-status"><span>${p.image_url?"Imagem 1 ✓":"Imagem 1 —"}</span><span>${p.image_url_2?"Imagem 2 ✓":"Imagem 2 —"}</span><span>${p.video_url?"Vídeo ✓":"Vídeo —"}</span></div><div class="admin-meta"><strong>${money(p.price)}</strong><span class="status ${p.active?"on":"off"}">${p.active?"ATIVO":"INATIVO"}</span></div><div class="admin-item-actions"><button class="primary" onclick="editProduct(${p.id})">Editar</button><button onclick="toggleProduct(${p.id})">${p.active?"Desativar":"Ativar"}</button><button class="danger" onclick="deleteProduct(${p.id})">Excluir</button></div></div></article>`).join(""):`<div class="admin-empty">Nenhum produto cadastrado.</div>`;
   document.querySelector("#ideasAdmin").innerHTML=ideas.length?ideas.map((i,idx)=>`<article class="admin-item"><div class="admin-thumb">${i.image_url?`<img src="${i.image_url}" alt="${escapeHtml(i.title)}">`:""}</div><div class="admin-item-body"><h3>${escapeHtml(i.title||"Imagem sem nome")}</h3><p>Posição ${idx+1} no carrossel</p><div class="admin-item-actions"><button ${idx===0?"disabled":""} onclick="moveIdea(${i.id},-1)">←</button><button ${idx===ideas.length-1?"disabled":""} onclick="moveIdea(${i.id},1)">→</button><button class="danger" onclick="deleteIdea(${i.id})">Excluir</button></div></div></article>`).join(""):`<div class="admin-empty">Nenhuma imagem cadastrada.</div>`;
 }
 async function uploadMedia(file,folder,type){
@@ -60,7 +60,35 @@ async function uploadImage(file,folder){
   return uploadMedia(file,folder,"image");
 }
 async function removeImage(path){if(path)await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`,{method:"DELETE",headers:headers({"Content-Type":"application/json"}),body:JSON.stringify({prefixes:[path]})});}
-window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);document.querySelector("#productPayment").value=p.payment_url||"";
+function ensureProductMeasurementsField(){
+  const form=document.querySelector("#productForm");
+  if(!form)return null;
+
+  let input=document.querySelector("#productMeasurements");
+  if(input)return input;
+
+  const description=document.querySelector("#productDescription");
+  const group=document.createElement("div");
+  group.className="form-group";
+  group.innerHTML=`
+    <label for="productMeasurements">Medidas</label>
+    <input id="productMeasurements" name="measurements" type="text"
+      placeholder="Ex.: 10 × 15 × 5 cm">
+  `;
+
+  const descriptionGroup=description?.closest(".form-group");
+  if(descriptionGroup?.parentNode){
+    descriptionGroup.parentNode.insertBefore(group,descriptionGroup.nextSibling);
+  }else{
+    const actions=form.querySelector(".quote-actions,.form-actions,button[type='submit']");
+    if(actions?.parentNode) actions.parentNode.insertBefore(group,actions);
+    else form.appendChild(group);
+  }
+
+  return group.querySelector("#productMeasurements");
+}
+
+window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";ensureProductMeasurementsField().value=p.measurements||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);document.querySelector("#productPayment").value=p.payment_url||"";
 document.querySelector("#productImage1").value="";
 document.querySelector("#productImage2").value="";
 document.querySelector("#productVideo").value="";
@@ -83,8 +111,11 @@ window.deleteProduct=async id=>{
 window.moveIdea=async(id,d)=>{const i=ideas.findIndex(x=>x.id===id),n=i+d;if(i<0||n<0||n>=ideas.length)return;try{await api(`/rest/v1/idea_images?id=eq.${ideas[i].id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({sort_order:ideas[n].sort_order})});await api(`/rest/v1/idea_images?id=eq.${ideas[n].id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({sort_order:ideas[i].sort_order})});await loadData();}catch(e){showError(e);}};
 window.deleteIdea=async id=>{if(!confirm("Excluir esta imagem do carrossel?"))return;try{const i=ideas.find(x=>x.id===id);await api(`/rest/v1/idea_images?id=eq.${id}`,{method:"DELETE"});await removeImage(i?.image_path);await loadData();}catch(e){showError(e);}};
 
+ensureProductMeasurementsField();
+
 document.querySelector("#addProductBtn").onclick=()=>{
   document.querySelector("#productForm").reset();
+  ensureProductMeasurementsField().value="";
   document.querySelector("#productId").value="";
   document.querySelector("#productDialogTitle").textContent="Adicionar produto";
   document.querySelector("#productPreview1").textContent="Nenhuma imagem selecionada";
@@ -146,6 +177,7 @@ document.querySelector("#productForm").onsubmit=async e=>{
     const payload={
       name:document.querySelector("#productName").value.trim(),
       description:document.querySelector("#productDescription").value.trim(),
+      measurements:ensureProductMeasurementsField().value.trim(),
       price:Number(document.querySelector("#productPrice").value||0),
       active:document.querySelector("#productActive").value==="true",
       payment_url:document.querySelector("#productPayment").value.trim(),
