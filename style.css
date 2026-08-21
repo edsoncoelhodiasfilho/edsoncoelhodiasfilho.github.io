@@ -1305,119 +1305,118 @@ footer .brand-name strong{
 }
 
 
-
 /* ============================================================
-   ERALIS — CARDS DE BENEFÍCIOS NO MOBILE
-   Ajuste específico para Tecnologia 3D / Personalizados /
-   Entrega / Facilidade.
+   AJUSTE MOBILE — Cards "Tecnologia 3D", "Personalizados",
+   "Entrega" e "Facilidade"
    ============================================================ */
-@media screen and (max-width: 768px) {
-  .benefits {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 8px !important;
-    padding: 16px 12px !important;
-    margin: 0 !important;
+@media (max-width: 768px) {
+  .features-grid,
+  .benefits-grid,
+  .feature-cards {
+    gap: 10px !important;
   }
 
-  .benefits > div {
-    width: auto !important;
-    min-width: 0 !important;
+  .features-grid > *,
+  .benefits-grid > *,
+  .feature-cards > * {
     min-height: 0 !important;
     height: auto !important;
-    box-sizing: border-box !important;
-    padding: 10px 7px !important;
+    padding: 14px 10px !important;
+    border-radius: 12px !important;
+  }
+
+  .features-grid h3,
+  .benefits-grid h3,
+  .feature-cards h3 {
+    font-size: 0.88rem !important;
+    line-height: 1.15 !important;
+    margin: 7px 0 0 !important;
+  }
+
+  .features-grid p,
+  .benefits-grid p,
+  .feature-cards p {
+    font-size: 0.72rem !important;
+    line-height: 1.3 !important;
+    margin: 5px 0 0 !important;
+  }
+
+  .features-grid svg,
+  .benefits-grid svg,
+  .feature-cards svg,
+  .features-grid img,
+  .benefits-grid img,
+  .feature-cards img {
+    width: 34px !important;
+    height: 34px !important;
+    max-width: 34px !important;
+    max-height: 34px !important;
+  }
+}
+
+/* Mobile refinement: compact benefit/feature cards */
+@media (max-width: 768px) {
+  .features,
+  .benefits,
+  .feature-section,
+  .benefits-section {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .features-grid,
+  .benefits-grid,
+  .feature-cards,
+  .features-list,
+  .benefits-list {
+    gap: 7px !important;
+  }
+
+  .features-grid > *,
+  .benefits-grid > *,
+  .feature-cards > *,
+  .features-list > *,
+  .benefits-list > * {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 9px 7px !important;
     margin: 0 !important;
     border-radius: 10px !important;
   }
 
-  .benefits > div h3 {
-    font-size: 0.70rem !important;
+  .features-grid h3,
+  .benefits-grid h3,
+  .feature-cards h3,
+  .features-list h3,
+  .benefits-list h3 {
+    font-size: 0.72rem !important;
     line-height: 1.08 !important;
     margin: 4px 0 0 !important;
-    letter-spacing: 0 !important;
   }
 
-  .benefits > div p {
-    font-size: 0.60rem !important;
+  .features-grid p,
+  .benefits-grid p,
+  .feature-cards p,
+  .features-list p,
+  .benefits-list p {
+    font-size: 0.62rem !important;
     line-height: 1.18 !important;
     margin: 3px 0 0 !important;
   }
 
-  .benefits > div svg,
-  .benefits > div img {
-    width: 25px !important;
-    height: 25px !important;
-    max-width: 25px !important;
-    max-height: 25px !important;
-    margin: 0 auto !important;
-  }
-}
-
-@media screen and (max-width: 390px) {
-  .benefits {
-    gap: 6px !important;
-    padding-left: 9px !important;
-    padding-right: 9px !important;
-  }
-
-  .benefits > div {
-    padding: 8px 5px !important;
-  }
-
-  .benefits > div h3 {
-    font-size: 0.64rem !important;
-  }
-
-  .benefits > div p {
-    font-size: 0.56rem !important;
-  }
-
-  .benefits > div svg,
-  .benefits > div img {
-    width: 22px !important;
-    height: 22px !important;
-    max-width: 22px !important;
-    max-height: 22px !important;
-  }
-}
-
-/* Final exact mobile sizing for the actual benefits markup */
-@media screen and (max-width: 768px) {
-  .benefits > div {
-    flex: 1 1 0 !important;
-    min-height: 0 !important;
-    height: auto !important;
-    padding: 9px 6px !important;
-    font-size: 0.82rem !important;
-  }
-
-  .benefits > div b {
-    display: block !important;
-    font-size: 0.68rem !important;
-    line-height: 1.08 !important;
-    margin-top: 4px !important;
-  }
-
-  .benefits > div small {
-    display: block !important;
-    font-size: 0.57rem !important;
-    line-height: 1.15 !important;
-    margin-top: 3px !important;
-  }
-}
-
-@media screen and (max-width: 390px) {
-  .benefits > div {
-    padding: 7px 5px !important;
-    font-size: 0.74rem !important;
-  }
-
-  .benefits > div b {
-    font-size: 0.61rem !important;
-  }
-
-  .benefits > div small {
-    font-size: 0.52rem !important;
+  .features-grid svg,
+  .benefits-grid svg,
+  .feature-cards svg,
+  .features-list svg,
+  .benefits-list svg,
+  .features-grid img,
+  .benefits-grid img,
+  .feature-cards img,
+  .features-list img,
+  .benefits-list img {
+    width: 27px !important;
+    height: 27px !important;
+    max-width: 27px !important;
+    max-height: 27px !important;
   }
 }
