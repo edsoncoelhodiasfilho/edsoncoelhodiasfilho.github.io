@@ -99,7 +99,7 @@ function openProduct(id){
         <div class="price">${money(p.price)}</div>
         <p class="modal-description">${p.desc || p.description || ""}</p>
         ${p.measurements ? `<p class="modal-measurements"><strong>Medidas:</strong> ${p.measurements}</p>` : ""}
-        <p><b>Produzido sob demanda.</b> Consulte cores e prazo.</p>
+        <p><b>Produzido sob demanda.</b> Consulte prazo de entrega.</p>
         <a class="btn" href="${p.payment_url || paymentLinks[id] || "#"}" rel="noopener" target="_blank">Comprar via Mercado Pago →</a>
       </div>
     </div>`;
