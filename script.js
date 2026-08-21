@@ -386,7 +386,7 @@ if (ideaCarousel) {
 
   function startIdeaCarousel() {
     clearInterval(ideaTimer);
-    ideaTimer = setInterval(nextIdeaSlide, 3000);
+    ideaTimer = setInterval(nextIdeaSlide, 7000);
   }
 
   showIdeaSlide(ideaCurrent);
