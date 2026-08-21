@@ -1528,31 +1528,112 @@ footer .brand-name strong{
 
 
 /* =========================================================
-   PERSONALIZE SUA IDEIA — engrenagem giratória
+   PERSONALIZE SUA IDEIA — engrenagem CSS giratória
+   Compatível com Safari/iPhone
    ========================================================= */
 .custom .star{
-  font-size:0;
   position:relative;
-  color:#cda04a;
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  width:190px;
+  height:190px;
+  flex:0 0 190px;
+  margin:0;
+  font-size:0 !important;
+  color:transparent !important;
+  transform-origin:center;
+  animation:eralisGearSpin 8s linear infinite;
+  filter:drop-shadow(0 0 8px rgba(205,160,74,.22));
+  will-change:transform;
+}
+
+.custom .star::before{
+  content:"";
+  position:absolute;
+  width:112px;
+  height:112px;
+  border-radius:50%;
+  background:
+    conic-gradient(
+      from 0deg,
+      #cda04a 0deg 8deg,
+      transparent 8deg 22deg,
+      #cda04a 22deg 30deg,
+      transparent 30deg 45deg,
+      #cda04a 45deg 53deg,
+      transparent 53deg 67deg,
+      #cda04a 67deg 75deg,
+      transparent 75deg 90deg,
+      #cda04a 90deg 98deg,
+      transparent 98deg 112deg,
+      #cda04a 112deg 120deg,
+      transparent 120deg 135deg,
+      #cda04a 135deg 143deg,
+      transparent 143deg 157deg,
+      #cda04a 157deg 165deg,
+      transparent 165deg 180deg,
+      #cda04a 180deg 188deg,
+      transparent 188deg 202deg,
+      #cda04a 202deg 210deg,
+      transparent 210deg 225deg,
+      #cda04a 225deg 233deg,
+      transparent 233deg 247deg,
+      #cda04a 247deg 255deg,
+      transparent 255deg 270deg,
+      #cda04a 270deg 278deg,
+      transparent 278deg 292deg,
+      #cda04a 292deg 300deg,
+      transparent 300deg 315deg,
+      #cda04a 315deg 323deg,
+      transparent 323deg 337deg,
+      #cda04a 337deg 345deg,
+      transparent 345deg 360deg
+    );
+  -webkit-mask:radial-gradient(circle,transparent 0 31px,#000 32px);
+  mask:radial-gradient(circle,transparent 0 31px,#000 32px);
 }
 
 .custom .star::after{
-  content:"⚙︎";
+  content:"";
   position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:Arial,"Segoe UI Symbol",sans-serif;
-  font-size:150px;
-  line-height:1;
-  color:#cda04a;
-  transform:rotate(0deg);
+  width:58px;
+  height:58px;
+  border:10px solid #cda04a;
+  border-radius:50%;
+  box-shadow:0 0 0 1px rgba(205,160,74,.35);
 }
 
-/* Mantém a mesma animação de rotação da estrela anterior. */
+@keyframes eralisGearSpin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .custom .star{
+    animation:none;
+  }
+}
+
 @media (max-width:560px){
+  .custom .star{
+    display:flex !important;
+    width:120px;
+    height:120px;
+    flex-basis:120px;
+    margin:28px auto 0;
+  }
+
+  .custom .star::before{
+    width:76px;
+    height:76px;
+    -webkit-mask:radial-gradient(circle,transparent 0 21px,#000 22px);
+    mask:radial-gradient(circle,transparent 0 21px,#000 22px);
+  }
+
   .custom .star::after{
-    font-size:90px;
+    width:38px;
+    height:38px;
+    border-width:7px;
   }
 }
