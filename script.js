@@ -215,7 +215,7 @@ if(isCarousel){
 
   function start(){
     clearInterval(timer);
-    timer=setInterval(next,3000);
+    timer=setInterval(next,7000);
   }
 
   window.refreshEralisProductCarousel=function(){
