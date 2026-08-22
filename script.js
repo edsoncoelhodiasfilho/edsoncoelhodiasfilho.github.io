@@ -233,28 +233,20 @@ if(isCarousel){
 
   const viewport=grid.parentElement;
 
-  // Setas de navegação: criadas somente para o carrossel da página inicial.
-  // O CSS controla sua visibilidade; no desktop elas permanecem ocultas.
-  let mobilePrev=viewport.querySelector(".carousel-mobile-arrow.prev");
-  let mobileNext=viewport.querySelector(".carousel-mobile-arrow.next");
-
-  if(!mobilePrev){
-    mobilePrev=document.createElement("button");
-    mobilePrev.type="button";
-    mobilePrev.className="carousel-mobile-arrow prev";
-    mobilePrev.setAttribute("aria-label","Produto anterior");
-    mobilePrev.innerHTML="&#8249;";
-    viewport.appendChild(mobilePrev);
+  // Controles fora do viewport: não interferem no dimensionamento dos cards.
+  let mobileControls=viewport.nextElementSibling;
+  if(!mobileControls || !mobileControls.classList.contains("carousel-mobile-controls")){
+    mobileControls=document.createElement("div");
+    mobileControls.className="carousel-mobile-controls";
+    mobileControls.innerHTML=`
+      <button type="button" class="carousel-mobile-arrow prev" aria-label="Produto anterior">&#8249;</button>
+      <button type="button" class="carousel-mobile-arrow next" aria-label="Próximo produto">&#8250;</button>
+    `;
+    viewport.insertAdjacentElement("afterend",mobileControls);
   }
 
-  if(!mobileNext){
-    mobileNext=document.createElement("button");
-    mobileNext.type="button";
-    mobileNext.className="carousel-mobile-arrow next";
-    mobileNext.setAttribute("aria-label","Próximo produto");
-    mobileNext.innerHTML="&#8250;";
-    viewport.appendChild(mobileNext);
-  }
+  const mobilePrev=mobileControls.querySelector(".carousel-mobile-arrow.prev");
+  const mobileNext=mobileControls.querySelector(".carousel-mobile-arrow.next");
 
   function goPrevious(){
     current=current<=0 ? maxIndex() : current-1;

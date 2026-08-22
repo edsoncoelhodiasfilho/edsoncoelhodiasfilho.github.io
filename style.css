@@ -1683,3 +1683,52 @@ footer .brand-name strong{
     transform:translateY(-50%) scale(.94);
   }
 }
+
+/* Navegação do carrossel de produtos — somente mobile */
+.carousel-mobile-controls{display:none}
+
+@media (max-width:560px){
+  .carousel-viewport .carousel-track{
+    display:flex !important;
+    flex-wrap:nowrap !important;
+    width:auto !important;
+    grid-template-columns:none !important;
+  }
+
+  .carousel-viewport .carousel-track .card{
+    flex:0 0 var(--card-width);
+    width:var(--card-width);
+    min-width:0;
+  }
+
+  .carousel-mobile-controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:28px;
+    width:100%;
+    margin-top:12px;
+  }
+
+  .carousel-mobile-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:34px;
+    padding:0;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#fff;
+    color:var(--g);
+    box-shadow:0 3px 10px #00000012;
+    font-family:Arial,sans-serif;
+    font-size:28px;
+    line-height:1;
+    cursor:pointer;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .carousel-mobile-arrow:active{transform:scale(.94)}
+}
