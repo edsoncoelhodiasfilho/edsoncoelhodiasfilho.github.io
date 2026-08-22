@@ -1681,22 +1681,18 @@ footer .brand-name strong{
 }
 
 
-/* =========================================================
-   CONTATO — WhatsApp e E-mail com a mesma altura
-   ========================================================= */
-.contact > div:last-child{
-  display:flex;
-  align-items:stretch;
-  gap:10px;
+/* E-mail no rodapé: mesma tipografia dos links de contato */
+footer > div:not(:first-child) .footer-email-btn{
+  display:block;
+  color:#b9c7c1;
+  font-family:"DM Sans",Arial,sans-serif;
+  font-size:13px;
+  font-weight:400;
+  line-height:normal;
+  margin:10px 0;
+  padding:0;
+  text-align:left;
 }
-
-.contact > div:last-child .btn{
-  min-height:48px;
-  height:48px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  box-sizing:border-box;
-  margin:0;
-  line-height:1.2;
+footer > div:not(:first-child) .footer-email-btn:hover{
+  color:var(--gold);
 }
