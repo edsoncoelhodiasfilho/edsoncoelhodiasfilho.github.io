@@ -1729,3 +1729,17 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     margin:8px 5px 0 0;
   }
 }
+
+
+/* =========================================================
+   PREÇO — centavos em formato reduzido (estilo marketplace)
+   ========================================================= */
+.price-cents{
+  font-size:.58em;
+  line-height:0;
+  position:relative;
+  top:-.45em;
+  margin-left:1px;
+  vertical-align:baseline;
+  font-weight:700;
+}

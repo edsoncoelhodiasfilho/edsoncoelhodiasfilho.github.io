@@ -33,7 +33,12 @@ products.forEach(p=>paymentLinks[p.id]="https://mpago.la/SEU_LINK_"+p.id);
 const grid=document.querySelector("#grid");
 const modal=document.querySelector("#modal");
 const body=document.querySelector("#modalBody");
-const money=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+function money(n){
+  const value=Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  const match=value.match(/^(.+?)(\\d+),(\\d{2})$/);
+  if(!match) return value;
+  return `${match[1]}${match[2]}<sup class="price-cents">${match[3]}</sup>`;
+}
 
 function image(type, imageUrl){
   if(imageUrl){
