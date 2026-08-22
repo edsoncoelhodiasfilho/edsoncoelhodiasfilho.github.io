@@ -1730,16 +1730,17 @@ footer > div:not(:first-child) .footer-email-btn:hover{
   }
 }
 
-
-/* Centavos do preço em formato reduzido, estilo marketplace */
-.price .price-cents,
+/* =========================================================
+   PREÇO — centavos reduzidos estilo marketplace
+   ========================================================= */
 .price-cents{
   display:inline-block;
-  font-size:.55em;
+  font-size:.58em;
   line-height:1;
-  vertical-align:top;
-  position:relative;
-  top:.05em;
-  margin-left:1px;
   font-weight:700;
+  position:relative;
+  top:-.38em;
+  margin-left:1px;
+  vertical-align:baseline;
+  white-space:nowrap;
 }
