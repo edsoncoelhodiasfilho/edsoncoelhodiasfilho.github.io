@@ -405,6 +405,8 @@ body{overflow-x:hidden}
   }
   .row .buy{
     width:100%;
+    font-size:13px;
+    padding:9px 12px;
   }
 
   .custom{
