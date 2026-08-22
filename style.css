@@ -1679,3 +1679,24 @@ footer .brand-name strong{
     transform:scale(.94);
   }
 }
+
+
+/* =========================================================
+   CONTATO — WhatsApp e E-mail com a mesma altura
+   ========================================================= */
+.contact > div:last-child{
+  display:flex;
+  align-items:stretch;
+  gap:10px;
+}
+
+.contact > div:last-child .btn{
+  min-height:48px;
+  height:48px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  margin:0;
+  line-height:1.2;
+}
