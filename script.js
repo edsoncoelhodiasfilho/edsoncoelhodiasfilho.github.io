@@ -232,21 +232,9 @@ if(isCarousel){
   start();
 
   const viewport=grid.parentElement;
-
-  // Controles fora do viewport: não interferem no dimensionamento dos cards.
-  let mobileControls=viewport.nextElementSibling;
-  if(!mobileControls || !mobileControls.classList.contains("carousel-mobile-controls")){
-    mobileControls=document.createElement("div");
-    mobileControls.className="carousel-mobile-controls";
-    mobileControls.innerHTML=`
-      <button type="button" class="carousel-mobile-arrow prev" aria-label="Produto anterior">&#8249;</button>
-      <button type="button" class="carousel-mobile-arrow next" aria-label="Próximo produto">&#8250;</button>
-    `;
-    viewport.insertAdjacentElement("afterend",mobileControls);
-  }
-
-  const mobilePrev=mobileControls.querySelector(".carousel-mobile-arrow.prev");
-  const mobileNext=mobileControls.querySelector(".carousel-mobile-arrow.next");
+  const mobileControls=viewport.parentElement.querySelector(".carousel-mobile-controls");
+  const mobilePrev=mobileControls?.querySelector(".carousel-mobile-arrow.prev");
+  const mobileNext=mobileControls?.querySelector(".carousel-mobile-arrow.next");
 
   function goPrevious(){
     current=current<=0 ? maxIndex() : current-1;
@@ -260,8 +248,8 @@ if(isCarousel){
     start();
   }
 
-  mobilePrev.addEventListener("click",goPrevious);
-  mobileNext.addEventListener("click",goNext);
+  if(mobilePrev) mobilePrev.addEventListener("click",goPrevious);
+  if(mobileNext) mobileNext.addEventListener("click",goNext);
 
   viewport.addEventListener("mouseenter",()=>clearInterval(timer));
   viewport.addEventListener("mouseleave",start);

@@ -1639,13 +1639,7 @@ footer .brand-name strong{
 }
 
 
-/* =========================================================
-   SETAS DO CARROSSEL DE PRODUTOS — SOMENTE MOBILE
-   Não altera o layout do carrossel em desktop/tablet.
-   ========================================================= */
-.carousel-mobile-arrow{
-  display:none;
-}
+
 
 @media (max-width:560px){
   .carousel-viewport{
@@ -1684,24 +1678,35 @@ footer .brand-name strong{
   }
 }
 
-/* Navegação do carrossel de produtos — somente mobile */
-.carousel-mobile-controls{display:none}
+/* =========================================================
+   NAVEGAÇÃO — CARROSSEL "NOSSOS PRODUTOS" — SOMENTE MOBILE
+   ========================================================= */
+.carousel-mobile-controls{
+  display:none;
+}
 
 @media (max-width:560px){
-  .carousel-viewport .carousel-track{
+  /* O track continua sendo controlado pelo JavaScript. */
+  #produtos .carousel-viewport{
+    width:100%;
+    overflow:hidden;
+  }
+
+  #produtos .carousel-viewport .carousel-track{
     display:flex !important;
     flex-wrap:nowrap !important;
     width:auto !important;
     grid-template-columns:none !important;
   }
 
-  .carousel-viewport .carousel-track .card{
+  #produtos .carousel-viewport .carousel-track .card{
     flex:0 0 var(--card-width);
     width:var(--card-width);
     min-width:0;
   }
 
-  .carousel-mobile-controls{
+  /* As setas pertencem explicitamente a Nossos produtos e ficam abaixo. */
+  #produtos .carousel-mobile-controls{
     display:flex;
     align-items:center;
     justify-content:center;
@@ -1710,7 +1715,7 @@ footer .brand-name strong{
     margin-top:12px;
   }
 
-  .carousel-mobile-arrow{
+  #produtos .carousel-mobile-arrow{
     display:flex;
     align-items:center;
     justify-content:center;
@@ -1724,11 +1729,14 @@ footer .brand-name strong{
     box-shadow:0 3px 10px #00000012;
     font-family:Arial,sans-serif;
     font-size:28px;
+    font-weight:400;
     line-height:1;
     cursor:pointer;
     touch-action:manipulation;
     -webkit-tap-highlight-color:transparent;
   }
 
-  .carousel-mobile-arrow:active{transform:scale(.94)}
+  #produtos .carousel-mobile-arrow:active{
+    transform:scale(.94);
+  }
 }
