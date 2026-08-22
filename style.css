@@ -1696,3 +1696,34 @@ footer > div:not(:first-child) .footer-email-btn{
 footer > div:not(:first-child) .footer-email-btn:hover{
   color:var(--gold);
 }
+
+
+/* =========================================================
+   CONTATO — WhatsApp e E-mail com a MESMA ALTURA
+   ========================================================= */
+#contato > div:last-child{
+  display:flex;
+  align-items:stretch;
+  gap:10px;
+}
+
+#contato > div:last-child > .btn{
+  box-sizing:border-box;
+  height:48px;
+  min-height:48px;
+  padding:14px 22px;
+  margin:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1.2;
+  vertical-align:middle;
+}
+
+@media (max-width:760px){
+  #contato > div:last-child > .btn{
+    height:48px;
+    min-height:48px;
+    margin:8px 5px 0 0;
+  }
+}
