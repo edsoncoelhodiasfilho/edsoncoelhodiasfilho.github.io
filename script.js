@@ -232,9 +232,9 @@ if(isCarousel){
   start();
 
   const viewport=grid.parentElement;
-  const mobileControls=viewport.parentElement.querySelector(".carousel-mobile-controls");
-  const mobilePrev=mobileControls?.querySelector(".carousel-mobile-arrow.prev");
-  const mobileNext=mobileControls?.querySelector(".carousel-mobile-arrow.next");
+  const productsControls=document.querySelector("#productsMobileControls");
+  const productsPrev=document.querySelector("#productsPrev");
+  const productsNext=document.querySelector("#productsNext");
 
   function goPrevious(){
     current=current<=0 ? maxIndex() : current-1;
@@ -248,8 +248,8 @@ if(isCarousel){
     start();
   }
 
-  if(mobilePrev) mobilePrev.addEventListener("click",goPrevious);
-  if(mobileNext) mobileNext.addEventListener("click",goNext);
+  if(productsPrev) productsPrev.addEventListener("click",goPrevious);
+  if(productsNext) productsNext.addEventListener("click",goNext);
 
   viewport.addEventListener("mouseenter",()=>clearInterval(timer));
   viewport.addEventListener("mouseleave",start);

@@ -1640,86 +1640,28 @@ footer .brand-name strong{
 
 
 
-
-@media (max-width:560px){
-  .carousel-viewport{
-    position:relative;
-  }
-
-  .carousel-mobile-arrow{
-    display:flex;
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    z-index:10;
-    width:34px;
-    height:34px;
-    padding:0;
-    align-items:center;
-    justify-content:center;
-    border:1px solid rgba(7,59,45,.18);
-    border-radius:50%;
-    background:rgba(255,253,249,.94);
-    color:var(--g);
-    box-shadow:0 4px 12px rgba(0,0,0,.12);
-    font-family:Arial,sans-serif;
-    font-size:28px;
-    font-weight:400;
-    line-height:1;
-    cursor:pointer;
-    -webkit-tap-highlight-color:transparent;
-  }
-
-  .carousel-mobile-arrow.prev{left:5px}
-  .carousel-mobile-arrow.next{right:5px}
-
-  .carousel-mobile-arrow:active{
-    transform:translateY(-50%) scale(.94);
-  }
-}
-
 /* =========================================================
-   NAVEGAÇÃO — CARROSSEL "NOSSOS PRODUTOS" — SOMENTE MOBILE
+   SETAS — SOMENTE "NOSSOS PRODUTOS" NO MOBILE
    ========================================================= */
-.carousel-mobile-controls{
+#productsMobileControls{
   display:none;
 }
 
 @media (max-width:560px){
-  /* O track continua sendo controlado pelo JavaScript. */
-  #produtos .carousel-viewport{
+  #produtos #productsMobileControls{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:26px;
     width:100%;
-    overflow:hidden;
+    margin:12px 0 0;
   }
 
-  #produtos .carousel-viewport .carousel-track{
-    display:flex !important;
-    flex-wrap:nowrap !important;
-    width:auto !important;
-    grid-template-columns:none !important;
-  }
-
-  #produtos .carousel-viewport .carousel-track .card{
-    flex:0 0 var(--card-width);
-    width:var(--card-width);
-    min-width:0;
-  }
-
-  /* As setas pertencem explicitamente a Nossos produtos e ficam abaixo. */
-  #produtos .carousel-mobile-controls{
+  #produtos #productsMobileControls button{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:28px;
-    width:100%;
-    margin-top:12px;
-  }
-
-  #produtos .carousel-mobile-arrow{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    width:38px;
+    width:42px;
     height:34px;
     padding:0;
     border:1px solid var(--line);
@@ -1727,16 +1669,13 @@ footer .brand-name strong{
     background:#fff;
     color:var(--g);
     box-shadow:0 3px 10px #00000012;
-    font-family:Arial,sans-serif;
-    font-size:28px;
-    font-weight:400;
-    line-height:1;
+    font:400 28px/1 Arial,sans-serif;
     cursor:pointer;
     touch-action:manipulation;
     -webkit-tap-highlight-color:transparent;
   }
 
-  #produtos .carousel-mobile-arrow:active{
+  #produtos #productsMobileControls button:active{
     transform:scale(.94);
   }
 }
