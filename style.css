@@ -1830,7 +1830,7 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     height:100% !important;
     max-width:none;
     max-height:none;
-    object-fit:cover;
+    object-fit:contain;
     object-position:center;
   }
 }
