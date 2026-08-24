@@ -1861,3 +1861,30 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     font-size:13.8px !important;
   }
 }
+
+
+/* =========================================================
+   AJUSTE — MENOR DISTÂNCIA ENTRE "SOBRE A ERALIS" E
+   "FALE CONOSCO" — DESKTOP E MOBILE
+   ========================================================= */
+
+/* Reduz o espaçamento inferior da seção Sobre */
+.about{
+  margin-bottom:20px !important;
+}
+
+/* Reduz o espaçamento superior da seção Fale Conosco */
+.contact{
+  margin-top:0 !important;
+}
+
+/* Mobile: aproxima ainda mais as duas seções */
+@media (max-width:760px){
+  .about{
+    margin-bottom:15px !important;
+  }
+
+  .contact{
+    margin-top:0 !important;
+  }
+}
