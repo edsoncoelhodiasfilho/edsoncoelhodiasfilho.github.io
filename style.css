@@ -1779,7 +1779,7 @@ footer > div:not(:first-child) .footer-email-btn:hover{
   height:100% !important;
   max-width:100%;
   max-height:100%;
-  object-fit:contain;
+  object-fit:cover;
   object-position:center;
 }
 @media (min-width:761px){
@@ -1795,6 +1795,7 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     overflow:hidden;
   }
   .hero-art .idea-carousel .idea-slide img{
-    object-fit:contain;
+    object-fit:cover;
+    object-position:center;
   }
 }
