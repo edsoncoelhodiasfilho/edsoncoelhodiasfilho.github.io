@@ -1831,3 +1831,18 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     line-height:1.25 !important;
   }
 }
+
+
+/* =========================================================
+   DESKTOP — TEXTOS DOS BENEFÍCIOS +15%
+   Tecnologia 3D | Personalizados | Entrega | Facilidade
+   ========================================================= */
+@media (min-width: 769px){
+  .benefits b{
+    font-size:16.1px !important;
+  }
+
+  .benefits small{
+    font-size:12.65px !important;
+  }
+}
