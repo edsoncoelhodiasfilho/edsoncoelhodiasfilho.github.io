@@ -1779,7 +1779,7 @@ footer > div:not(:first-child) .footer-email-btn:hover{
   height:100% !important;
   max-width:100%;
   max-height:100%;
-  object-fit:cover;
+  object-fit:contain;
   object-position:center;
 }
 @media (min-width:761px){
@@ -1795,60 +1795,6 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     overflow:hidden;
   }
   .hero-art .idea-carousel .idea-slide img{
-    object-fit:cover;
-    object-position:center;
-  }
-}
-
-
-/* =========================================================
-   CRIAMOS IDEIAS — MESMO TAMANHO PARA TODAS AS IMAGENS
-   ========================================================= */
-.hero-art .idea-carousel .idea-slide{
-  width:100% !important;
-  height:100% !important;
-  min-height:0 !important;
-}
-
-.hero-art .idea-carousel .idea-slide img{
-  display:block;
-  width:100% !important;
-  height:100% !important;
-  min-width:100%;
-  min-height:100%;
-  max-width:none !important;
-  max-height:none !important;
-  object-fit:fill !important;
-  object-position:center;
-}
-
-
-/* CRIAMOS IDEIAS — altura reduzida em 15% */
-@media (min-width:761px){
-  .hero-art{
-    height:467.5px !important;
-    min-height:467.5px !important;
-  }
-  .hero-art .idea-carousel,
-  .hero-art .idea-carousel-track,
-  .hero-art .idea-carousel .idea-slide{
-    height:100% !important;
-    min-height:0 !important;
-  }
-}
-@media (max-width:760px){
-  .hero-art{
-    min-height:280.5px !important;
-  }
-  .hero-art .idea-carousel,
-  .hero-art .idea-carousel-track,
-  .hero-art .idea-carousel .idea-slide{
-    height:100% !important;
-    min-height:0 !important;
-  }
-}
-@media (max-width:480px){
-  .hero-art{
-    min-height:238px !important;
+    object-fit:contain;
   }
 }

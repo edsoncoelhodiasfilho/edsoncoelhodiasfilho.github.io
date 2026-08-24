@@ -636,9 +636,30 @@ window.addEventListener("eralis-content-loaded", function(event){
         };
       });
 
+      slides.forEach(slide => {
+        const img = slide.querySelector("img");
+        if (img) {
+          img.addEventListener("load", () => {
+            // Força apenas uma recalculação de layout; não altera a proporção.
+            ideaCarousel.querySelector("#ideaCarouselTrack").style.height = "auto";
+          });
+        }
+      });
+
       console.log("ERALIS: imagens de Criamos ideias exibidas:", ideaItems);
     }
   }
 });
 
-
+/* Recalcula a área de Criamos ideias quando uma imagem termina de carregar.
+   Não define altura fixa: deixa o navegador respeitar a proporção original. */
+window.addEventListener("load", function(){
+  document.querySelectorAll(".idea-carousel .idea-slide img").forEach(function(img){
+    img.addEventListener("load", function(){
+      const slide = img.closest(".idea-slide");
+      if(slide){
+        slide.style.height = "auto";
+      }
+    });
+  });
+});
