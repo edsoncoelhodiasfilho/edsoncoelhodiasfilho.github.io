@@ -1798,3 +1798,36 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     object-fit:contain;
   }
 }
+
+
+/* =========================================================
+   MOBILE — CARDS TECNOLOGIA 3D / PERSONALIZADOS / ENTREGA / FACILIDADE
+   Quadros 15% menores + textos mais legíveis
+   ========================================================= */
+@media screen and (max-width:768px){
+  .benefits{
+    padding:13.6px 4% !important;
+    column-gap:0 !important;
+    row-gap:0 !important;
+  }
+
+  .benefits > div{
+    padding:10px 7px !important;
+    margin:0 !important;
+  }
+
+  .benefits > div{
+    font-size:20px !important;
+  }
+
+  .benefits > div b{
+    font-size:13px !important;
+    line-height:1.15 !important;
+    margin:6px 0 !important;
+  }
+
+  .benefits > div small{
+    font-size:11px !important;
+    line-height:1.25 !important;
+  }
+}
