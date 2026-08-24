@@ -641,15 +641,4 @@ window.addEventListener("eralis-content-loaded", function(event){
   }
 });
 
-/* Recalcula a área de Criamos ideias quando uma imagem termina de carregar.
-   Não define altura fixa: deixa o navegador respeitar a proporção original. */
-window.addEventListener("load", function(){
-  document.querySelectorAll(".idea-carousel .idea-slide img").forEach(function(img){
-    img.addEventListener("load", function(){
-      const slide = img.closest(".idea-slide");
-      if(slide){
-        slide.style.height = "auto";
-      }
-    });
-  });
-});
+

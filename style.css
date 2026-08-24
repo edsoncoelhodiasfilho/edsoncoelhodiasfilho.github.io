@@ -1821,3 +1821,34 @@ footer > div:not(:first-child) .footer-email-btn:hover{
   object-fit:fill !important;
   object-position:center;
 }
+
+
+/* CRIAMOS IDEIAS — altura reduzida em 15% */
+@media (min-width:761px){
+  .hero-art{
+    height:467.5px !important;
+    min-height:467.5px !important;
+  }
+  .hero-art .idea-carousel,
+  .hero-art .idea-carousel-track,
+  .hero-art .idea-carousel .idea-slide{
+    height:100% !important;
+    min-height:0 !important;
+  }
+}
+@media (max-width:760px){
+  .hero-art{
+    min-height:280.5px !important;
+  }
+  .hero-art .idea-carousel,
+  .hero-art .idea-carousel-track,
+  .hero-art .idea-carousel .idea-slide{
+    height:100% !important;
+    min-height:0 !important;
+  }
+}
+@media (max-width:480px){
+  .hero-art{
+    min-height:238px !important;
+  }
+}
