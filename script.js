@@ -636,16 +636,6 @@ window.addEventListener("eralis-content-loaded", function(event){
         };
       });
 
-      slides.forEach(slide => {
-        const img = slide.querySelector("img");
-        if (img) {
-          img.addEventListener("load", () => {
-            // Força apenas uma recalculação de layout; não altera a proporção.
-            ideaCarousel.querySelector("#ideaCarouselTrack").style.height = "auto";
-          });
-        }
-      });
-
       console.log("ERALIS: imagens de Criamos ideias exibidas:", ideaItems);
     }
   }

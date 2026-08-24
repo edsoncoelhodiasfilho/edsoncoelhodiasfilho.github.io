@@ -1799,3 +1799,25 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     object-position:center;
   }
 }
+
+
+/* =========================================================
+   CRIAMOS IDEIAS — MESMO TAMANHO PARA TODAS AS IMAGENS
+   ========================================================= */
+.hero-art .idea-carousel .idea-slide{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+}
+
+.hero-art .idea-carousel .idea-slide img{
+  display:block;
+  width:100% !important;
+  height:100% !important;
+  min-width:100%;
+  min-height:100%;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:fill !important;
+  object-position:center;
+}
