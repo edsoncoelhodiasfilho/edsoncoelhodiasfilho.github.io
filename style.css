@@ -1888,3 +1888,28 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     margin-top:0 !important;
   }
 }
+
+
+/* =========================================================
+   AJUSTE FINAL — SOBRE A ERALIS → FALE CONOSCO
+   Redução adicional de aproximadamente 20% no espaçamento.
+   Desktop e mobile.
+   ========================================================= */
+
+.about{
+  margin-bottom:12px !important;
+}
+
+.contact{
+  margin-top:0 !important;
+}
+
+@media (max-width:760px){
+  .about{
+    margin-bottom:9px !important;
+  }
+
+  .contact{
+    margin-top:0 !important;
+  }
+}
