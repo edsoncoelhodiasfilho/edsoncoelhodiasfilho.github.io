@@ -568,7 +568,10 @@ window.addEventListener("eralis-content-loaded", function(event){
 
     const renderIdeaCarousel = () => {
       const mobile = window.matchMedia("(max-width: 760px)").matches;
-      const ideaItems = allIdeaItems.filter(item => !item.mobile_only || mobile);
+      const ideaItems = allIdeaItems.filter(item => {
+        const target = item.display_target || (item.mobile_only ? "mobile" : "all");
+        return target === "all" || (target === "mobile" && mobile) || (target === "desktop" && !mobile);
+      });
       const track = ideaCarousel.querySelector("#ideaCarouselTrack");
       const dotsContainer = ideaCarousel.querySelector("#ideaCarouselDots");
 

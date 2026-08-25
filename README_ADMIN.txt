@@ -19,3 +19,6 @@ Para uma versão de produção, o próximo passo é conectar o painel a:
 - banco de dados;
 - armazenamento permanente de imagens;
 - API para o site público.
+
+
+Visibilidade das imagens de Criamos ideias: computador + celular, somente celular ou somente computador.

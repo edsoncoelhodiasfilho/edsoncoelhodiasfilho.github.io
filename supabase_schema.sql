@@ -34,6 +34,7 @@ create table if not exists public.idea_images (
   active boolean not null default true,
   sort_order integer not null default 0,
   mobile_only boolean not null default false,
+  display_target text not null default 'all' check (display_target in ('all','mobile','desktop')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -145,3 +146,10 @@ alter table public.products add column if not exists video_path text;
 
 -- Imagens exclusivas para celular no carrossel Criamos ideias.
 alter table public.idea_images add column if not exists mobile_only boolean not null default false;
+
+
+-- Visibilidade do carrossel Criamos ideias: todos, somente celular ou somente computador.
+alter table public.idea_images add column if not exists display_target text not null default 'all';
+update public.idea_images set display_target = 'mobile' where mobile_only = true;
+alter table public.idea_images drop constraint if exists idea_images_display_target_check;
+alter table public.idea_images add constraint idea_images_display_target_check check (display_target in ('all','mobile','desktop'));

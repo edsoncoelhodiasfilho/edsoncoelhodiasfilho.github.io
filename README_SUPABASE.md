@@ -144,3 +144,6 @@ Os formulários de orçamento e e-mail foram reforçados com `method="POST"` exp
 
 \n### Correção definitiva — Solicitar orçamento / FormSubmit
 O problema estava no campo `_next`: o formulário de orçamento tinha `method="POST"`, mas o JavaScript não estava preenchendo o `_next`, deixando-o vazio. O FormSubmit exige uma URL absoluta para `_next`. Agora `quoteNext` é preenchido no evento de submit com a URL absoluta de `obrigado.html`. O formulário continua usando `multipart/form-data` para permitir o upload da imagem.
+
+
+Visibilidade das imagens de Criamos ideias: computador + celular, somente celular ou somente computador.
