@@ -1913,3 +1913,15 @@ footer > div:not(:first-child) .footer-email-btn:hover{
     margin-top:0 !important;
   }
 }
+
+/* AJUSTE FINAL — CABEÇALHO MOBILE
+   Aumenta somente a altura do cabeçalho no celular.
+   Os demais elementos permanecem inalterados. */
+@media screen and (max-width: 760px){
+  header{height:82px !important;}
+  nav{top:82px !important;}
+}
+@media screen and (max-width: 480px){
+  header{height:82px !important;}
+  nav{top:82px !important;}
+}
