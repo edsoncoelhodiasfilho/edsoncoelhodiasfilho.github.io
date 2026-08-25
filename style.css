@@ -2083,3 +2083,12 @@ body.idea-lightbox-open{
     height:42px;
   }
 }
+
+
+/* AJUSTE FINAL — DESCRIÇÃO DOS PRODUTOS +15% SOMENTE NO MOBILE */
+@media screen and (max-width: 760px){
+  .card .info p,
+  .info p{
+    font-size:12.65px !important;
+  }
+}
