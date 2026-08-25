@@ -168,14 +168,15 @@
 </dialog>
 
 <dialog id="ideaDialog" class="admin-modal">
-  <div class="admin-modal-head"><label>CRIAMOS IDEIAS</label><h2>Adicionar imagem</h2></div>
+  <div class="admin-modal-head"><label>CRIAMOS IDEIAS</label><h2 id="ideaDialogTitle">Adicionar imagem</h2></div>
   <form id="ideaForm" class="admin-form">
     <div class="field">
       <label for="ideaImage">Imagem</label>
       <div class="image-preview" id="ideaPreview">Nenhuma imagem selecionada</div>
-      <input id="ideaImage" type="file" accept="image/*" required>
+      <input id="ideaImage" type="file" accept="image/*">
     </div>
     <div class="field"><label for="ideaTitle">Nome/identificação (opcional)</label><input id="ideaTitle" placeholder="Ex.: Chaveiro ERALIS"></div>
+    <div class="field"><label for="ideaMobileOnly">Exibir somente no celular</label><select id="ideaMobileOnly"><option value="false">NÃO — computador e celular</option><option value="true">SIM — somente celular</option></select></div>
     <div class="admin-form-actions"><button class="btn outline" type="button" data-close="ideaDialog">Cancelar</button><button class="btn" type="submit">Adicionar imagem</button></div>
   </form>
 </dialog>

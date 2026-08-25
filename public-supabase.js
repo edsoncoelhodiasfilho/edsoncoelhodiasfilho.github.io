@@ -24,7 +24,7 @@
     }
 
     const ideasResponse = await fetch(
-      `${url}/rest/v1/idea_images?select=id,title,image_url,image_path,active,sort_order,created_at&active=eq.true&order=sort_order.asc,created_at.asc`,
+      `${url}/rest/v1/idea_images?select=id,title,image_url,image_path,active,sort_order,mobile_only,created_at&active=eq.true&order=sort_order.asc,created_at.asc`,
       {headers}
     );
 

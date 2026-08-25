@@ -33,18 +33,7 @@ products.forEach(p=>paymentLinks[p.id]="https://mpago.la/SEU_LINK_"+p.id);
 const grid=document.querySelector("#grid");
 const modal=document.querySelector("#modal");
 const body=document.querySelector("#modalBody");
-function money(n){
-  const value=Number(n ?? 0).toLocaleString("pt-BR",{
-    style:"currency",
-    currency:"BRL",
-    minimumFractionDigits:2,
-    maximumFractionDigits:2
-  });
-  const match=value.match(/^(.*?)(\d+),(\d{2})$/);
-  if(!match) return value;
-
-  return `${match[1]}${match[2]}<span class="price-cents">,${match[3]}</span>`;
-}
+const money=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 
 function image(type, imageUrl){
   if(imageUrl){
@@ -62,7 +51,6 @@ function render(list){
       <div class="info">
         <h3>${p.name}</h3>
         <p>${p.desc || p.description || ""}</p>
-        ${p.measurements ? `<p class="product-measurements"><strong>Medidas:</strong> ${p.measurements}</p>` : ""}
         <div class="row">
           <span class="price">${money(p.price)}</span>
           <button class="buy" data-id="${p.id}">Comprar</button>
@@ -109,8 +97,7 @@ function openProduct(id){
         <h2>${p.name}</h2>
         <div class="price">${money(p.price)}</div>
         <p class="modal-description">${p.desc || p.description || ""}</p>
-        ${p.measurements ? `<p class="modal-measurements"><strong>Medidas:</strong> ${p.measurements}</p>` : ""}
-        <p><b>Produzido sob demanda.</b> Consulte prazo de entrega.</p>
+        <p><b>Produzido sob demanda.</b> Consulte cores e prazo.</p>
         <a class="btn" href="${p.payment_url || paymentLinks[id] || "#"}" rel="noopener" target="_blank">Comprar via Mercado Pago →</a>
       </div>
     </div>`;
@@ -243,25 +230,6 @@ if(isCarousel){
   start();
 
   const viewport=grid.parentElement;
-  const productsControls=document.querySelector("#productsMobileControls");
-  const productsPrev=document.querySelector("#productsPrev");
-  const productsNext=document.querySelector("#productsNext");
-
-  function goPrevious(){
-    current=current<=0 ? maxIndex() : current-1;
-    updateCarousel();
-    start();
-  }
-
-  function goNext(){
-    current=current>=maxIndex() ? 0 : current+1;
-    updateCarousel();
-    start();
-  }
-
-  if(productsPrev) productsPrev.addEventListener("click",goPrevious);
-  if(productsNext) productsNext.addEventListener("click",goNext);
-
   viewport.addEventListener("mouseenter",()=>clearInterval(timer));
   viewport.addEventListener("mouseleave",start);
   viewport.addEventListener("touchstart",()=>clearInterval(timer),{passive:true});
@@ -538,7 +506,6 @@ window.addEventListener("eralis-content-loaded", function(event){
         type: p.type || "figure",
         desc: p.description || "",
         description: p.description || "",
-        measurements: p.measurements || "",
         image_url: p.image_url || "",
         image_path: p.image_path || "",
         image_url_2: p.image_url_2 || "",
@@ -560,58 +527,94 @@ window.addEventListener("eralis-content-loaded", function(event){
     }
   }
 
-  // Criamos ideias — imagens podem ser gerais ou exclusivas para celular.
+  // Criamos ideias
   if (Array.isArray(data.ideas) && ideaCarousel) {
-    const allIdeaItems = data.ideas
+    const ideaItems = data.ideas
       .filter(item => item && item.active !== false && item.image_url)
       .sort((a,b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
 
-    const renderIdeaCarousel = () => {
-      const mobile = window.matchMedia("(max-width: 760px)").matches;
-      const ideaItems = allIdeaItems.filter(item => !item.mobile_only || mobile);
-      const track = ideaCarousel.querySelector("#ideaCarouselTrack");
-      const dotsContainer = ideaCarousel.querySelector("#ideaCarouselDots");
+    const track = ideaCarousel.querySelector("#ideaCarouselTrack");
+    const dotsContainer = ideaCarousel.querySelector("#ideaCarouselDots");
 
-      if (window.eralisIdeaTimer) {
-        clearInterval(window.eralisIdeaTimer);
-        window.eralisIdeaTimer = null;
-      }
-
-      if (track) {
+    if (track) {
+      if (ideaItems.length) {
         track.innerHTML = ideaItems.map((item, index) => `
           <div class="idea-slide ${index === 0 ? "active" : ""}">
-            <img src="${item.image_url}" alt="${item.title || "Ideia ERALIS"}" loading="${index === 0 ? "eager" : "lazy"}">
+            <img
+              src="${item.image_url}"
+              alt="${item.title || "Ideia ERALIS"}"
+              loading="${index === 0 ? "eager" : "lazy"}"
+            >
           </div>
         `).join("");
+      } else {
+        track.innerHTML = "";
       }
-      if (dotsContainer) {
-        dotsContainer.innerHTML = ideaItems.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-index="${index}"></span>`).join("");
-      }
+    }
 
-      const slides = Array.from(ideaCarousel.querySelectorAll(".idea-slide"));
-      const dots = Array.from(ideaCarousel.querySelectorAll(".idea-dots span"));
+    if (dotsContainer) {
+      dotsContainer.innerHTML = ideaItems.map((_, index) =>
+        `<span class="${index === 0 ? "active" : ""}" data-index="${index}"></span>`
+      ).join("");
+    }
+
+    // Para o carrossel antigo e cria um novo sobre os elementos realmente
+    // inseridos pelo Supabase.
+    if (window.eralisIdeaTimer) {
+      clearInterval(window.eralisIdeaTimer);
+      window.eralisIdeaTimer = null;
+    }
+
+    const slides = Array.from(ideaCarousel.querySelectorAll(".idea-slide"));
+    const dots = Array.from(ideaCarousel.querySelectorAll(".idea-dots span"));
+
+    if (slides.length) {
       let current = 0;
-      const show = index => {
-        slides.forEach((slide,i)=>slide.classList.toggle("active",i===index));
-        dots.forEach((dot,i)=>dot.classList.toggle("active",i===index));
-      };
-      const next = () => { if (slides.length) { current=(current+1)%slides.length; show(current); } };
-      show(0);
-      if (slides.length > 1) window.eralisIdeaTimer=setInterval(next,4000);
-      dots.forEach((dot,index)=>dot.onclick=()=>{
-        current=index; show(current);
-        if(slides.length>1){clearInterval(window.eralisIdeaTimer);window.eralisIdeaTimer=setInterval(next,3000);}
-      });
-      slides.forEach(slide=>{const img=slide.querySelector("img");if(img)img.addEventListener("load",()=>{ideaCarousel.querySelector("#ideaCarouselTrack").style.height="auto";});});
-      console.log("ERALIS: imagens de Criamos ideias exibidas:", ideaItems);
-    };
 
-    renderIdeaCarousel();
-    let lastMobile=window.matchMedia("(max-width: 760px)").matches;
-    window.addEventListener("resize",()=>{
-      const nowMobile=window.matchMedia("(max-width: 760px)").matches;
-      if(nowMobile!==lastMobile){lastMobile=nowMobile;renderIdeaCarousel();}
-    });
+      function showDynamicIdeaSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === index);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === index);
+        });
+      }
+
+      function nextDynamicIdeaSlide() {
+        current = (current + 1) % slides.length;
+        showDynamicIdeaSlide(current);
+      }
+
+      showDynamicIdeaSlide(0);
+
+      if (slides.length > 1) {
+        window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 4000);
+      }
+
+      dots.forEach((dot, index) => {
+        dot.onclick = () => {
+          current = index;
+          showDynamicIdeaSlide(current);
+
+          if (slides.length > 1) {
+            clearInterval(window.eralisIdeaTimer);
+            window.eralisIdeaTimer = setInterval(nextDynamicIdeaSlide, 3000);
+          }
+        };
+      });
+
+      slides.forEach(slide => {
+        const img = slide.querySelector("img");
+        if (img) {
+          img.addEventListener("load", () => {
+            // Força apenas uma recalculação de layout; não altera a proporção.
+            ideaCarousel.querySelector("#ideaCarouselTrack").style.height = "auto";
+          });
+        }
+      });
+
+      console.log("ERALIS: imagens de Criamos ideias exibidas:", ideaItems);
+    }
   }
 });
 

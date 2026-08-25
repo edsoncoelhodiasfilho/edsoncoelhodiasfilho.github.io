@@ -33,6 +33,7 @@ create table if not exists public.idea_images (
   image_path text,
   active boolean not null default true,
   sort_order integer not null default 0,
+  mobile_only boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -141,3 +142,6 @@ alter table public.products add column if not exists image_url_2 text;
 alter table public.products add column if not exists image_path_2 text;
 alter table public.products add column if not exists video_url text;
 alter table public.products add column if not exists video_path text;
+
+-- Imagens exclusivas para celular no carrossel Criamos ideias.
+alter table public.idea_images add column if not exists mobile_only boolean not null default false;
