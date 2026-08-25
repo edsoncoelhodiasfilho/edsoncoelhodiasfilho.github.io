@@ -1925,3 +1925,43 @@ footer > div:not(:first-child) .footer-email-btn:hover{
   header{height:82px !important;}
   nav{top:82px !important;}
 }
+
+/* =========================================================
+   AJUSTE — LOGOTIPO E NOME ERALIS NO CABEÇALHO MOBILE
+   O cabeçalho mobile já está com 82px; este ajuste aumenta
+   somente a marca dentro dele.
+   ========================================================= */
+@media screen and (max-width: 760px){
+  header .brand-logo{
+    width:54px !important;
+    height:54px !important;
+    flex-basis:54px !important;
+  }
+
+  header .brand-name strong{
+    font-size:22px !important;
+    letter-spacing:2.8px !important;
+  }
+
+  header .brand-name small{
+    font-size:7.5px !important;
+    letter-spacing:1.6px !important;
+  }
+}
+
+@media screen and (max-width: 380px){
+  header .brand-logo{
+    width:50px !important;
+    height:50px !important;
+    flex-basis:50px !important;
+  }
+
+  header .brand-name strong{
+    font-size:20px !important;
+  }
+
+  header .brand-name small{
+    font-size:7px !important;
+  }
+}
+
