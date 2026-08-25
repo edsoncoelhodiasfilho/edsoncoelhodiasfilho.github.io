@@ -1965,3 +1965,121 @@ footer > div:not(:first-child) .footer-email-btn:hover{
   }
 }
 
+
+
+/* =========================================================
+   CRIAMOS IDEIAS — imagem ampliada no mobile
+   ========================================================= */
+.idea-lightbox{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(0,0,0,.82);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .28s ease, visibility .28s ease;
+}
+
+.idea-lightbox.is-open{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+
+.idea-lightbox-content{
+  position:relative;
+  width:min(96vw, 1100px);
+  max-height:92vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:scale(.88);
+  opacity:0;
+  transition:transform .34s cubic-bezier(.2,.75,.25,1), opacity .25s ease;
+}
+
+.idea-lightbox.is-open .idea-lightbox-content{
+  transform:scale(1);
+  opacity:1;
+}
+
+.idea-lightbox-image{
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:96vw;
+  max-height:92vh;
+  object-fit:contain;
+  border-radius:8px;
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+}
+
+.idea-lightbox-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:2;
+  width:44px;
+  height:44px;
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:50%;
+  background:rgba(0,0,0,.62);
+  color:#fff;
+  font-size:32px;
+  line-height:38px;
+  font-weight:300;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background .2s ease, transform .2s ease;
+}
+
+.idea-lightbox-close:active{
+  transform:scale(.94);
+}
+
+body.idea-lightbox-open{
+  overflow:hidden;
+}
+
+@media (min-width:761px){
+  .idea-lightbox{
+    display:none !important;
+  }
+}
+
+@media (max-width:760px){
+  .idea-carousel .idea-slide img{
+    cursor:zoom-in;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .idea-lightbox{
+    padding:12px;
+    background:rgba(0,0,0,.84);
+  }
+
+  .idea-lightbox-content{
+    width:100%;
+    max-height:94vh;
+  }
+
+  .idea-lightbox-image{
+    max-width:94vw;
+    max-height:90vh;
+    border-radius:6px;
+  }
+
+  .idea-lightbox-close{
+    top:8px;
+    right:8px;
+    width:42px;
+    height:42px;
+  }
+}

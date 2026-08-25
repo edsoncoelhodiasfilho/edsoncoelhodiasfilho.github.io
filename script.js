@@ -520,6 +520,66 @@ if (ideaCarousel) {
   ideaCarousel.addEventListener("touchend", startIdeaCarousel, {passive:true});
 }
 
+
+/* =========================================================
+   ERALIS — visualização ampliada de "Criamos ideias" no mobile
+   Abre somente em telas mobile/tablet pequeno.
+   ========================================================= */
+(function(){
+  let ideaLightbox = null;
+  let ideaLightboxImage = null;
+
+  function ensureIdeaLightbox(){
+    if (ideaLightbox) return ideaLightbox;
+
+    ideaLightbox = document.createElement("div");
+    ideaLightbox.className = "idea-lightbox";
+    ideaLightbox.setAttribute("aria-hidden", "true");
+    ideaLightbox.innerHTML = `
+      <button class="idea-lightbox-close" type="button" aria-label="Fechar imagem ampliada">×</button>
+      <div class="idea-lightbox-content" role="dialog" aria-modal="true" aria-label="Imagem ampliada">
+        <img class="idea-lightbox-image" alt="Imagem ampliada">
+      </div>
+    `;
+    document.body.appendChild(ideaLightbox);
+    ideaLightboxImage = ideaLightbox.querySelector(".idea-lightbox-image");
+
+    function close(){
+      if (!ideaLightbox) return;
+      ideaLightbox.classList.remove("is-open");
+      ideaLightbox.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("idea-lightbox-open");
+      if (ideaLightboxImage) {
+        ideaLightboxImage.removeAttribute("src");
+      }
+    }
+
+    ideaLightbox.querySelector(".idea-lightbox-close").addEventListener("click", close);
+    ideaLightbox.addEventListener("click", function(event){
+      if (event.target === ideaLightbox || event.target.classList.contains("idea-lightbox-content")) close();
+    });
+    document.addEventListener("keydown", function(event){
+      if (event.key === "Escape" && ideaLightbox.classList.contains("is-open")) close();
+    });
+
+    ideaLightbox._open = function(src, alt){
+      if (!window.matchMedia("(max-width: 760px)").matches) return;
+      if (!src) return;
+      ideaLightboxImage.src = src;
+      ideaLightboxImage.alt = alt || "Imagem ampliada";
+      ideaLightbox.classList.add("is-open");
+      ideaLightbox.setAttribute("aria-hidden", "false");
+      document.body.classList.add("idea-lightbox-open");
+    };
+
+    return ideaLightbox;
+  }
+
+  window.openEralisIdeaLightbox = function(src, alt){
+    ensureIdeaLightbox()._open(src, alt);
+  };
+})();
+
 /* =========================================================
    ERALIS — sincronização pública com o Supabase
    ========================================================= */
@@ -605,7 +665,17 @@ window.addEventListener("eralis-content-loaded", function(event){
         current=index; show(current);
         if(slides.length>1){clearInterval(window.eralisIdeaTimer);window.eralisIdeaTimer=setInterval(next,3000);}
       });
-      slides.forEach(slide=>{const img=slide.querySelector("img");if(img)img.addEventListener("load",()=>{ideaCarousel.querySelector("#ideaCarouselTrack").style.height="auto";});});
+      slides.forEach(slide=>{
+         const img=slide.querySelector("img");
+         if(img){
+           img.addEventListener("load",()=>{ideaCarousel.querySelector("#ideaCarouselTrack").style.height="auto";});
+           img.addEventListener("click",()=>{
+             if(window.matchMedia("(max-width: 760px)").matches){
+               window.openEralisIdeaLightbox(img.currentSrc || img.src, img.alt);
+             }
+           });
+         }
+       });
       console.log("ERALIS: imagens de Criamos ideias exibidas:", ideaItems);
     };
 
