@@ -2463,10 +2463,14 @@ body.idea-lightbox-open{
 
 
 /* =========================================================
-   CRIAMOS IDEIAS — fundo igual ao restante da seção
+   CORREÇÃO — CRIAMOS IDEIAS COM O MESMO FUNDO DA ÁREA DE TEXTO
    ========================================================= */
-.idea-carousel,
-.idea-carousel-track,
-.idea-carousel .idea-slide{
-  background:var(--paper) !important;
+.hero-art{
+  background:#f8f4eb !important;
+}
+
+.hero-art .idea-carousel,
+.hero-art .idea-carousel-track,
+.hero-art .idea-carousel .idea-slide{
+  background:#f8f4eb !important;
 }
