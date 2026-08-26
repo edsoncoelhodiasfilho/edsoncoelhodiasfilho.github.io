@@ -2172,8 +2172,8 @@ body.idea-lightbox-open{
     ),
     linear-gradient(to bottom,
       transparent 0%,
-      #000 2.5%,
-      #000 97.5%,
+      #000 4%,
+      #000 96%,
       transparent 100%
     );
   -webkit-mask-composite:source-in;
@@ -2186,8 +2186,8 @@ body.idea-lightbox-open{
     ),
     linear-gradient(to bottom,
       transparent 0%,
-      #000 2.5%,
-      #000 97.5%,
+      #000 4%,
+      #000 96%,
       transparent 100%
     );
   mask-composite:intersect;
