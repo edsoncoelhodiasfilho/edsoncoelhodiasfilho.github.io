@@ -2460,3 +2460,13 @@ body.idea-lightbox-open{
   background:#fbfaf7;
   opacity:1;
 }
+
+
+/* =========================================================
+   CRIAMOS IDEIAS — fundo igual ao restante da seção
+   ========================================================= */
+.idea-carousel,
+.idea-carousel-track,
+.idea-carousel .idea-slide{
+  background:var(--paper) !important;
+}
