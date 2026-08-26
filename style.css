@@ -2102,10 +2102,16 @@ body.idea-lightbox-open{
 }
 
 /* =========================================================
-   CRIAMOS IDEIAS — névoa suave e uniforme nos quatro lados
+   CRIAMOS IDEIAS — névoa suave nos quatro lados e quatro cantos
+   Fundo externo exatamente igual ao fundo creme da seção.
    ========================================================= */
+.idea-carousel{
+  background:var(--paper);
+}
+
 .idea-carousel .idea-slide{
   isolation:isolate;
+  background:var(--paper) !important;
 }
 
 .idea-carousel .idea-slide::before{
@@ -2125,18 +2131,18 @@ body.idea-lightbox-open{
   background:
     linear-gradient(to right,
       var(--paper) 0%,
-      rgba(255,253,249,.55) 2%,
-      rgba(255,253,249,0) 5%,
-      rgba(255,253,249,0) 95%,
-      rgba(255,253,249,.55) 98%,
+      rgba(255,253,249,.38) 1.5%,
+      rgba(255,253,249,0) 4.5%,
+      rgba(255,253,249,0) 95.5%,
+      rgba(255,253,249,.38) 98.5%,
       var(--paper) 100%
     ),
     linear-gradient(to bottom,
       var(--paper) 0%,
-      rgba(255,253,249,.55) 2%,
-      rgba(255,253,249,0) 5%,
-      rgba(255,253,249,0) 95%,
-      rgba(255,253,249,.55) 98%,
+      rgba(255,253,249,.38) 1.5%,
+      rgba(255,253,249,0) 4.5%,
+      rgba(255,253,249,0) 95.5%,
+      rgba(255,253,249,.38) 98.5%,
       var(--paper) 100%
     );
 }
@@ -2150,34 +2156,27 @@ body.idea-lightbox-open{
   height:auto;
   object-fit:contain;
   object-position:center;
-  -webkit-mask-image:
-    linear-gradient(to right,
-      transparent 0%,
-      #000 4%,
-      #000 96%,
-      transparent 100%
-    ),
-    linear-gradient(to bottom,
-      transparent 0%,
-      #000 4%,
-      #000 96%,
-      transparent 100%
-    );
-  -webkit-mask-composite:source-in;
-  mask-image:
-    linear-gradient(to right,
-      transparent 0%,
-      #000 4%,
-      #000 96%,
-      transparent 100%
-    ),
-    linear-gradient(to bottom,
-      transparent 0%,
-      #000 4%,
-      #000 96%,
-      transparent 100%
-    );
-  mask-composite:intersect;
+  border-radius:0;
+  /*
+   * Máscara radial: cria uma transição contínua nos quatro lados
+   * e, principalmente, nos quatro cantos, sem borrar o centro.
+   */
+  -webkit-mask-image:radial-gradient(
+    ellipse 48% 48% at 50% 50%,
+    #000 62%,
+    rgba(0,0,0,.92) 68%,
+    rgba(0,0,0,.62) 78%,
+    rgba(0,0,0,.18) 91%,
+    transparent 100%
+  );
+  mask-image:radial-gradient(
+    ellipse 48% 48% at 50% 50%,
+    #000 62%,
+    rgba(0,0,0,.92) 68%,
+    rgba(0,0,0,.62) 78%,
+    rgba(0,0,0,.18) 91%,
+    transparent 100%
+  );
 }
 
 /* Desktop: mantém a redução de 15% solicitada anteriormente. */
@@ -2188,11 +2187,12 @@ body.idea-lightbox-open{
   }
 }
 
-/* Mobile/tablet: não altera a largura já existente. */
+/* Mobile/tablet: largura original preservada. */
 @media (max-width:900px){
   .idea-carousel .idea-slide img{
     width:100%;
     max-width:100%;
   }
+}
 }
 }
