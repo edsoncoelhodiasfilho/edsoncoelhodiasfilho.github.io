@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
-:root{--g:#073b2d;--g2:#0d503e;--gold:#c7943e;--cream:#f7f3eb;--paper:var(--paper);--ink:#12221d;--muted:#68736e;--line:#ddd7cb}
+:root{--g:#073b2d;--g2:#0d503e;--gold:#c7943e;--cream:#f7f3eb;--paper:#fbfaf7;--ink:#12221d;--muted:#68736e;--line:#ddd7cb}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",Arial,sans-serif}a{text-decoration:none;color:inherit}
 .topbar{height:34px;background:var(--g);color:#fff;padding:0 5%;display:flex;align-items:center;justify-content:space-between;font-size:11px}
 header{height:88px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#fffdfaf2;position:sticky;top:0;z-index:5;backdrop-filter:blur(8px)}
@@ -2435,4 +2435,28 @@ body.idea-lightbox-open{
     height:280px !important;
     min-height:280px !important;
   }
+}
+
+
+/* =========================================================
+   CORREÇÃO — MODAIS DE ORÇAMENTO E E-MAIL
+   ========================================================= */
+.quote-modal{
+  background:#fbfaf7 !important;
+  opacity:1 !important;
+}
+
+.email-modal{
+  background:#fbfaf7 !important;
+  opacity:1 !important;
+}
+
+.quote-modal .quote-header{
+  background:linear-gradient(135deg,#f8f4eb,#fbfaf7) !important;
+  opacity:1;
+}
+
+.quote-modal form{
+  background:#fbfaf7;
+  opacity:1;
 }
