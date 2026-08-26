@@ -2475,3 +2475,33 @@ body.idea-lightbox-open{
 .hero-art .idea-carousel .idea-image-wrap{
   background:#f8f4eb !important;
 }
+
+
+/* =========================================================
+   CRIAMOS IDEIAS — remover moldura/padding branco
+   A imagem permanece intacta; somente o entorno deixa de ser branco.
+   ========================================================= */
+.hero-art,
+.hero-art .idea-carousel,
+.hero-art .idea-carousel-track,
+.hero-art .idea-carousel .idea-slide,
+.hero-art .idea-carousel .idea-image-wrap{
+  background:#f8f4eb !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+}
+
+.hero-art .idea-carousel .idea-slide::before,
+.hero-art .idea-carousel .idea-slide::after{
+  background:transparent !important;
+  box-shadow:none !important;
+  content:none !important;
+}
+
+.hero-art .idea-carousel .idea-image-wrap img{
+  background:transparent !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+}
