@@ -313,8 +313,8 @@ body{overflow-x:hidden}
     display:flex;
     align-items:center;
     justify-content:center;
-    width:42px;
-    height:42px;
+    width:30px;
+    height:30px;
     color:var(--g);
     font-size:0;
     cursor:pointer;
@@ -1664,7 +1664,7 @@ footer .brand-name strong{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:42px;
+    width:30px;
     height:34px;
     padding:0;
     border:1px solid var(--line);
@@ -2079,8 +2079,8 @@ body.idea-lightbox-open{
   .idea-lightbox-close{
     top:8px;
     right:8px;
-    width:42px;
-    height:42px;
+    width:30px;
+    height:30px;
   }
 }
 
@@ -2135,7 +2135,7 @@ body.idea-lightbox-open{
     linear-gradient(to right,
       #ffffff 0,
       rgba(255,255,255,.42) 18px,
-      rgba(255,255,255,0) 42px,
+      rgba(255,255,255,0) 30px,
       rgba(255,255,255,0) calc(100% - 42px),
       rgba(255,255,255,.42) calc(100% - 18px),
       #ffffff 100%
@@ -2143,7 +2143,7 @@ body.idea-lightbox-open{
     linear-gradient(to bottom,
       #ffffff 0,
       rgba(255,255,255,.42) 18px,
-      rgba(255,255,255,0) 42px,
+      rgba(255,255,255,0) 30px,
       rgba(255,255,255,0) calc(100% - 42px),
       rgba(255,255,255,.42) calc(100% - 18px),
       #ffffff 100%
@@ -2257,19 +2257,19 @@ body.idea-lightbox-open{
   position:absolute;
   top:0;
   bottom:0;
-  width:42px;
+  width:30px;
   z-index:2;
   pointer-events:none;
 }
 
 .idea-carousel .idea-fog-left{
   left:0;
-  background:linear-gradient(to right,#fff 0,rgba(255,255,255,.85) 12px,rgba(255,255,255,.35) 28px,rgba(255,255,255,0) 42px);
+  background:linear-gradient(to right,#fff 0,rgba(255,255,255,.85) 9px,rgba(255,255,255,.35) 20px,rgba(255,255,255,0) 30px);
 }
 
 .idea-carousel .idea-fog-right{
   right:0;
-  background:linear-gradient(to left,#fff 0,rgba(255,255,255,.85) 12px,rgba(255,255,255,.35) 28px,rgba(255,255,255,0) 42px);
+  background:linear-gradient(to left,#fff 0,rgba(255,255,255,.85) 9px,rgba(255,255,255,.35) 20px,rgba(255,255,255,0) 30px);
 }
 
 /* Topo/baixo: névoa horizontal, independente da largura da imagem. */
@@ -2278,19 +2278,19 @@ body.idea-lightbox-open{
   position:absolute;
   left:0;
   right:0;
-  height:42px;
+  height:30px;
   z-index:2;
   pointer-events:none;
 }
 
 .idea-carousel .idea-fog-top{
   top:0;
-  background:linear-gradient(to bottom,#fff 0,rgba(255,255,255,.85) 12px,rgba(255,255,255,.35) 28px,rgba(255,255,255,0) 42px);
+  background:linear-gradient(to bottom,#fff 0,rgba(255,255,255,.85) 9px,rgba(255,255,255,.35) 20px,rgba(255,255,255,0) 30px);
 }
 
 .idea-carousel .idea-fog-bottom{
   bottom:0;
-  background:linear-gradient(to top,#fff 0,rgba(255,255,255,.85) 12px,rgba(255,255,255,.35) 28px,rgba(255,255,255,0) 42px);
+  background:linear-gradient(to top,#fff 0,rgba(255,255,255,.85) 9px,rgba(255,255,255,.35) 20px,rgba(255,255,255,0) 30px);
 }
 
 /* Desktop: mantém a redução de 15% solicitada anteriormente. */
