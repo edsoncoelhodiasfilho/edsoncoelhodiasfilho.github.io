@@ -700,3 +700,34 @@ window.addEventListener("load", function(){
     });
   });
 });
+
+/* Filme ERALIS — seleção responsiva e inicialização robusta. */
+(function(){
+  function initEralisPersonalizacaoVideo(){
+    const video=document.getElementById("eralisPersonalizacaoVideo");
+    if(!video) return;
+    const mobile=window.matchMedia("(max-width: 760px)").matches;
+    const src=mobile ? "media/eralis_personalizacao_mobile.mp4" : "media/eralis_personalizacao_desktop.mp4";
+    if(video.dataset.src!==src){
+      video.dataset.src=src;
+      video.src=src;
+      video.load();
+    }
+    video.muted=true;
+    video.defaultMuted=true;
+    video.playsInline=true;
+    const play=()=>{
+      const p=video.play();
+      if(p && typeof p.catch === "function") p.catch(()=>{});
+    };
+    video.addEventListener("canplay",play,{once:true});
+    play();
+  }
+  window.addEventListener("load",initEralisPersonalizacaoVideo);
+  window.addEventListener("pageshow",initEralisPersonalizacaoVideo);
+  let lastMobile=window.matchMedia("(max-width: 760px)").matches;
+  window.addEventListener("resize",()=>{
+    const now=window.matchMedia("(max-width: 760px)").matches;
+    if(now!==lastMobile){ lastMobile=now; initEralisPersonalizacaoVideo(); }
+  });
+})();

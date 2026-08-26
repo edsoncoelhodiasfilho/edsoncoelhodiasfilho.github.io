@@ -2187,9 +2187,6 @@ body.idea-lightbox-open{
 
 @media(prefers-reduced-motion:reduce){
   .eralis-personalizacao-video__media{
-    visibility:hidden;
-  }
-  .eralis-personalizacao-video{
-    background:#061d18 url("media/eralis_personalizacao_desktop.jpg") center/cover no-repeat;
+    visibility:visible;
   }
 }
