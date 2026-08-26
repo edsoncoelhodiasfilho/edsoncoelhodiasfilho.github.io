@@ -2213,3 +2213,98 @@ body.idea-lightbox-open{
 }
 }
 }
+
+
+/* =========================================================
+   CRIAMOS IDEIAS — névoa estrutural estável
+   Quatro camadas independentes, posicionadas no slide.
+   Fundo branco e efeito independente da proporção da imagem.
+   ========================================================= */
+.idea-carousel,
+.idea-carousel-track{
+  background:#fff;
+}
+
+.idea-carousel .idea-slide{
+  position:relative !important;
+  overflow:hidden;
+  isolation:isolate;
+  background:#fff !important;
+}
+
+.idea-carousel .idea-image-wrap{
+  position:relative;
+  z-index:1;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.idea-carousel .idea-image-wrap img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-width:100%;
+  object-fit:contain;
+  object-position:center;
+  border-radius:0;
+}
+
+/* Laterais: névoa vertical, independente da altura da imagem. */
+.idea-carousel .idea-fog-left,
+.idea-carousel .idea-fog-right{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:42px;
+  z-index:2;
+  pointer-events:none;
+}
+
+.idea-carousel .idea-fog-left{
+  left:0;
+  background:linear-gradient(to right,#fff 0,rgba(255,255,255,.85) 12px,rgba(255,255,255,.35) 28px,rgba(255,255,255,0) 42px);
+}
+
+.idea-carousel .idea-fog-right{
+  right:0;
+  background:linear-gradient(to left,#fff 0,rgba(255,255,255,.85) 12px,rgba(255,255,255,.35) 28px,rgba(255,255,255,0) 42px);
+}
+
+/* Topo/baixo: névoa horizontal, independente da largura da imagem. */
+.idea-carousel .idea-fog-top,
+.idea-carousel .idea-fog-bottom{
+  position:absolute;
+  left:0;
+  right:0;
+  height:42px;
+  z-index:2;
+  pointer-events:none;
+}
+
+.idea-carousel .idea-fog-top{
+  top:0;
+  background:linear-gradient(to bottom,#fff 0,rgba(255,255,255,.85) 12px,rgba(255,255,255,.35) 28px,rgba(255,255,255,0) 42px);
+}
+
+.idea-carousel .idea-fog-bottom{
+  bottom:0;
+  background:linear-gradient(to top,#fff 0,rgba(255,255,255,.85) 12px,rgba(255,255,255,.35) 28px,rgba(255,255,255,0) 42px);
+}
+
+/* Desktop: mantém a redução de 15% solicitada anteriormente. */
+@media (min-width:901px){
+  .idea-carousel .idea-image-wrap img{
+    width:85%;
+    max-width:85%;
+  }
+}
+
+/* Mobile/tablet: mantém a largura integral. */
+@media (max-width:900px){
+  .idea-carousel .idea-image-wrap img{
+    width:100%;
+    max-width:100%;
+  }
+}
