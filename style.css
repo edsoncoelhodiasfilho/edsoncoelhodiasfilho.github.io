@@ -2106,12 +2106,12 @@ body.idea-lightbox-open{
    Fundo externo exatamente igual ao fundo creme da seção.
    ========================================================= */
 .idea-carousel{
-  background:var(--paper);
+  background:#ffffff;
 }
 
 .idea-carousel .idea-slide{
   isolation:isolate;
-  background:var(--paper) !important;
+  background:#ffffff !important;
 }
 
 .idea-carousel .idea-slide::before{
@@ -2119,7 +2119,7 @@ body.idea-lightbox-open{
   position:absolute;
   inset:0;
   z-index:-1;
-  background:var(--paper);
+  background:#ffffff;
 }
 
 .idea-carousel .idea-slide::after{
@@ -2130,20 +2130,20 @@ body.idea-lightbox-open{
   pointer-events:none;
   background:
     linear-gradient(to right,
-      var(--paper) 0%,
-      rgba(255,253,249,.38) 1.5%,
-      rgba(255,253,249,0) 4.5%,
-      rgba(255,253,249,0) 95.5%,
-      rgba(255,253,249,.38) 98.5%,
-      var(--paper) 100%
+      #ffffff 0%,
+      rgba(255,255,255,.22) 0.75%,
+      rgba(255,255,255,0) 2.25%,
+      rgba(255,255,255,0) 97.75%,
+      rgba(255,255,255,.22) 99.25%,
+      #ffffff 100%
     ),
     linear-gradient(to bottom,
-      var(--paper) 0%,
-      rgba(255,253,249,.38) 1.5%,
-      rgba(255,253,249,0) 4.5%,
-      rgba(255,253,249,0) 95.5%,
-      rgba(255,253,249,.38) 98.5%,
-      var(--paper) 100%
+      #ffffff 0%,
+      rgba(255,255,255,.22) 0.75%,
+      rgba(255,255,255,0) 2.25%,
+      rgba(255,255,255,0) 97.75%,
+      rgba(255,255,255,.22) 99.25%,
+      #ffffff 100%
     );
 }
 
@@ -2163,18 +2163,18 @@ body.idea-lightbox-open{
    */
   -webkit-mask-image:radial-gradient(
     ellipse 48% 48% at 50% 50%,
-    #000 62%,
-    rgba(0,0,0,.92) 68%,
-    rgba(0,0,0,.62) 78%,
-    rgba(0,0,0,.18) 91%,
+    #000 81%,
+    rgba(0,0,0,.92) 84%,
+    rgba(0,0,0,.62) 89%,
+    rgba(0,0,0,.18) 95.5%,
     transparent 100%
   );
   mask-image:radial-gradient(
     ellipse 48% 48% at 50% 50%,
-    #000 62%,
-    rgba(0,0,0,.92) 68%,
-    rgba(0,0,0,.62) 78%,
-    rgba(0,0,0,.18) 91%,
+    #000 81%,
+    rgba(0,0,0,.92) 84%,
+    rgba(0,0,0,.62) 89%,
+    rgba(0,0,0,.18) 95.5%,
     transparent 100%
   );
 }
