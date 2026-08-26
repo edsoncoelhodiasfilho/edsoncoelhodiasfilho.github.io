@@ -2102,8 +2102,7 @@ body.idea-lightbox-open{
 }
 
 /* =========================================================
-   CRIAMOS IDEIAS — integração da imagem com o fundo
-   Efeito de névoa nas bordas, sem borrar o conteúdo central.
+   CRIAMOS IDEIAS — névoa suave e uniforme nos quatro lados
    ========================================================= */
 .idea-carousel .idea-slide{
   isolation:isolate;
@@ -2126,18 +2125,18 @@ body.idea-lightbox-open{
   background:
     linear-gradient(to right,
       var(--paper) 0%,
-      rgba(255,253,249,.88) 2%,
-      rgba(255,253,249,0) 7%,
-      rgba(255,253,249,0) 93%,
-      rgba(255,253,249,.88) 98%,
+      rgba(255,253,249,.55) 2%,
+      rgba(255,253,249,0) 5%,
+      rgba(255,253,249,0) 95%,
+      rgba(255,253,249,.55) 98%,
       var(--paper) 100%
     ),
     linear-gradient(to bottom,
       var(--paper) 0%,
-      rgba(255,253,249,.82) 2%,
-      rgba(255,253,249,0) 8%,
-      rgba(255,253,249,0) 92%,
-      rgba(255,253,249,.82) 98%,
+      rgba(255,253,249,.55) 2%,
+      rgba(255,253,249,0) 5%,
+      rgba(255,253,249,0) 95%,
+      rgba(255,253,249,.55) 98%,
       var(--paper) 100%
     );
 }
@@ -2154,31 +2153,31 @@ body.idea-lightbox-open{
   -webkit-mask-image:
     linear-gradient(to right,
       transparent 0%,
-      #000 5%,
-      #000 95%,
+      #000 4%,
+      #000 96%,
       transparent 100%
     ),
     linear-gradient(to bottom,
       transparent 0%,
-      #000 5%,
-      #000 95%,
+      #000 4%,
+      #000 96%,
       transparent 100%
     );
-  -webkit-mask-composite: source-in;
+  -webkit-mask-composite:source-in;
   mask-image:
     linear-gradient(to right,
       transparent 0%,
-      #000 5%,
-      #000 95%,
+      #000 4%,
+      #000 96%,
       transparent 100%
     ),
     linear-gradient(to bottom,
       transparent 0%,
-      #000 5%,
-      #000 95%,
+      #000 4%,
+      #000 96%,
       transparent 100%
     );
-  mask-composite: intersect;
+  mask-composite:intersect;
 }
 
 /* Desktop: mantém a redução de 15% solicitada anteriormente. */
@@ -2195,4 +2194,5 @@ body.idea-lightbox-open{
     width:100%;
     max-width:100%;
   }
+}
 }
