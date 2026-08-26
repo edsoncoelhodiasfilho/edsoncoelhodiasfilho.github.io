@@ -2092,3 +2092,11 @@ body.idea-lightbox-open{
     font-size:12.65px !important;
   }
 }
+
+/* Ajuste solicitado — Criamos Ideias: imagens 15% mais estreitas somente no computador */
+@media (min-width: 901px){
+  .idea-carousel .idea-slide img{
+    width:85%;
+    max-width:85%;
+  }
+}
