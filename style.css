@@ -2236,6 +2236,8 @@ body.idea-lightbox-open{
   position:relative;
   z-index:1;
   width:100%;
+  height:100%;
+  min-height:0;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -2243,9 +2245,10 @@ body.idea-lightbox-open{
 
 .idea-carousel .idea-image-wrap img{
   display:block;
-  width:100%;
-  height:auto;
+  width:auto;
+  height:100%;
   max-width:100%;
+  max-height:100%;
   object-fit:contain;
   object-position:center;
   border-radius:0;
@@ -2293,18 +2296,37 @@ body.idea-lightbox-open{
   background:linear-gradient(to top,#fff 0,rgba(255,255,255,.85) 2px,rgba(255,255,255,.35) 3px,rgba(255,255,255,0) 5px);
 }
 
-/* Desktop: mantém a redução de 15% solicitada anteriormente. */
+/* Desktop: altura padronizada sem cortar ou deformar as imagens.
+   A largura varia conforme a proporção original da imagem. */
 @media (min-width:901px){
+  .hero-art .idea-carousel,
+  .hero-art .idea-carousel-track,
+  .hero-art .idea-carousel .idea-slide{
+    height:100% !important;
+  }
+
+  .idea-carousel .idea-image-wrap{
+    height:100%;
+  }
+
   .idea-carousel .idea-image-wrap img{
-    width:85%;
+    height:100%;
+    width:auto;
+    max-height:100%;
     max-width:85%;
   }
 }
 
-/* Mobile/tablet: mantém a largura integral. */
+/* Mobile/tablet: mantém a largura integral e a proporção original. */
 @media (max-width:900px){
+  .idea-carousel .idea-image-wrap{
+    height:auto;
+  }
+
   .idea-carousel .idea-image-wrap img{
     width:100%;
+    height:auto;
     max-width:100%;
+    max-height:none;
   }
 }
