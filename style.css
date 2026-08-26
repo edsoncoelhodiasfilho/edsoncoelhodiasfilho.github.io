@@ -2102,8 +2102,8 @@ body.idea-lightbox-open{
 }
 
 /* =========================================================
-   CRIAMOS IDEIAS — névoa suave nos quatro lados e quatro cantos
-   Fundo externo exatamente igual ao fundo creme da seção.
+   CRIAMOS IDEIAS — névoa independente nos quatro lados
+   Mantém o efeito visível em diferentes proporções de janela.
    ========================================================= */
 .idea-carousel{
   background:#ffffff;
@@ -2122,6 +2122,9 @@ body.idea-lightbox-open{
   background:#ffffff;
 }
 
+/* Névoa lateral e vertical em camadas independentes.
+   A máscara usa dimensões fixas/responsivas em px para que
+   largura e altura não compitam entre si quando a janela muda. */
 .idea-carousel .idea-slide::after{
   content:"";
   position:absolute;
@@ -2130,19 +2133,19 @@ body.idea-lightbox-open{
   pointer-events:none;
   background:
     linear-gradient(to right,
-      #ffffff 0%,
-      rgba(255,255,255,.22) 0.75%,
-      rgba(255,255,255,0) 2.25%,
-      rgba(255,255,255,0) 97.75%,
-      rgba(255,255,255,.22) 99.25%,
+      #ffffff 0,
+      rgba(255,255,255,.42) 18px,
+      rgba(255,255,255,0) 42px,
+      rgba(255,255,255,0) calc(100% - 42px),
+      rgba(255,255,255,.42) calc(100% - 18px),
       #ffffff 100%
     ),
     linear-gradient(to bottom,
-      #ffffff 0%,
-      rgba(255,255,255,.22) 0.75%,
-      rgba(255,255,255,0) 2.25%,
-      rgba(255,255,255,0) 97.75%,
-      rgba(255,255,255,.22) 99.25%,
+      #ffffff 0,
+      rgba(255,255,255,.42) 18px,
+      rgba(255,255,255,0) 42px,
+      rgba(255,255,255,0) calc(100% - 42px),
+      rgba(255,255,255,.42) calc(100% - 18px),
       #ffffff 100%
     );
 }
@@ -2157,37 +2160,37 @@ body.idea-lightbox-open{
   object-fit:contain;
   object-position:center;
   border-radius:0;
+
   /*
-   * Névoa linear independente:
-   * - esquerda/direita: fade vertical suave;
-   * - cima/baixo: fade horizontal suave.
-   * O centro permanece totalmente nítido.
+   * As quatro máscaras são combinadas como interseção.
+   * A largura do fade é fixa em pixels, portanto não desaparece
+   * quando a janela muda de proporção.
    */
   -webkit-mask-image:
     linear-gradient(to right,
       transparent 0,
-      #000 clamp(28px, 2.5vw, 55px),
-      #000 calc(100% - clamp(28px, 2.5vw, 55px)),
+      #000 42px,
+      #000 calc(100% - 42px),
       transparent 100%
     ),
     linear-gradient(to bottom,
       transparent 0,
-      #000 clamp(24px, 2.2vw, 48px),
-      #000 calc(100% - clamp(24px, 2.2vw, 48px)),
+      #000 42px,
+      #000 calc(100% - 42px),
       transparent 100%
     );
   -webkit-mask-composite:source-in;
   mask-image:
     linear-gradient(to right,
       transparent 0,
-      #000 clamp(28px, 2.5vw, 55px),
-      #000 calc(100% - clamp(28px, 2.5vw, 55px)),
+      #000 42px,
+      #000 calc(100% - 42px),
       transparent 100%
     ),
     linear-gradient(to bottom,
       transparent 0,
-      #000 clamp(24px, 2.2vw, 48px),
-      #000 calc(100% - clamp(24px, 2.2vw, 48px)),
+      #000 42px,
+      #000 calc(100% - 42px),
       transparent 100%
     );
   mask-composite:intersect;
