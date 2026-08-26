@@ -2463,14 +2463,15 @@ body.idea-lightbox-open{
 
 
 /* =========================================================
-   CORREÇÃO — CRIAMOS IDEIAS COM O MESMO FUNDO DA ÁREA DE TEXTO
+   CORREÇÃO FINAL — FUNDO DO CARROSSEL CRIAMOS IDEIAS
+   Igual ao fundo creme da área de conteúdo do Hero.
+   Deve sobrescrever as regras brancas anteriores.
    ========================================================= */
-.hero-art{
-  background:#f8f4eb !important;
-}
-
+.hero-art,
 .hero-art .idea-carousel,
 .hero-art .idea-carousel-track,
-.hero-art .idea-carousel .idea-slide{
+.hero-art .idea-carousel .idea-slide,
+.hero-art .idea-carousel .idea-slide::before,
+.hero-art .idea-carousel .idea-image-wrap{
   background:#f8f4eb !important;
 }
