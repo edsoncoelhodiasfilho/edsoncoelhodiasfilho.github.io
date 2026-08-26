@@ -2100,3 +2100,99 @@ body.idea-lightbox-open{
     max-width:85%;
   }
 }
+
+/* =========================================================
+   CRIAMOS IDEIAS — integração da imagem com o fundo
+   Efeito de névoa nas bordas, sem borrar o conteúdo central.
+   ========================================================= */
+.idea-carousel .idea-slide{
+  isolation:isolate;
+}
+
+.idea-carousel .idea-slide::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:#fffdf9;
+}
+
+.idea-carousel .idea-slide::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(to right,
+      #fffdf9 0%,
+      rgba(255,253,249,.88) 3%,
+      rgba(255,253,249,0) 12%,
+      rgba(255,253,249,0) 88%,
+      rgba(255,253,249,.88) 97%,
+      #fffdf9 100%
+    ),
+    linear-gradient(to bottom,
+      #fffdf9 0%,
+      rgba(255,253,249,.82) 4%,
+      rgba(255,253,249,0) 14%,
+      rgba(255,253,249,0) 86%,
+      rgba(255,253,249,.82) 96%,
+      #fffdf9 100%
+    );
+}
+
+.idea-carousel .idea-slide img{
+  position:relative;
+  z-index:1;
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  object-fit:contain;
+  object-position:center;
+  -webkit-mask-image:
+    linear-gradient(to right,
+      transparent 0%,
+      #000 8%,
+      #000 92%,
+      transparent 100%
+    ),
+    linear-gradient(to bottom,
+      transparent 0%,
+      #000 8%,
+      #000 92%,
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right,
+      transparent 0%,
+      #000 8%,
+      #000 92%,
+      transparent 100%
+    ),
+    linear-gradient(to bottom,
+      transparent 0%,
+      #000 8%,
+      #000 92%,
+      transparent 100%
+    );
+  mask-composite: intersect;
+}
+
+/* Desktop: mantém a redução de 15% solicitada anteriormente. */
+@media (min-width:901px){
+  .idea-carousel .idea-slide img{
+    width:85%;
+    max-width:85%;
+  }
+}
+
+/* Mobile/tablet: não altera a largura já existente. */
+@media (max-width:900px){
+  .idea-carousel .idea-slide img{
+    width:100%;
+    max-width:100%;
+  }
+}
