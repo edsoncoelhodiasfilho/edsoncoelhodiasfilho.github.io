@@ -2330,3 +2330,19 @@ body.idea-lightbox-open{
     max-height:none;
   }
 }
+
+
+/* =========================================================
+   CRIAMOS IDEIAS — MOBILE SEM NÉVOA
+   Mantém a névoa no desktop e remove as quatro camadas
+   exclusivamente em telas de até 760px.
+   ========================================================= */
+@media (max-width:760px){
+  .idea-carousel .idea-fog,
+  .idea-carousel .idea-fog-left,
+  .idea-carousel .idea-fog-right,
+  .idea-carousel .idea-fog-top,
+  .idea-carousel .idea-fog-bottom{
+    display:none !important;
+  }
+}
