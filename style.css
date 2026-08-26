@@ -2349,3 +2349,33 @@ body.idea-lightbox-open{
     background:none !important;
   }
 }
+
+/* =========================================================
+   CORREÇÃO DEFINITIVA — CRIAMOS IDEIAS SEM NÉVOA NO MOBILE
+   Remove também o pseudo-elemento e a máscara da imagem.
+   ========================================================= */
+@media screen and (max-width: 760px){
+  #ideaCarousel .idea-slide::after{
+    content:none !important;
+    display:none !important;
+    background:none !important;
+  }
+
+  #ideaCarousel .idea-slide img{
+    -webkit-mask-image:none !important;
+    mask-image:none !important;
+    -webkit-mask:none !important;
+    mask:none !important;
+  }
+
+  #ideaCarousel .idea-fog,
+  #ideaCarousel .idea-fog-left,
+  #ideaCarousel .idea-fog-right,
+  #ideaCarousel .idea-fog-top,
+  #ideaCarousel .idea-fog-bottom{
+    display:none !important;
+    visibility:hidden !important;
+    opacity:0 !important;
+    background:none !important;
+  }
+}
