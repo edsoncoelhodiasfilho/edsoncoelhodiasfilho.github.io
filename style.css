@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
-:root{--g:#073b2d;--g2:#0d503e;--gold:#c7943e;--cream:#f7f3eb;--paper:#fbfaf7;--ink:#12221d;--muted:#68736e;--line:#ddd7cb}
+:root{--g:#073b2d;--g2:#0d503e;--gold:#c7943e;--cream:#f7f3eb;--paper:var(--paper);--ink:#12221d;--muted:#68736e;--line:#ddd7cb}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",Arial,sans-serif}a{text-decoration:none;color:inherit}
 .topbar{height:34px;background:var(--g);color:#fff;padding:0 5%;display:flex;align-items:center;justify-content:space-between;font-size:11px}
 header{height:88px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#fffdfaf2;position:sticky;top:0;z-index:5;backdrop-filter:blur(8px)}
@@ -2439,69 +2439,142 @@ body.idea-lightbox-open{
 
 
 /* =========================================================
-   CORREÇÃO — MODAIS DE ORÇAMENTO E E-MAIL
+   ERALIS — CRIAMOS IDEIAS
+   REESTRUTURAÇÃO FINAL DO VIEWPORT DO CARROSSEL
    ========================================================= */
-.quote-modal{
-  background:#fbfaf7 !important;
-  opacity:1 !important;
-}
 
-.email-modal{
-  background:#fbfaf7 !important;
-  opacity:1 !important;
-}
-
-.quote-modal .quote-header{
-  background:linear-gradient(135deg,#f8f4eb,#fbfaf7) !important;
-  opacity:1;
-}
-
-.quote-modal form{
-  background:#fbfaf7;
-  opacity:1;
-}
-
-
-/* =========================================================
-   CORREÇÃO FINAL — FUNDO DO CARROSSEL CRIAMOS IDEIAS
-   Igual ao fundo creme da área de conteúdo do Hero.
-   Deve sobrescrever as regras brancas anteriores.
-   ========================================================= */
-.hero-art,
-.hero-art .idea-carousel,
-.hero-art .idea-carousel-track,
-.hero-art .idea-carousel .idea-slide,
-.hero-art .idea-carousel .idea-slide::before,
-.hero-art .idea-carousel .idea-image-wrap{
+/* Um único viewport com proporção estável.
+   As imagens entram dentro dele sem corte ou deformação. */
+#ideaCarousel{
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  aspect-ratio:4 / 3 !important;
+  overflow:hidden !important;
+  position:relative !important;
   background:#f8f4eb !important;
 }
 
-
-/* =========================================================
-   CRIAMOS IDEIAS — remover moldura/padding branco
-   A imagem permanece intacta; somente o entorno deixa de ser branco.
-   ========================================================= */
-.hero-art,
-.hero-art .idea-carousel,
-.hero-art .idea-carousel-track,
-.hero-art .idea-carousel .idea-slide,
-.hero-art .idea-carousel .idea-image-wrap{
+#ideaCarousel .idea-carousel-track{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  position:relative !important;
   background:#f8f4eb !important;
+}
+
+#ideaCarousel .idea-slide{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
   padding:0 !important;
   margin:0 !important;
-  border:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  overflow:hidden !important;
+  background:#f8f4eb !important;
 }
 
-.hero-art .idea-carousel .idea-slide::before,
-.hero-art .idea-carousel .idea-slide::after{
-  background:transparent !important;
-  box-shadow:none !important;
+#ideaCarousel .idea-image-wrap{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  background:#f8f4eb !important;
+}
+
+#ideaCarousel .idea-image-wrap img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+}
+
+/* Elimina qualquer moldura/pseudo-elemento branco acumulado. */
+#ideaCarousel .idea-slide::before,
+#ideaCarousel .idea-slide::after{
   content:none !important;
+  display:none !important;
 }
 
-.hero-art .idea-carousel .idea-image-wrap img{
-  background:transparent !important;
-  padding:0 !important;
-  margin:0 !important;
-  border:0 !important;
+/* A névoa continua disponível no desktop, mas fica fora do mobile. */
+@media screen and (max-width:760px){
+  #ideaCarousel{
+    aspect-ratio:4 / 3 !important;
+    height:auto !important;
+    min-height:0 !important;
+    background:#f8f4eb !important;
+  }
+
+  #ideaCarousel .idea-carousel-track,
+  #ideaCarousel .idea-slide,
+  #ideaCarousel .idea-image-wrap{
+    height:100% !important;
+    min-height:0 !important;
+    background:#f8f4eb !important;
+  }
+
+  #ideaCarousel .idea-image-wrap img{
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    object-fit:contain !important;
+    -webkit-mask:none !important;
+    mask:none !important;
+  }
+
+  #ideaCarousel .idea-fog,
+  #ideaCarousel .idea-fog-left,
+  #ideaCarousel .idea-fog-right,
+  #ideaCarousel .idea-fog-top,
+  #ideaCarousel .idea-fog-bottom{
+    display:none !important;
+    visibility:hidden !important;
+    opacity:0 !important;
+  }
+}
+
+/* Desktop: o frame ocupa todo o espaço disponível do lado direito.
+   Não aplica mais a redução de 15% à imagem. */
+@media screen and (min-width:901px){
+  .hero-art{
+    padding:0 !important;
+    overflow:hidden !important;
+    background:#f8f4eb !important;
+  }
+
+  #ideaCarousel{
+    width:100% !important;
+    height:100% !important;
+    aspect-ratio:auto !important;
+    background:#f8f4eb !important;
+  }
+
+  #ideaCarousel .idea-carousel-track,
+  #ideaCarousel .idea-slide,
+  #ideaCarousel .idea-image-wrap{
+    height:100% !important;
+  }
+
+  #ideaCarousel .idea-image-wrap img{
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    object-fit:contain !important;
+  }
 }
