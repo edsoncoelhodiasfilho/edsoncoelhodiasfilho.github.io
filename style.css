@@ -2440,141 +2440,80 @@ body.idea-lightbox-open{
 
 /* =========================================================
    ERALIS — CRIAMOS IDEIAS
-   REESTRUTURAÇÃO FINAL DO VIEWPORT DO CARROSSEL
+   PREENCHIMENTO VISUAL UNIFORME
    ========================================================= */
 
-/* Um único viewport com proporção estável.
-   As imagens entram dentro dele sem corte ou deformação. */
-#ideaCarousel{
-  width:100% !important;
-  height:auto !important;
-  min-height:0 !important;
-  aspect-ratio:4 / 3 !important;
-  overflow:hidden !important;
-  position:relative !important;
-  background:#f8f4eb !important;
-}
-
-#ideaCarousel .idea-carousel-track{
-  width:100% !important;
-  height:100% !important;
-  min-height:0 !important;
-  position:relative !important;
-  background:#f8f4eb !important;
-}
-
+/* O próprio slide recebe a imagem como fundo "cover".
+   Assim o campo nunca fica branco/vazio, enquanto a imagem
+   principal continua inteira e sem deformação. */
 #ideaCarousel .idea-slide{
+  background-color:#f8f4eb !important;
+  background-image:var(--idea-bg-image) !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+}
+
+/* Véu sutil para o fundo ampliado não competir com a imagem principal. */
+#ideaCarousel .idea-slide::before{
+  content:"" !important;
   position:absolute !important;
   inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  min-height:0 !important;
-  padding:0 !important;
-  margin:0 !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  overflow:hidden !important;
-  background:#f8f4eb !important;
+  z-index:0 !important;
+  background:rgba(248,244,235,.18) !important;
+  pointer-events:none !important;
 }
 
+/* A imagem principal permanece inteira. */
 #ideaCarousel .idea-image-wrap{
+  position:relative !important;
+  z-index:1 !important;
   width:100% !important;
   height:100% !important;
-  min-height:0 !important;
-  padding:0 !important;
-  margin:0 !important;
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
-  background:#f8f4eb !important;
+  background:transparent !important;
 }
 
 #ideaCarousel .idea-image-wrap img{
+  position:relative !important;
+  z-index:1 !important;
   display:block !important;
   width:100% !important;
   height:100% !important;
   max-width:100% !important;
   max-height:100% !important;
+  object-fit:contain !important;
+  object-position:center !important;
   margin:0 !important;
   padding:0 !important;
   border:0 !important;
-  object-fit:contain !important;
-  object-position:center center !important;
+  -webkit-mask:none !important;
+  mask:none !important;
 }
 
-/* Elimina qualquer moldura/pseudo-elemento branco acumulado. */
-#ideaCarousel .idea-slide::before,
-#ideaCarousel .idea-slide::after{
-  content:none !important;
+/* Remove a névoa estrutural: o preenchimento agora é feito pelo
+   próprio fundo da imagem, sem faixas brancas. */
+#ideaCarousel .idea-fog{
   display:none !important;
 }
 
-/* A névoa continua disponível no desktop, mas fica fora do mobile. */
+/* Desktop e mobile usam exatamente o mesmo princípio. */
 @media screen and (max-width:760px){
-  #ideaCarousel{
-    aspect-ratio:4 / 3 !important;
-    height:auto !important;
-    min-height:0 !important;
-    background:#f8f4eb !important;
+  #ideaCarousel .idea-slide{
+    background-size:cover !important;
+    background-position:center !important;
+    background-color:#f8f4eb !important;
   }
 
-  #ideaCarousel .idea-carousel-track,
-  #ideaCarousel .idea-slide,
-  #ideaCarousel .idea-image-wrap{
-    height:100% !important;
-    min-height:0 !important;
-    background:#f8f4eb !important;
+  #ideaCarousel .idea-slide::before{
+    background:rgba(248,244,235,.12) !important;
   }
 
+  #ideaCarousel .idea-image-wrap,
   #ideaCarousel .idea-image-wrap img{
     width:100% !important;
     height:100% !important;
-    max-width:100% !important;
-    max-height:100% !important;
-    object-fit:contain !important;
-    -webkit-mask:none !important;
-    mask:none !important;
-  }
-
-  #ideaCarousel .idea-fog,
-  #ideaCarousel .idea-fog-left,
-  #ideaCarousel .idea-fog-right,
-  #ideaCarousel .idea-fog-top,
-  #ideaCarousel .idea-fog-bottom{
-    display:none !important;
-    visibility:hidden !important;
-    opacity:0 !important;
-  }
-}
-
-/* Desktop: o frame ocupa todo o espaço disponível do lado direito.
-   Não aplica mais a redução de 15% à imagem. */
-@media screen and (min-width:901px){
-  .hero-art{
-    padding:0 !important;
-    overflow:hidden !important;
-    background:#f8f4eb !important;
-  }
-
-  #ideaCarousel{
-    width:100% !important;
-    height:100% !important;
-    aspect-ratio:auto !important;
-    background:#f8f4eb !important;
-  }
-
-  #ideaCarousel .idea-carousel-track,
-  #ideaCarousel .idea-slide,
-  #ideaCarousel .idea-image-wrap{
-    height:100% !important;
-  }
-
-  #ideaCarousel .idea-image-wrap img{
-    width:100% !important;
-    height:100% !important;
-    max-width:100% !important;
-    max-height:100% !important;
-    object-fit:contain !important;
   }
 }

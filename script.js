@@ -642,7 +642,7 @@ window.addEventListener("eralis-content-loaded", function(event){
 
       if (track) {
         track.innerHTML = ideaItems.map((item, index) => `
-          <div class="idea-slide ${index === 0 ? "active" : ""}">
+          <div class="idea-slide ${index === 0 ? "active" : ""}" style="--idea-bg-image:url("${item.image_url.replace(/"/g, '&quot;')}")">
             <div class="idea-fog idea-fog-left" aria-hidden="true"></div>
             <div class="idea-fog idea-fog-right" aria-hidden="true"></div>
             <div class="idea-fog idea-fog-top" aria-hidden="true"></div>
@@ -674,6 +674,7 @@ window.addEventListener("eralis-content-loaded", function(event){
       slides.forEach(slide=>{
          const img=slide.querySelector("img");
          if(img){
+           img.addEventListener("load",()=>{ideaCarousel.querySelector("#ideaCarouselTrack").style.height="auto";});
            img.addEventListener("click",()=>{
              if(window.matchMedia("(max-width: 760px)").matches){
                window.openEralisIdeaLightbox(img.currentSrc || img.src, img.alt);
@@ -695,3 +696,4 @@ window.addEventListener("eralis-content-loaded", function(event){
 
 /* Recalcula a área de Criamos ideias quando uma imagem termina de carregar.
    Não define altura fixa: deixa o navegador respeitar a proporção original. */
+
