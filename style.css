@@ -2577,16 +2577,22 @@ dialog.email-modal::backdrop{
 }
 
 @media (max-width: 760px){
-  /* "Personalize sua ideia" deve ter exatamente a mesma
-     largura externa de "Sobre a Eralis" no celular.
-     .about fica dentro de .section (90% da viewport);
-     .custom é independente da .section. */
-  .custom,
-  .about{
+  /* No mobile, #sobre está dentro de .section (com 5% de padding).
+     Portanto .about ocupa 100% do conteúdo da section (=90vw),
+     enquanto #personalizados precisa ter 90vw diretamente. */
+  .custom{
     width:90% !important;
     max-width:none !important;
     margin-left:auto !important;
     margin-right:auto !important;
+    box-sizing:border-box !important;
+  }
+
+  .about{
+    width:100% !important;
+    max-width:none !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
     box-sizing:border-box !important;
   }
 }
