@@ -2669,3 +2669,63 @@ dialog.email-modal::backdrop{
     min-height:280px !important;
   }
 }
+
+
+/* ERALIS — correção final: carrossel estável em qualquer largura de desktop */
+.hero{
+  height:550px !important;
+  min-height:550px !important;
+}
+.hero-art{
+  height:550px !important;
+  min-height:0 !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  position:relative !important;
+}
+#ideaCarousel{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  max-height:100% !important;
+  overflow:hidden !important;
+}
+#ideaCarousel .idea-carousel-track{
+  width:100% !important;
+  height:100% !important;
+  overflow:hidden !important;
+  position:relative !important;
+}
+#ideaCarousel .idea-slide{
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  overflow:hidden !important;
+}
+#ideaCarousel .idea-image-wrap{
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  overflow:hidden !important;
+}
+#ideaCarousel .idea-image-wrap img{
+  position:absolute !important;
+  inset:0 !important;
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+}
+@media(max-width:900px){
+  .hero{height:auto !important; min-height:0 !important;}
+  .hero-art{height:390px !important; min-height:390px !important;}
+}
+@media(max-width:560px){
+  .hero-art{height:330px !important; min-height:330px !important;}
+}
+@media(max-width:480px){
+  .hero-art{height:280px !important; min-height:280px !important;}
+}

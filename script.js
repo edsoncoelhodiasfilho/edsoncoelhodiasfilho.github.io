@@ -532,8 +532,6 @@ window.eralisIdeaCarousel = {
 
 if(ideaCarousel){
   window.eralisIdeaCarousel.refresh();
-  ideaCarousel.addEventListener("mouseenter",()=>window.eralisIdeaCarousel.stop());
-  ideaCarousel.addEventListener("mouseleave",()=>window.eralisIdeaCarousel.refresh());
   ideaCarousel.addEventListener("touchstart",()=>window.eralisIdeaCarousel.stop(),{passive:true});
   ideaCarousel.addEventListener("touchend",()=>window.eralisIdeaCarousel.refresh(),{passive:true});
 }
