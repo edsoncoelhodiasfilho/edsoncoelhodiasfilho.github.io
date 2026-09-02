@@ -2548,3 +2548,40 @@ dialog.email-modal::backdrop{
   background:#00150fcc !important;
   opacity:1 !important;
 }
+
+
+/* =========================================================
+   ERALIS — ALINHAMENTO "PERSONALIZADOS" E "SOBRE NÓS"
+   Desktop: mesma largura externa dos dois campos.
+   ========================================================= */
+@media (min-width: 1001px){
+  .custom,
+  .about{
+    width:900px !important;
+    max-width:900px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    box-sizing:border-box !important;
+  }
+}
+
+/* Em telas menores, os dois campos ocupam a mesma largura
+   disponível, respeitando o espaçamento lateral existente. */
+@media (max-width: 1000px){
+  .custom,
+  .about{
+    width:100% !important;
+    max-width:none !important;
+    box-sizing:border-box !important;
+  }
+}
+
+@media (max-width: 760px){
+  .custom,
+  .about{
+    width:100% !important;
+    max-width:none !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+}
