@@ -642,7 +642,7 @@ window.addEventListener("eralis-content-loaded", function(event){
 
       if (track) {
         track.innerHTML = ideaItems.map((item, index) => `
-          <div class="idea-slide ${index === 0 ? "active" : ""}" style="--idea-bg-image:url("${item.image_url.replace(/"/g, '&quot;')}")">
+          <div class="idea-slide ${index === 0 ? "active" : ""}>
             <div class="idea-fog idea-fog-left" aria-hidden="true"></div>
             <div class="idea-fog idea-fog-right" aria-hidden="true"></div>
             <div class="idea-fog idea-fog-top" aria-hidden="true"></div>
