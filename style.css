@@ -720,6 +720,301 @@ footer .brand-name strong{
 
 
 /* =========================================================
+   CARROSSEL — "CRIAMOS IDEIAS"
+   Mesma cadência do carrossel de produtos: 3 segundos.
+   ========================================================= */
+.idea-carousel{
+  width:100%;
+  height:100%;
+  min-height:550px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.idea-carousel-track{
+  width:100%;
+  height:100%;
+  position:relative;
+}
+.idea-slide{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  visibility:hidden;
+  transform:scale(.97);
+  transition:opacity .65s ease, transform .65s ease, visibility .65s ease;
+}
+.idea-slide.active{
+  opacity:1;
+  visibility:visible;
+  transform:scale(1);
+}
+.idea-product{
+  width:250px;
+  height:250px;
+  border-radius:50%;
+  background:#151918;
+  box-shadow:0 25px 35px #0003,inset 0 0 0 5px #d4a34c;
+  position:relative;
+}
+.idea-product::after{
+  content:"";
+  position:absolute;
+  inset:28px;
+  border:3px solid #d4a34c;
+  border-radius:50%;
+}
+.idea-product-cactus{
+  width:150px;
+  height:230px;
+  border-radius:55px 55px 38px 38px;
+  background:#6d803c;
+  box-shadow:0 25px 35px #0003;
+}
+.idea-product-cactus::before{
+  content:"";
+  position:absolute;
+  width:65px;
+  height:95px;
+  left:-42px;
+  top:78px;
+  border-radius:40px 0 0 40px;
+  background:#6d803c;
+}
+.idea-product-cactus::after{
+  inset:18px;
+  border:2px dashed #dce4b0;
+  opacity:.55;
+}
+.idea-product-holder{
+  width:260px;
+  height:165px;
+  border-radius:20px;
+  background:#202624;
+  box-shadow:0 25px 35px #0003;
+}
+.idea-product-holder::after{
+  inset:22px;
+  border:3px solid #cda04a;
+  border-radius:12px;
+}
+.idea-product-figure{
+  width:170px;
+  height:245px;
+  border-radius:48% 48% 30% 30%;
+  background:#9c7557;
+  box-shadow:0 25px 35px #0003;
+}
+.idea-product-figure::after{
+  inset:22px;
+  border:2px solid #e6c39f;
+  opacity:.7;
+}
+.idea-dots{
+  position:absolute;
+  left:50%;
+  bottom:30px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  z-index:3;
+}
+.idea-dots span{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#073b2d55;
+  transition:.25s;
+}
+.idea-dots span.active{
+  width:24px;
+  border-radius:8px;
+  background:#c7943e;
+}
+
+@media(max-width:900px){
+  .idea-carousel{min-height:390px}
+}
+@media(max-width:560px){
+  .idea-carousel{min-height:330px}
+  .idea-product{width:190px;height:190px}
+  .idea-product-cactus{width:105px;height:170px}
+  .idea-product-holder{width:190px;height:120px}
+  .idea-product-figure{width:125px;height:185px}
+  .idea-dots{bottom:18px}
+}
+
+/* Imagens reais cadastradas no Supabase */
+.pic.real-image{overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pic.real-image img{width:100%;height:100%;object-fit:cover;display:block;}
+
+
+/* =========================================================
+   GALERIA DE MÍDIA — MODAL DO PRODUTO
+   ========================================================= */
+.product-modal-gallery{
+  width:100%;
+  max-width:620px;
+  margin:0 auto 24px;
+}
+
+.product-modal-stage{
+  position:relative;
+  width:100%;
+  min-height:360px;
+  border-radius:18px;
+  overflow:hidden;
+  background:#f5f2ed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.product-modal-media-current{
+  width:100%;
+  min-height:360px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.product-modal-media-current img,
+.product-modal-media-current video{
+  width:100%;
+  height:100%;
+  min-height:360px;
+  max-height:560px;
+  display:block;
+  object-fit:contain;
+}
+
+.product-modal-media-current video{
+  background:#111;
+}
+
+.product-media-arrow{
+  position:absolute;
+  z-index:20;
+  top:50%;
+  transform:translateY(-50%);
+  width:46px;
+  height:46px;
+  padding:0;
+  border:1px solid rgba(0,0,0,.12);
+  border-radius:50%;
+  background:rgba(255,255,255,.96);
+  color:#222;
+  font-size:34px;
+  line-height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 3px 12px rgba(0,0,0,.18);
+  transition:transform .15s ease,background .15s ease;
+}
+
+.product-media-arrow:hover{
+  transform:translateY(-50%) scale(1.08);
+  background:#fff;
+}
+
+.product-media-arrow:focus-visible{
+  outline:3px solid rgba(0,0,0,.25);
+  outline-offset:2px;
+}
+
+.product-media-arrow[hidden]{
+  display:none !important;
+}
+
+.product-media-prev{left:12px;}
+.product-media-next{right:12px;}
+
+.product-modal-gallery-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:12px;
+}
+
+.product-modal-thumbs{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.product-modal-thumb{
+  width:54px;
+  height:54px;
+  padding:2px;
+  border:2px solid transparent;
+  border-radius:9px;
+  background:#eee;
+  overflow:hidden;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.product-modal-thumb.active{
+  border-color:currentColor;
+}
+
+.product-modal-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:6px;
+}
+
+.product-thumb-video{
+  font-size:19px;
+}
+
+.product-modal-counter{
+  font-size:12px;
+  opacity:.65;
+  white-space:nowrap;
+}
+
+@media(max-width:700px){
+  .product-modal-gallery{
+    margin-bottom:18px;
+  }
+
+  .product-modal-stage,
+  .product-modal-media-current{
+    min-height:250px;
+  }
+
+  .product-modal-media-current img,
+  .product-modal-media-current video{
+    min-height:250px;
+    max-height:380px;
+  }
+
+  .product-media-arrow{
+    width:40px;
+    height:40px;
+    font-size:29px;
+  }
+
+  .product-media-prev{left:8px;}
+  .product-media-next{right:8px;}
+}
+
+
+
+/* =========================================================
    CARDS DE PRODUTOS — ALTURA UNIFORME
    ========================================================= */
 .card{
@@ -1670,3 +1965,145 @@ body.idea-lightbox-open{
   }
 }
 
+/* =========================================================
+   CORREÇÃO FINAL — MODAIS DE ORÇAMENTO E E-MAIL
+   Fundo sólido, preservando o backdrop escurecido.
+   ========================================================= */
+dialog.quote-modal,
+dialog.email-modal{
+  background:#fbfaf7 !important;
+  opacity:1 !important;
+  color:#12221d !important;
+  border:0 !important;
+}
+
+dialog.quote-modal .quote-header,
+dialog.email-modal .quote-header{
+  background:linear-gradient(135deg,#f8f4eb,#fbfaf7) !important;
+  opacity:1 !important;
+}
+
+dialog.quote-modal #quoteForm,
+dialog.email-modal #emailForm{
+  background:#fbfaf7 !important;
+  opacity:1 !important;
+}
+
+dialog.quote-modal::backdrop,
+dialog.email-modal::backdrop{
+  background:#00150fcc !important;
+  opacity:1 !important;
+}
+
+
+
+/* =========================================================
+   ERALIS — CRIAMOS IDEIAS / COMPONENTE FINAL LIMPO
+   O quadro mantém a proporção da arte em qualquer largura.
+   ========================================================= */
+#ideaCarousel{
+  position:relative;
+  width:100%;
+  aspect-ratio:16 / 9;
+  height:auto !important;
+  min-height:0 !important;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  display:block;
+  background:#fff;
+}
+#ideaCarousel .idea-carousel-track{
+  position:relative;
+  width:100%;
+  height:100%;
+  min-height:0 !important;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+}
+#ideaCarousel .idea-slide{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  overflow:hidden !important;
+  opacity:0;
+  visibility:hidden;
+  transform:none !important;
+  transition:opacity .55s ease, visibility .55s ease;
+  background:#fff;
+}
+#ideaCarousel .idea-slide.active{opacity:1;visibility:visible;z-index:2;}
+#ideaCarousel .idea-slide:not(.active){z-index:1;}
+#ideaCarousel .idea-image-wrap{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+#ideaCarousel .idea-image-wrap img{
+  position:absolute !important;
+  inset:0 !important;
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  max-width:none !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+}
+#ideaCarousel .idea-fog,
+#ideaCarousel .idea-fog-left,
+#ideaCarousel .idea-fog-right,
+#ideaCarousel .idea-fog-top,
+#ideaCarousel .idea-fog-bottom{display:none !important;}
+#ideaCarousel .idea-dots{
+  position:absolute;
+  left:50%;
+  bottom:14px;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  z-index:5;
+}
+#ideaCarousel .idea-dots span{
+  width:8px;height:8px;border-radius:50%;background:#073b2d55;
+  transition:width .25s ease,background .25s ease;cursor:pointer;
+}
+#ideaCarousel .idea-dots span.active{width:24px;border-radius:8px;background:#c7943e;}
+
+@media (min-width:901px){
+  .hero-art{
+    min-width:0;
+    min-height:0;
+    padding:0;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  #ideaCarousel{width:100%;}
+}
+@media (max-width:900px){
+  .hero-art{min-height:0;padding:0;overflow:hidden;}
+  #ideaCarousel{width:100%;aspect-ratio:16 / 9;}
+}
+@media (max-width:760px){
+  #ideaCarousel .idea-slide img{cursor:zoom-in;-webkit-tap-highlight-color:transparent;}
+}
