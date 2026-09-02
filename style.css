@@ -2577,11 +2577,16 @@ dialog.email-modal::backdrop{
 }
 
 @media (max-width: 760px){
+  /* "Personalize sua ideia" deve ter exatamente a mesma
+     largura externa de "Sobre a Eralis" no celular.
+     .about fica dentro de .section (90% da viewport);
+     .custom é independente da .section. */
   .custom,
   .about{
-    width:100% !important;
+    width:90% !important;
     max-width:none !important;
-    margin-left:0 !important;
-    margin-right:0 !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    box-sizing:border-box !important;
   }
 }
