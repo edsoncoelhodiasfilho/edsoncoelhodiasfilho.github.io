@@ -488,38 +488,70 @@ if(uploadBox){
 }
 
 
-// Carrossel da área "Criamos ideias" — mesma regra do carrossel de produtos: 3 segundos.
-const ideaCarousel = document.querySelector("#ideaCarousel");
-if (ideaCarousel) {
-  const slides = Array.from(ideaCarousel.querySelectorAll(".idea-slide"));
-  const dots = Array.from(ideaCarousel.querySelectorAll(".idea-dots span"));
-  let ideaCurrent = 0;
-  let ideaTimer = null;
+// Carrossel da área "Criamos ideias".
+// Uma única implementação é usada tanto para os slides iniciais
+// quanto para as imagens carregadas do Supabase.
+(function(){
+  const carousel = document.querySelector("#ideaCarousel");
+  if (!carousel) return;
 
-  function showIdeaSlide(index) {
-    slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
-    dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+  let current = 0;
+  let timer = null;
+  let boundSlides = [];
+  let boundDots = [];
+
+  function stop(){
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
   }
 
-  function nextIdeaSlide() {
-    ideaCurrent = (ideaCurrent + 1) % slides.length;
-    showIdeaSlide(ideaCurrent);
+  function show(index){
+    const slides = Array.from(carousel.querySelectorAll(".idea-slide"));
+    const dots = Array.from(carousel.querySelectorAll(".idea-dots span"));
+    if (!slides.length) return;
+
+    current = ((index % slides.length) + slides.length) % slides.length;
+    slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === current));
+    boundSlides = slides;
+    boundDots = dots;
   }
 
-  function startIdeaCarousel() {
-    clearInterval(ideaTimer);
-    ideaTimer = setInterval(nextIdeaSlide, 4000);
+  function start(){
+    stop();
+    if (boundSlides.length > 1) {
+      timer = setInterval(() => show(current + 1), 4000);
+      window.eralisIdeaTimer = timer;
+    } else {
+      window.eralisIdeaTimer = null;
+    }
   }
 
-  showIdeaSlide(ideaCurrent);
-  startIdeaCarousel();
+  function setup(){
+    stop();
+    current = 0;
+    show(0);
 
-  ideaCarousel.addEventListener("mouseenter", () => clearInterval(ideaTimer));
-  ideaCarousel.addEventListener("mouseleave", startIdeaCarousel);
-  ideaCarousel.addEventListener("touchstart", () => clearInterval(ideaTimer), {passive:true});
-  ideaCarousel.addEventListener("touchend", startIdeaCarousel, {passive:true});
-}
+    // Os dots são recriados quando o Supabase atualiza as imagens.
+    boundDots.forEach((dot, i) => {
+      dot.onclick = () => {
+        show(i);
+        start();
+      };
+    });
+    start();
+  }
 
+  carousel.addEventListener("mouseenter", stop);
+  carousel.addEventListener("mouseleave", start);
+  carousel.addEventListener("touchstart", stop, {passive:true});
+  carousel.addEventListener("touchend", start, {passive:true});
+
+  window.refreshEralisIdeaCarousel = setup;
+  setup();
+})();
 
 /* =========================================================
    ERALIS — visualização ampliada de "Criamos ideias" no mobile
@@ -657,24 +689,15 @@ window.addEventListener("eralis-content-loaded", function(event){
         dotsContainer.innerHTML = ideaItems.map((_, index) => `<span class="${index === 0 ? "active" : ""}" data-index="${index}"></span>`).join("");
       }
 
+      // Reativa o único controlador do carrossel depois que as imagens
+      // vindas do Supabase substituem os slides iniciais.
+      if (typeof window.refreshEralisIdeaCarousel === "function") {
+        window.refreshEralisIdeaCarousel();
+      }
       const slides = Array.from(ideaCarousel.querySelectorAll(".idea-slide"));
-      const dots = Array.from(ideaCarousel.querySelectorAll(".idea-dots span"));
-      let current = 0;
-      const show = index => {
-        slides.forEach((slide,i)=>slide.classList.toggle("active",i===index));
-        dots.forEach((dot,i)=>dot.classList.toggle("active",i===index));
-      };
-      const next = () => { if (slides.length) { current=(current+1)%slides.length; show(current); } };
-      show(0);
-      if (slides.length > 1) window.eralisIdeaTimer=setInterval(next,4000);
-      dots.forEach((dot,index)=>dot.onclick=()=>{
-        current=index; show(current);
-        if(slides.length>1){clearInterval(window.eralisIdeaTimer);window.eralisIdeaTimer=setInterval(next,3000);}
-      });
       slides.forEach(slide=>{
          const img=slide.querySelector("img");
          if(img){
-           img.addEventListener("load",()=>{ideaCarousel.querySelector("#ideaCarouselTrack").style.height="auto";});
            img.addEventListener("click",()=>{
              if(window.matchMedia("(max-width: 760px)").matches){
                window.openEralisIdeaLightbox(img.currentSrc || img.src, img.alt);
