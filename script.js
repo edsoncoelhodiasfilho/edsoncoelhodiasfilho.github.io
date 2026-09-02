@@ -674,7 +674,7 @@ window.addEventListener("eralis-content-loaded", function(event){
       slides.forEach(slide=>{
          const img=slide.querySelector("img");
          if(img){
-           
+           img.addEventListener("load",()=>{ideaCarousel.querySelector("#ideaCarouselTrack").style.height="auto";});
            img.addEventListener("click",()=>{
              if(window.matchMedia("(max-width: 760px)").matches){
                window.openEralisIdeaLightbox(img.currentSrc || img.src, img.alt);
