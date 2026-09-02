@@ -2548,3 +2548,14 @@ dialog.email-modal::backdrop{
   background:#00150fcc !important;
   opacity:1 !important;
 }
+
+/* =========================================================
+   FEITO PARA VOCÊ — largura do conteúdo igual a SOBRE A ERALIS
+   ========================================================= */
+@media (min-width: 761px){
+  .custom > div:first-child{
+    width:900px;
+    max-width:900px;
+    flex:0 0 900px;
+  }
+}
