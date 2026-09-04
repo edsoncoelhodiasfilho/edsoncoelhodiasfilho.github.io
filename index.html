@@ -89,7 +89,7 @@
   }
   @media (max-width: 560px){ .hero h1{ font-size: 36px; } }
   .hero p{ color: var(--text-dim); font-size: 17px; max-width: 46ch; margin: 0 0 32px; }
-  .hero-actions{ display:flex; gap: 14px; flex-wrap: wrap; }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:nowrap; }
 
   /* 3D printer building the piece */
   .printer-stage{ width:100%; max-width: 320px; margin: 0 auto; }
@@ -522,6 +522,8 @@
 
 /* Ajuste fino para celulares: evita qualquer estouro horizontal e deixa as áreas principais mais fluidas. */
 @media (max-width: 720px){
+  .hero-actions{display:flex;flex-wrap:nowrap;gap:10px;}
+  .hero-actions .btn{flex:1 1 0;min-width:0;width:auto;max-width:none;justify-content:center;}
   html,body{width:100%;max-width:100%;overflow-x:hidden;}
   .wrap{width:100%;max-width:100%;padding-left:18px;padding-right:18px;}
   .nav{padding-left:0;padding-right:0;}
@@ -537,6 +539,8 @@
 }
 
 @media (max-width: 380px){
+  .hero-actions{gap:8px;}
+  .hero-actions .btn{padding-left:10px;padding-right:10px;font-size:13px;}
   .wrap{padding-left:16px;padding-right:16px;}
   .custom{width:92%;}
   .hero h1{font-size:34px;}
