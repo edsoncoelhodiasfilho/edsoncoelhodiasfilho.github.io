@@ -33,12 +33,12 @@ async function requireAdmin(){
 }
 async function loadData(){
   if(!await requireAdmin())return;
-  try{[products,ideas]=await Promise.all([api("/rest/v1/products?select=id,name,description,measurements,price,active,sort_order,payment_url,image_url,image_path,image_url_2,image_path_2,video_url,video_path&order=sort_order.asc,created_at.asc"),api("/rest/v1/idea_images?select=*&order=sort_order.asc,created_at.asc")]);render();}
+  try{[products,ideas]=await Promise.all([api("/rest/v1/products?select=id,name,description,price,active,sort_order,payment_url,image_url,image_path,image_url_2,image_path_2,video_url,video_path&order=sort_order.asc,created_at.asc"),api("/rest/v1/idea_images?select=*&order=sort_order.asc,created_at.asc")]);render();}
   catch(e){showError(e);}
 }
 function render(){
-  document.querySelector("#productsAdmin").innerHTML=products.length?products.map(p=>`<article class="admin-item"><div class="admin-thumb">${p.image_url?`<img src="${p.image_url}" alt="${escapeHtml(p.name)}">`:`<span style="font-size:50px;color:#c7943e;font-weight:800">✦</span>`}</div><div class="admin-item-body"><h3>${escapeHtml(p.name)}</h3><p>${escapeHtml(p.description)}</p>${p.measurements?`<p><strong>Medidas:</strong> ${escapeHtml(p.measurements)}</p>`:""}<div class="media-status"><span>${p.image_url?"Imagem 1 ✓":"Imagem 1 —"}</span><span>${p.image_url_2?"Imagem 2 ✓":"Imagem 2 —"}</span><span>${p.video_url?"Vídeo ✓":"Vídeo —"}</span></div><div class="admin-meta"><strong>${money(p.price)}</strong><span class="status ${p.active?"on":"off"}">${p.active?"ATIVO":"INATIVO"}</span></div><div class="admin-item-actions"><button class="primary" onclick="editProduct(${p.id})">Editar</button><button onclick="toggleProduct(${p.id})">${p.active?"Desativar":"Ativar"}</button><button class="danger" onclick="deleteProduct(${p.id})">Excluir</button></div></div></article>`).join(""):`<div class="admin-empty">Nenhum produto cadastrado.</div>`;
-  document.querySelector("#ideasAdmin").innerHTML=ideas.length?ideas.map((i,idx)=>`<article class="admin-item"><div class="admin-thumb">${i.image_url?`<img src="${i.image_url}" alt="${escapeHtml(i.title)}">`:""}</div><div class="admin-item-body"><h3>${escapeHtml(i.title||"Imagem sem nome")}</h3><p>Posição ${idx+1} no carrossel<br><strong>${i.display_target === "mobile" ? "📱 Somente celular" : i.display_target === "desktop" ? "🖥️ Somente computador" : "🖥️📱 Computador + celular"}</strong></p><div class="admin-item-actions"><button class="primary" onclick="editIdea(${i.id})">Editar</button><button ${idx===0?"disabled":""} onclick="moveIdea(${i.id},-1)">←</button><button ${idx===ideas.length-1?"disabled":""} onclick="moveIdea(${i.id},1)">→</button><button class="danger" onclick="deleteIdea(${i.id})">Excluir</button></div></div></article>`).join(""):`<div class="admin-empty">Nenhuma imagem cadastrada.</div>`;
+  document.querySelector("#productsAdmin").innerHTML=products.length?products.map(p=>`<article class="admin-item"><div class="admin-thumb">${p.image_url?`<img src="${p.image_url}" alt="${escapeHtml(p.name)}">`:`<span style="font-size:50px;color:#c7943e;font-weight:800">✦</span>`}</div><div class="admin-item-body"><h3>${escapeHtml(p.name)}</h3><p>${escapeHtml(p.description)}</p><div class="media-status"><span>${p.image_url?"Imagem 1 ✓":"Imagem 1 —"}</span><span>${p.image_url_2?"Imagem 2 ✓":"Imagem 2 —"}</span><span>${p.video_url?"Vídeo ✓":"Vídeo —"}</span></div><div class="admin-meta"><strong>${money(p.price)}</strong><span class="status ${p.active?"on":"off"}">${p.active?"ATIVO":"INATIVO"}</span></div><div class="admin-item-actions"><button class="primary" onclick="editProduct(${p.id})">Editar</button><button onclick="toggleProduct(${p.id})">${p.active?"Desativar":"Ativar"}</button><button class="danger" onclick="deleteProduct(${p.id})">Excluir</button></div></div></article>`).join(""):`<div class="admin-empty">Nenhum produto cadastrado.</div>`;
+  document.querySelector("#ideasAdmin").innerHTML=ideas.length?ideas.map((i,idx)=>`<article class="admin-item"><div class="admin-thumb">${i.image_url?`<img src="${i.image_url}" alt="${escapeHtml(i.title)}">`:""}</div><div class="admin-item-body"><h3>${escapeHtml(i.title||"Imagem sem nome")}</h3><p>Posição ${idx+1} no carrossel</p><div class="admin-item-actions"><button ${idx===0?"disabled":""} onclick="moveIdea(${i.id},-1)">←</button><button ${idx===ideas.length-1?"disabled":""} onclick="moveIdea(${i.id},1)">→</button><button class="danger" onclick="deleteIdea(${i.id})">Excluir</button></div></div></article>`).join(""):`<div class="admin-empty">Nenhuma imagem cadastrada.</div>`;
 }
 async function uploadMedia(file,folder,type){
   if(!file) return {url:null,path:null};
@@ -60,41 +60,10 @@ async function uploadImage(file,folder){
   return uploadMedia(file,folder,"image");
 }
 async function removeImage(path){if(path)await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`,{method:"DELETE",headers:headers({"Content-Type":"application/json"}),body:JSON.stringify({prefixes:[path]})});}
-
-const productImageRemoval={1:false,2:false};
-
-function resetProductMediaState(){
-  productImageRemoval[1]=false;
-  productImageRemoval[2]=false;
-  const b1=document.querySelector("#removeProductImage1");
-  const b2=document.querySelector("#removeProductImage2");
-  if(b1)b1.textContent="Remover";
-  if(b2)b2.textContent="Remover";
-}
-
-function setProductImageRemoval(slot,remove){
-  productImageRemoval[slot]=remove;
-  const preview=document.querySelector(`#productPreview${slot}`);
-  const input=document.querySelector(`#productImage${slot}`);
-  const button=document.querySelector(`#removeProductImage${slot}`);
-
-  if(remove){
-    if(input)input.value="";
-    if(preview)preview.textContent="Imagem será removida ao salvar";
-    if(button)button.textContent="Desfazer";
-  }else{
-    const p=products.find(x=>x.id===Number(document.querySelector("#productId").value));
-    const url=slot===1?p?.image_url:p?.image_url_2;
-    if(preview)preview.innerHTML=url?`<img src="${url}" alt="">`:"Nenhuma imagem";
-    if(button)button.textContent="Remover";
-  }
-}
-
-window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";document.querySelector("#productMeasurements").value=p.measurements||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);document.querySelector("#productPayment").value=p.payment_url||"";
+window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);document.querySelector("#productPayment").value=p.payment_url||"";
 document.querySelector("#productImage1").value="";
 document.querySelector("#productImage2").value="";
 document.querySelector("#productVideo").value="";
-  resetProductMediaState();
 document.querySelector("#productPreview1").innerHTML=p.image_url?`<img src="${p.image_url}" alt="">`:"Nenhuma imagem";
 document.querySelector("#productPreview2").innerHTML=p.image_url_2?`<img src="${p.image_url_2}" alt="">`:"Nenhuma imagem";
 document.querySelector("#productVideoPreview").innerHTML=p.video_url?`<video src="${p.video_url}" controls muted></video>`:"Nenhum vídeo";
@@ -116,8 +85,6 @@ window.deleteIdea=async id=>{if(!confirm("Excluir esta imagem do carrossel?"))re
 
 document.querySelector("#addProductBtn").onclick=()=>{
   document.querySelector("#productForm").reset();
-  document.querySelector("#productMeasurements").value="";
-  resetProductMediaState();
   document.querySelector("#productId").value="";
   document.querySelector("#productDialogTitle").textContent="Adicionar produto";
   document.querySelector("#productPreview1").textContent="Nenhuma imagem selecionada";
@@ -125,12 +92,7 @@ document.querySelector("#addProductBtn").onclick=()=>{
   document.querySelector("#productVideoPreview").textContent="Nenhum vídeo selecionado";
   document.querySelector("#productDialog").showModal();
 };
-document.querySelector("#addIdeaBtn").onclick=()=>{document.querySelector("#ideaForm").reset();document.querySelector("#ideaDialogTitle").textContent="Adicionar imagem";document.querySelector("#ideaImage").required=true;document.querySelector("#ideaPreview").textContent="Nenhuma imagem selecionada";document.querySelector("#ideaDisplayTarget").value="all";document.querySelector("#ideaForm button[type=submit]").textContent="Adicionar imagem";document.querySelector("#ideaForm").dataset.editId="";document.querySelector("#ideaDialog").showModal();};
-window.editIdea=id=>{const item=ideas.find(x=>x.id===id);if(!item)return;document.querySelector("#ideaForm").reset();document.querySelector("#ideaForm").dataset.editId=String(id);document.querySelector("#ideaDialogTitle").textContent="Editar imagem";document.querySelector("#ideaImage").required=false;document.querySelector("#ideaImage").value="";document.querySelector("#ideaTitle").value=item.title||"";document.querySelector("#ideaDisplayTarget").value=item.display_target || (item.mobile_only ? "mobile" : "all");document.querySelector("#ideaPreview").innerHTML=item.image_url?`<img src="${item.image_url}" alt="">`:"Nenhuma imagem";document.querySelector("#ideaForm button[type=submit]").textContent="Salvar alterações";document.querySelector("#ideaDialog").showModal();};
-
-document.querySelector("#removeProductImage1").onclick=()=>setProductImageRemoval(1,!productImageRemoval[1]);
-document.querySelector("#removeProductImage2").onclick=()=>setProductImageRemoval(2,!productImageRemoval[2]);
-
+document.querySelector("#addIdeaBtn").onclick=()=>{document.querySelector("#ideaForm").reset();document.querySelector("#ideaPreview").textContent="Nenhuma imagem selecionada";document.querySelector("#ideaDialog").showModal();};
 function bindImagePreview(inputId,previewId){
   document.querySelector("#"+inputId).onchange=e=>{
     const f=e.target.files[0];
@@ -165,11 +127,6 @@ document.querySelector("#productForm").onsubmit=async e=>{
     let image_path=old?.image_path||null;
     let image_url_2=old?.image_url_2||null;
     let image_path_2=old?.image_path_2||null;
-    const oldImagePath1=old?.image_path||null;
-    const oldImagePath2=old?.image_path_2||null;
-
-    if(productImageRemoval[1]){image_url=null;image_path=null;}
-    if(productImageRemoval[2]){image_url_2=null;image_path_2=null;}
     let video_url=old?.video_url||null;
     let video_path=old?.video_path||null;
 
@@ -189,7 +146,6 @@ document.querySelector("#productForm").onsubmit=async e=>{
     const payload={
       name:document.querySelector("#productName").value.trim(),
       description:document.querySelector("#productDescription").value.trim(),
-      measurements:document.querySelector("#productMeasurements").value.trim(),
       price:Number(document.querySelector("#productPrice").value||0),
       active:document.querySelector("#productActive").value==="true",
       payment_url:document.querySelector("#productPayment").value.trim(),
@@ -212,8 +168,8 @@ document.querySelector("#productForm").onsubmit=async e=>{
     }
 
     // Remove only media that was actually replaced.
-    if((file1 || productImageRemoval[1]) && oldImagePath1 && oldImagePath1!==image_path)await removeImage(oldImagePath1);
-    if((file2 || productImageRemoval[2]) && oldImagePath2 && oldImagePath2!==image_path_2)await removeImage(oldImagePath2);
+    if(file1 && old?.image_path && old.image_path!==image_path)await removeImage(old.image_path);
+    if(file2 && old?.image_path_2 && old.image_path_2!==image_path_2)await removeImage(old.image_path_2);
     if(video && old?.video_path && old.video_path!==video_path)await removeImage(old.video_path);
 
     document.querySelector("#productDialog").close();
@@ -222,7 +178,7 @@ document.querySelector("#productForm").onsubmit=async e=>{
     showError(e);
   }
 };
-document.querySelector("#ideaForm").onsubmit=async e=>{e.preventDefault();if(!await requireAdmin())return;try{const f=document.querySelector("#ideaImage").files[0];const title=document.querySelector("#ideaTitle").value.trim()||"Imagem ERALIS";const display_target=document.querySelector("#ideaDisplayTarget").value;const mobile_only=display_target==="mobile";const editId=document.querySelector("#ideaForm").dataset.editId;let old=null;if(editId)old=ideas.find(x=>x.id===Number(editId));if(!editId&&!f)return;let image_url=old?.image_url||null,image_path=old?.image_path||null;if(f){const u=await uploadImage(f,"ideas");image_url=u.url;image_path=u.path;}if(editId){await api(`/rest/v1/idea_images?id=eq.${editId}`,{method:"PATCH",headers:{"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify({title,image_url,image_path,mobile_only,display_target})});if(f&&old?.image_path&&old.image_path!==image_path)await removeImage(old.image_path);}else{const max=ideas.reduce((m,i)=>Math.max(m,i.sort_order||0),0);await api("/rest/v1/idea_images",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({title,image_url,image_path,active:true,sort_order:max+1,mobile_only,display_target})});}document.querySelector("#ideaForm").dataset.editId="";document.querySelector("#ideaDialog").close();await loadData();}catch(e){showError(e);}};
+document.querySelector("#ideaForm").onsubmit=async e=>{e.preventDefault();if(!await requireAdmin())return;try{const f=document.querySelector("#ideaImage").files[0];if(!f)return;const u=await uploadImage(f,"ideas"),max=ideas.reduce((m,i)=>Math.max(m,i.sort_order||0),0);await api("/rest/v1/idea_images",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({title:document.querySelector("#ideaTitle").value.trim()||"Imagem ERALIS",image_url:u.url,image_path:u.path,active:true,sort_order:max+1})});document.querySelector("#ideaDialog").close();await loadData();}catch(e){showError(e);}};
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>document.querySelector("#"+b.dataset.close).close());
 document.querySelector("#logoutBtn").onclick=()=>{localStorage.removeItem(TOKEN_KEY);accessToken=null;location.reload();};
 document.querySelector("#resetBtn").onclick=async()=>{if(confirm("Restaurar os exemplos? Isso apagará os produtos e imagens do Supabase."))try{await api("/rest/v1/products?id=gt.0",{method:"DELETE"});await api("/rest/v1/idea_images?id=gt.0",{method:"DELETE"});await loadData();}catch(e){showError(e);}};
