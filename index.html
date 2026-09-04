@@ -444,8 +444,11 @@
     <h2>Conte-nos sobre o seu projeto</h2>
     <p>Preencha as informações abaixo para que possamos entender melhor o que você precisa.</p>
   </div>
-  <form id="quoteForm" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="fi-text-form-subject" value="Novo pedido de orçamento — ERALIS">
+  <form id="quoteForm" action="https://formsubmit.co/eralis3d@gmail.com" method="POST" enctype="multipart/form-data" target="_self">
+    <input type="hidden" name="_subject" value="Novo pedido de orçamento — ERALIS">
+    <input type="hidden" name="_captcha" value="true">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_url" id="quoteFormUrl" value="">
 
     <div class="quote-form-group">
       <label for="quoteDescription">Fale sobre o que precisa:</label>
@@ -489,12 +492,12 @@
 
 
 <style>
-.quote-modal{width:min(700px,94vw);max-height:90vh;border:0;border-radius:20px;padding:0;overflow:auto;box-shadow:0 30px 80px #0007;background:var(--surface)}
+.quote-modal{width:min(700px,94vw);max-height:90vh;border:0;border-radius:20px;padding:0;overflow:auto;box-shadow:0 30px 80px #0007;background:#fffdf8!important;color:#161616!important;opacity:1!important;isolation:isolate}
 .quote-modal::backdrop{background:#00150fcc;backdrop-filter:blur(3px)}
-.quote-header{padding:30px 34px 22px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#f8f4eb,var(--surface))}
-.quote-eyebrow{font-size:11px!important;letter-spacing:2.5px;color:var(--accent);font-weight:700;margin:0 0 8px!important}
-.quote-header h2{font-size:30px;color:var(--text);margin:8px 0}
-.quote-header>p:last-child{margin:0;color:var(--text-dim);line-height:1.6;font-size:14px}
+.quote-header{position:relative;z-index:1;padding:30px 34px 22px;border-bottom:1px solid #e7e0d4;background:#fffdf8!important;color:#161616!important;opacity:1!important;backdrop-filter:none!important}
+.quote-eyebrow{font-size:11px!important;letter-spacing:2.5px;color:var(--accent);font-weight:700;margin:0 0 8px!important;opacity:1!important}
+.quote-header h2{font-size:30px;color:#161616!important;margin:8px 0;opacity:1!important}
+.quote-header>p:last-child{margin:0;color:#5b5b5b!important;line-height:1.6;font-size:14px;opacity:1!important}
 #quoteForm{padding:28px 34px 30px}
 .quote-form-group{margin-bottom:20px}
 .quote-form-group>label,.quote-fieldset legend{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}

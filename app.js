@@ -100,24 +100,26 @@
         const dims=[];
         if(h)dims.push(`Altura: ${h} cm`); if(w)dims.push(`Largura: ${w} cm`); if(l)dims.push(`Comprimento: ${l} cm`); if(d)dims.push(`Profundidade: ${d} cm`);
 
-        const forminit=await loadForminit();
-        const result=await forminit.submit(FORMINIT_FORM_ID,formData);
-        if(result.error) throw new Error(result.error.message||'Erro ao enviar o orçamento.');
+        // FormSubmit envia diretamente para eralis3d@gmail.com e aceita o anexo
+        // usando multipart/form-data. O primeiro envio exige ativação do endereço.
+        const next=document.getElementById('quoteFormUrl');
+        if(next) next.value=window.location.href;
 
         let msg='Olá! Acabei de solicitar um orçamento pelo site da ERALIS.';
-        if(description) msg+=`\\n\\nDescrição: ${description}`;
-        if(dims.length) msg+=`\\n\\nDimensões: ${dims.join(' | ')}`;
-        if(file&&file.name) msg+=`\\n\\nEnviei também uma imagem de referência no formulário.`;
-        msg+='\\n\\nAguardo o orçamento.';
-        quoteModal.close();
-        quoteForm.reset();
-        if(fileName) fileName.textContent='Nenhum arquivo selecionado';
+        if(description) msg+=`\n\nDescrição: ${description}`;
+        if(dims.length) msg+=`\n\nDimensões: ${dims.join(' | ')}`;
+        if(file&&file.name) msg+=`\n\nEnviei também uma imagem de referência no formulário.`;
+        msg+='\n\nAguardo o orçamento.';
+
+        // Abre o WhatsApp antes do redirecionamento do envio do formulário.
         window.open(wa(msg),'_blank','noopener');
+
+        // Envio nativo para o FormSubmit: preserva multipart/form-data e o arquivo.
+        quoteForm.submit();
       }catch(err){
-        console.error('Erro ao enviar orçamento:',err);
-        alert('Não foi possível enviar o orçamento.\\n\\n'+(err?.message||'Tente novamente.'));
-      }finally{
+        console.error('Erro ao preparar orçamento:',err);
         if(submit){submit.disabled=false;submit.textContent='Enviar solicitação →'}
+        alert('Não foi possível enviar o orçamento.\n\n'+(err?.message||'Tente novamente.'));
       }
     });
   }
