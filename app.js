@@ -123,10 +123,19 @@
   }
   function images(p){return [p.image_url,p.image_url_2].filter(Boolean).slice(0,3);}
 
-  function addToCart(p,qty=1){
+  function addToCart(p,qty=1,button=null){
     const found=cart.find(x=>String(x.id)===String(p.id));
     if(found) found.qty+=qty; else cart.push({id:p.id,qty});
-    saveCart(); renderCart(); openCart();
+    saveCart();
+    renderCart();
+    if(button){
+      button.classList.remove('cart-added-feedback');
+      void button.offsetWidth;
+      button.classList.add('cart-added-feedback');
+      const original=button.textContent;
+      button.textContent='Adicionado ✓';
+      setTimeout(()=>{button.textContent=original;button.classList.remove('cart-added-feedback');},900);
+    }
   }
   function saveCart(){localStorage.setItem('eralisCart',JSON.stringify(cart));}
   function countCart(){return cart.reduce((s,x)=>s+Number(x.qty||0),0);}
@@ -137,7 +146,7 @@
     card.innerHTML=`<div class="card-art ${imgs.length?'has-images':''}">${imgs[0]?`<img src="${esc(imgs[0])}" alt="${esc(p.name)}" loading="lazy">`:''}</div><div class="card-body"><h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p><div class="card-foot"><div class="price">${fmt(p.price)}</div><button class="btn btn-accent btn-sm add">Adicionar</button></div></div>`;
     card.querySelector('.card-art').addEventListener('click',()=>openProduct(p));
     card.querySelector('.card-body h3').addEventListener('click',()=>openProduct(p));
-    card.querySelector('.add').addEventListener('click',()=>addToCart(p));
+    card.querySelector('.add').addEventListener('click',e=>addToCart(p,1,e.currentTarget));
     return card;
   }
   function renderCatalog(){
@@ -161,7 +170,7 @@
     current.forEach((src,i)=>{const b=document.createElement('button');b.className='modal-thumb'+(i===index?' active':'');b.innerHTML=`<img src="${esc(src)}" alt="">`;b.onclick=()=>{index=i;renderProduct()};thumbs.appendChild(b);});
     let add=document.getElementById('modal-add-cart');
     if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-ghost';price.parentNode.appendChild(add);}
-    add.textContent='Adicionar ao carrinho';add.onclick=()=>addToCart(currentProduct);
+    add.textContent='Adicionar ao carrinho';add.onclick=()=>addToCart(currentProduct,1,add);
   }
   function closeProduct(){overlay.hidden=true;document.body.style.overflow='';}
   document.getElementById('modal-close').onclick=closeProduct;overlay.addEventListener('click',e=>{if(e.target===overlay)closeProduct()});prev.onclick=()=>{index=(index-1+current.length)%current.length;renderProduct()};next.onclick=()=>{index=(index+1)%current.length;renderProduct()};
