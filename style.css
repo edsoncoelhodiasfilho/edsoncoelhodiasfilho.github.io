@@ -2585,3 +2585,15 @@ dialog.email-modal::backdrop{
     margin-right:0 !important;
   }
 }
+
+/* ERALIS — ajuste fino de largura mobile */
+@media (max-width:720px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden;}
+  .wrap{width:100%;max-width:100%;box-sizing:border-box;padding-left:18px;padding-right:18px;}
+  img,video,svg{max-width:100%;}
+  .custom{width:94%;max-width:900px;margin-left:auto;margin-right:auto;box-sizing:border-box;}
+}
+@media (max-width:380px){
+  .wrap{padding-left:16px;padding-right:16px;}
+  .custom{width:92%;}
+}

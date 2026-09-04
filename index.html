@@ -32,7 +32,7 @@
   }
   a{ color: inherit; }
   img{ max-width:100%; display:block; }
-  .wrap{ max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+  .wrap{ max-width: 1120px; width: 100%; margin: 0 auto; padding: 0 28px; }
 
   @media (prefers-reduced-motion: reduce){
     *{ animation: none !important; transition: none !important; }
@@ -512,6 +512,28 @@
 .quote-modal-close{position:absolute;right:14px;top:10px;z-index:2;width:36px;height:36px;border:0;border-radius:50%;background:#ffffffdd;color:#101014;font-size:27px;line-height:1;cursor:pointer}
 @media(max-width:650px){.quote-header{padding:28px 22px 20px}#quoteForm{padding:24px 22px}.quote-header h2{font-size:25px}.dimensions-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:400px){.dimensions-grid{grid-template-columns:1fr}.quote-actions{flex-direction:column-reverse}.quote-actions .btn{width:100%;justify-content:center}}
+
+/* Ajuste fino para celulares: evita qualquer estouro horizontal e deixa as áreas principais mais fluidas. */
+@media (max-width: 720px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden;}
+  .wrap{width:100%;max-width:100%;padding-left:18px;padding-right:18px;}
+  .nav{padding-left:0;padding-right:0;}
+  .hero{width:100%;max-width:100%;}
+  .hero p{max-width:100%;}
+  .hero-actions{max-width:100%;}
+  .hero-actions .btn{max-width:100%;}
+  .section{width:100%;max-width:100%;}
+  .custom{width:94%;max-width:900px;margin-left:auto;margin-right:auto;}
+  .about{width:100%;max-width:100%;}
+  .cta .wrap{padding-left:18px;padding-right:18px;}
+  footer.wrap{padding-left:18px;padding-right:18px;}
+}
+
+@media (max-width: 380px){
+  .wrap{padding-left:16px;padding-right:16px;}
+  .custom{width:92%;}
+  .hero h1{font-size:34px;}
+}
 </style>
 
 </body>
