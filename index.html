@@ -397,7 +397,7 @@
   <div class="wrap">
     <h2>Tem um modelo em mente?</h2>
     <p>Mande uma imagem, referência ou só a ideia — a gente avalia e orça pelo WhatsApp em até 1h</p>
-    <a class="btn btn-accent" id="wa-cta" href="#" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+    <button class="btn btn-accent" id="quoteBtn" type="button">Faça um orçamento</button>
   </div>
 </section>
 
@@ -427,17 +427,92 @@
         <p class="modal-size" id="modal-size"></p>
         <p class="modal-desc" id="modal-desc"></p>
         <div class="modal-price" id="modal-price"></div>
-        <p class="modal-price-note">Valor base, sujeito a confirmação no WhatsApp conforme cor, tamanho e prazo combinados.</p>
+        
         <a class="btn btn-accent" id="modal-buy" href="#" target="_blank" rel="noopener">Comprar no WhatsApp</a>
       </div>
     </div>
   </div>
 </div>
 
+
+
+<!-- Modal de orçamento -->
+<dialog id="quoteModal" class="quote-modal">
+  <button class="quote-modal-close" id="quoteClose" type="button" aria-label="Fechar">×</button>
+  <div class="quote-header">
+    <p class="quote-eyebrow">SOLICITE UM ORÇAMENTO</p>
+    <h2>Conte-nos sobre o seu projeto</h2>
+    <p>Preencha as informações abaixo para que possamos entender melhor o que você precisa.</p>
+  </div>
+  <form id="quoteForm" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="fi-text-form-subject" value="Novo pedido de orçamento — ERALIS">
+
+    <div class="quote-form-group">
+      <label for="quoteDescription">Fale sobre o que precisa:</label>
+      <textarea id="quoteDescription" name="fi-text-description" rows="5" placeholder="Descreva sua ideia, produto, personalização ou projeto..." required></textarea>
+    </div>
+
+    <fieldset class="quote-fieldset">
+      <legend>Dimensões da sua peça <span>(centímetros)</span></legend>
+      <div class="dimensions-grid">
+        <div class="quote-form-group"><label for="quoteHeight">Altura</label><input id="quoteHeight" name="fi-number-height" type="number" min="0" step="0.1" placeholder="Ex.: 10"></div>
+        <div class="quote-form-group"><label for="quoteWidth">Largura</label><input id="quoteWidth" name="fi-number-width" type="number" min="0" step="0.1" placeholder="Ex.: 8"></div>
+        <div class="quote-form-group"><label for="quoteLength">Comprimento</label><input id="quoteLength" name="fi-number-length" type="number" min="0" step="0.1" placeholder="Ex.: 15"></div>
+        <div class="quote-form-group"><label for="quoteDepth">Profundidade</label><input id="quoteDepth" name="fi-number-depth" type="number" min="0" step="0.1" placeholder="Ex.: 5"></div>
+      </div>
+    </fieldset>
+
+    <div class="quote-form-group reference-group">
+      <label for="quoteReference">Tem alguma foto ou imagem de referência? Se sim, mande para nós.</label>
+      <div class="upload-box" id="uploadBox">
+        <input id="quoteReference" name="fi-file-reference" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+        <div class="upload-content">
+          <span class="upload-icon">↑</span>
+          <strong>Selecione uma imagem</strong>
+          <small>JPG, PNG, WEBP ou GIF</small>
+          <span class="file-name" id="fileName">Nenhum arquivo selecionado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-actions">
+      <button class="btn btn-ghost" id="quoteCancel" type="button">Cancelar</button>
+      <button class="btn btn-accent" type="submit">Enviar solicitação →</button>
+    </div>
+    <p class="quote-note">As dimensões são aproximadas. Caso não saiba alguma medida, você pode deixar o campo em branco.</p>
+  </form>
+</dialog>
+
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
 <script src="public-supabase.js"></script>
 
+
+<style>
+.quote-modal{width:min(700px,94vw);max-height:90vh;border:0;border-radius:20px;padding:0;overflow:auto;box-shadow:0 30px 80px #0007;background:var(--surface)}
+.quote-modal::backdrop{background:#00150fcc;backdrop-filter:blur(3px)}
+.quote-header{padding:30px 34px 22px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#f8f4eb,var(--surface))}
+.quote-eyebrow{font-size:11px!important;letter-spacing:2.5px;color:var(--accent);font-weight:700;margin:0 0 8px!important}
+.quote-header h2{font-size:30px;color:var(--text);margin:8px 0}
+.quote-header>p:last-child{margin:0;color:var(--text-dim);line-height:1.6;font-size:14px}
+#quoteForm{padding:28px 34px 30px}
+.quote-form-group{margin-bottom:20px}
+.quote-form-group>label,.quote-fieldset legend{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+#quoteForm textarea,#quoteForm input[type="number"]{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--text);padding:12px 13px;font:inherit;outline:none;box-sizing:border-box;transition:border-color .2s,box-shadow .2s}
+#quoteForm textarea{resize:vertical;min-height:120px}
+#quoteForm textarea:focus,#quoteForm input[type="number"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px #d9a52022}
+.quote-fieldset{border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 20px}
+.quote-fieldset legend{padding:0 7px;margin:0}.quote-fieldset legend span{font-weight:400;color:var(--text-dim)}
+.dimensions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.dimensions-grid .quote-form-group{margin:0}.dimensions-grid label{font-size:12px}
+.reference-group{margin-top:4px}
+.upload-box{position:relative;border:1.5px dashed var(--line);border-radius:14px;padding:20px;text-align:center;background:var(--surface-2);cursor:pointer;transition:.2s}.upload-box:hover,.upload-box.dragover{border-color:var(--accent);background:var(--surface)}
+.upload-box input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.upload-content{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--text-dim);pointer-events:none}.upload-content strong{color:var(--text)}.upload-content small{font-size:11px}.upload-icon{font-size:24px}.file-name{font-size:12px;margin-top:5px;word-break:break-word}
+.quote-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:25px}.quote-note{margin:15px 0 0;font-size:11px;line-height:1.5;color:var(--text-dim)}
+.quote-modal-close{position:absolute;right:14px;top:10px;z-index:2;width:36px;height:36px;border:0;border-radius:50%;background:#ffffffdd;color:#101014;font-size:27px;line-height:1;cursor:pointer}
+@media(max-width:650px){.quote-header{padding:28px 22px 20px}#quoteForm{padding:24px 22px}.quote-header h2{font-size:25px}.dimensions-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.dimensions-grid{grid-template-columns:1fr}.quote-actions{flex-direction:column-reverse}.quote-actions .btn{width:100%;justify-content:center}}
+</style>
 
 </body>
 </html>
