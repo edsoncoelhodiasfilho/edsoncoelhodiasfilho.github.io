@@ -176,7 +176,7 @@
     const multi=current.length>1;prev.hidden=!multi;next.hidden=!multi;thumbs.innerHTML='';
     current.forEach((src,i)=>{const b=document.createElement('button');b.className='modal-thumb'+(i===index?' active':'');b.innerHTML=`<img src="${esc(src)}" alt="">`;b.onclick=()=>{index=i;renderProduct()};thumbs.appendChild(b);});
     let add=document.getElementById('modal-add-cart');
-    if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-ghost';price.parentNode.appendChild(add);}
+    if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-accent btn-sm add';price.parentNode.appendChild(add);}
     add.textContent='Adicionar ao carrinho';add.onclick=(e)=>{e.preventDefault();e.stopPropagation();addToCart(currentProduct,1,add);};
   }
   function closeProduct(){overlay.hidden=true;document.body.style.overflow='';}
