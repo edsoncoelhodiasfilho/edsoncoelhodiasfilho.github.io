@@ -40,7 +40,7 @@
 
   function buildCard(p){
     const imgs=images(p), card=document.createElement('article'); card.className='card';
-    card.innerHTML=`<div class="card-art ${imgs.length?'has-images':''}">${imgs[0]?`<img src="${esc(imgs[0])}" alt="${esc(p.name)}" loading="lazy">`:''}</div><div class="card-body"><h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p>${p.measurements?`<p class="measurements">${esc(p.measurements)}</p>`:''}<div class="card-foot"><div class="price">${fmt(p.price)}<small>valor base</small></div><button class="btn btn-accent btn-sm add">Adicionar</button></div></div>`;
+    card.innerHTML=`<div class="card-art ${imgs.length?'has-images':''}">${imgs[0]?`<img src="${esc(imgs[0])}" alt="${esc(p.name)}" loading="lazy">`:''}</div><div class="card-body"><h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p>${p.measurements?`<p class="measurements">${esc(p.measurements)}</p>`:''}<div class="card-foot"><div class="price">${fmt(p.price)}</div><button class="btn btn-accent btn-sm add">Adicionar</button></div></div>`;
     card.querySelector('.card-art').addEventListener('click',()=>openProduct(p));
     card.querySelector('.card-body h3').addEventListener('click',()=>openProduct(p));
     card.querySelector('.add').addEventListener('click',()=>addToCart(p));
@@ -86,7 +86,7 @@
   function removeItem(id){cart=cart.filter(i=>String(i.id)!==String(id));renderCart();}
   function openCart(){ensureCartUI();renderCart();document.getElementById('cart-overlay').hidden=false;document.body.style.overflow='hidden';}
   function closeCart(){document.getElementById('cart-overlay').hidden=true;document.body.style.overflow='';}
-  function checkout(){if(!cart.length){alert('Seu carrinho está vazio.');return;}const lines=cart.map(x=>{const p=products.find(y=>String(y.id)===String(x.id));return `• ${p.name} — ${x.qty} un. — ${fmt(p.price*x.qty)}`}).join('\n');const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nMe envie o link para pagamento pelo Mercado Pago.\n\nTotal estimado: ${fmt(totalCart())}\n\nGostaria de confirmar disponibilidade, frete e pagamento.`;window.open(wa(msg),'_blank','noopener');}
+  function checkout(){if(!cart.length){alert('Seu carrinho está vazio.');return;}const lines=cart.map(x=>{const p=products.find(y=>String(y.id)===String(x.id));return `• ${p.name} — ${x.qty} un. — ${fmt(p.price*x.qty)}`}).join('\n');const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nMe envie o link para pagamento pelo Mercado Pago.\n\nTotal estimado: ${fmt(totalCart())}`;window.open(wa(msg),'_blank','noopener');}
 
   window.addEventListener('eralis-content-loaded',e=>{products=(e.detail.products||[]).map(normalize);products.forEach(p=>{p.category=p.category||'Produtos'});renderCatalog();renderCart();});
   ensureCartUI();renderCart();
