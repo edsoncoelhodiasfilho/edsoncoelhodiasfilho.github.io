@@ -103,18 +103,13 @@
         // FormSubmit envia diretamente para eralis3d@gmail.com e aceita o anexo
         // usando multipart/form-data. O primeiro envio exige ativação do endereço.
         const next=document.getElementById('quoteFormUrl');
-        if(next) next.value=window.location.href;
+        const nextPage=document.getElementById('quoteFormNext');
+        const siteUrl=window.location.origin+window.location.pathname;
+        if(next) next.value=siteUrl;
+        if(nextPage) nextPage.value=siteUrl+'?orcamento=enviado#contato';
 
-        let msg='Olá! Acabei de solicitar um orçamento pelo site da ERALIS.';
-        if(description) msg+=`\n\nDescrição: ${description}`;
-        if(dims.length) msg+=`\n\nDimensões: ${dims.join(' | ')}`;
-        if(file&&file.name) msg+=`\n\nEnviei também uma imagem de referência no formulário.`;
-        msg+='\n\nAguardo o orçamento.';
-
-        // Abre o WhatsApp antes do redirecionamento do envio do formulário.
-        window.open(wa(msg),'_blank','noopener');
-
-        // Envio nativo para o FormSubmit: preserva multipart/form-data e o arquivo.
+        // Não abre o WhatsApp neste formulário. O orçamento é enviado por e-mail
+        // e, após o envio, o FormSubmit retorna automaticamente para o site.
         quoteForm.submit();
       }catch(err){
         console.error('Erro ao preparar orçamento:',err);
@@ -175,7 +170,7 @@
   function ensureCartUI(){
     if(document.getElementById('cart-float'))return;
     const b=document.createElement('button');b.id='cart-float';b.className='btn btn-accent cart-float';b.innerHTML='Carrinho <span id="cart-count">0</span>';b.onclick=openCart;document.body.appendChild(b);
-    const o=document.createElement('div');o.id='cart-overlay';o.hidden=true;o.className='cart-overlay';o.innerHTML='<aside class="cart-panel"><button class="modal-close" id="cart-close">×</button><h2>Seu carrinho</h2><div id="cart-items"></div><div class="cart-total"><span>Total estimado</span><strong id="cart-total-value">R$ 0,00</strong></div><button id="cart-whatsapp" class="btn btn-accent">Finalizar pelo WhatsApp</button></aside>';document.body.appendChild(o);document.getElementById('cart-close').onclick=closeCart;o.addEventListener('click',e=>{if(e.target===o)closeCart()});document.getElementById('cart-whatsapp').onclick=checkout;
+    const o=document.createElement('div');o.id='cart-overlay';o.hidden=true;o.className='cart-overlay';o.innerHTML='<aside class="cart-panel"><button class="modal-close" id="cart-close">×</button><h2>Seu carrinho</h2><div id="cart-items"></div><div class="cart-total"><span>Total estimado</span><strong id="cart-total-value">R$ 0,00</strong></div><button id="cart-whatsapp" class="btn btn-accent">Finalizar pelo WhatsApp</button><a href="#catalogo" id="cart-continue" class="cart-continue">Continuar comprando</a></aside>';document.body.appendChild(o);document.getElementById('cart-close').onclick=closeCart;o.addEventListener('click',e=>{if(e.target===o)closeCart()});document.getElementById('cart-whatsapp').onclick=checkout;
   }
   function renderCart(){ensureCartUI();document.getElementById('cart-count').textContent=countCart();const box=document.getElementById('cart-items');box.innerHTML='';
     cart=cart.filter(x=>products.some(p=>String(p.id)===String(x.id)));
@@ -186,6 +181,7 @@
   function removeItem(id){cart=cart.filter(i=>String(i.id)!==String(id));renderCart();}
   function openCart(){ensureCartUI();renderCart();document.getElementById('cart-overlay').hidden=false;document.body.style.overflow='hidden';}
   function closeCart(){document.getElementById('cart-overlay').hidden=true;document.body.style.overflow='';}
+  document.addEventListener('click',e=>{if(e.target&&e.target.id==='cart-continue'){closeCart();}});
   function checkout(){if(!cart.length){alert('Seu carrinho está vazio.');return;}const lines=cart.map(x=>{const p=products.find(y=>String(y.id)===String(x.id));return `• ${p.name} — ${x.qty} un. — ${fmt(p.price*x.qty)}`}).join('\n');const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nMe envie o link para pagamento pelo Mercado Pago.\n\nTotal estimado: ${fmt(totalCart())}`;window.open(wa(msg),'_blank','noopener');}
 
   window.addEventListener('eralis-content-loaded',e=>{products=(e.detail.products||[]).map(normalize);products.forEach(p=>{p.category=p.category||'Produtos'});renderCatalog();renderCart();});

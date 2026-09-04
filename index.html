@@ -294,7 +294,7 @@
 </style>
 
 <style>
-.card-art{cursor:pointer}.card-body h3{cursor:pointer}.measurements{font-size:.8rem;opacity:.72;margin:.35rem 0}.loading-products{text-align:center;padding:30px}.cart-float{position:fixed;right:22px;bottom:22px;z-index:90;box-shadow:0 12px 30px #0006}.cart-float span{display:inline-grid;place-items:center;min-width:22px;height:22px;margin-left:5px;border-radius:99px;background:#101014;color:#fff;font-size:12px}.cart-overlay{position:fixed;inset:0;z-index:100;background:#0009;display:flex;justify-content:flex-end}.cart-overlay[hidden]{display:none}.cart-panel{position:relative;width:min(440px,94vw);height:100%;overflow:auto;background:#18191f;padding:34px 26px;box-shadow:-15px 0 50px #0006}.cart-panel h2{margin-top:20px}.cart-item{display:flex;justify-content:space-between;gap:15px;padding:16px 0;border-bottom:1px solid var(--line)}.cart-item small{display:block;color:var(--text-dim);margin-top:4px}.cart-controls{display:flex;align-items:center;gap:8px}.cart-controls button{border:1px solid var(--line);background:var(--surface-2);color:var(--text);width:30px;height:30px;border-radius:8px;cursor:pointer}.cart-total{display:flex;justify-content:space-between;padding:22px 0;font-size:1.1rem}.cart-empty{color:var(--text-dim);padding:30px 0}.cart-panel .modal-close{position:absolute;right:18px;top:14px;background:transparent;color:var(--text);border:0;font-size:32px;cursor:pointer}.cart-panel #cart-whatsapp{width:100%;justify-content:center}@media(max-width:600px){.cart-float{right:14px;bottom:14px}.cart-panel{padding:30px 20px}}
+.card-art{cursor:pointer}.card-body h3{cursor:pointer}.measurements{font-size:.8rem;opacity:.72;margin:.35rem 0}.loading-products{text-align:center;padding:30px}.cart-float{position:fixed;right:22px;bottom:22px;z-index:90;box-shadow:0 12px 30px #0006}.cart-float span{display:inline-grid;place-items:center;min-width:22px;height:22px;margin-left:5px;border-radius:99px;background:#101014;color:#fff;font-size:12px}.cart-overlay{position:fixed;inset:0;z-index:100;background:#0009;display:flex;justify-content:flex-end}.cart-overlay[hidden]{display:none}.cart-panel{position:relative;width:min(440px,94vw);height:100%;overflow:auto;background:#18191f;padding:34px 26px;box-shadow:-15px 0 50px #0006}.cart-panel h2{margin-top:20px}.cart-item{display:flex;justify-content:space-between;gap:15px;padding:16px 0;border-bottom:1px solid var(--line)}.cart-item small{display:block;color:var(--text-dim);margin-top:4px}.cart-controls{display:flex;align-items:center;gap:8px}.cart-controls button{border:1px solid var(--line);background:var(--surface-2);color:var(--text);width:30px;height:30px;border-radius:8px;cursor:pointer}.cart-total{display:flex;justify-content:space-between;padding:22px 0;font-size:1.1rem}.cart-empty{color:var(--text-dim);padding:30px 0}.cart-panel .modal-close{position:absolute;right:18px;top:14px;background:transparent;color:var(--text);border:0;font-size:32px;cursor:pointer}.cart-panel #cart-whatsapp{width:100%;justify-content:center}.cart-continue{display:block;text-align:center;margin:12px auto 0;color:#d9a520;font-size:13px;font-weight:700;text-decoration:underline;cursor:pointer}@media(max-width:600px){.cart-float{right:14px;bottom:14px}.cart-panel{padding:30px 20px}}
 </style>
 </head>
 <body>
@@ -449,6 +449,7 @@
     <input type="hidden" name="_captcha" value="true">
     <input type="hidden" name="_template" value="table">
     <input type="hidden" name="_url" id="quoteFormUrl" value="">
+    <input type="hidden" name="_next" id="quoteFormNext" value="">
 
     <div class="quote-form-group">
       <label for="quoteDescription">Fale sobre o que precisa:</label>
@@ -492,7 +493,7 @@
 
 
 <style>
-.quote-modal{width:min(700px,94vw);max-height:90vh;border:0;border-radius:20px;padding:0;overflow:auto;box-shadow:0 30px 80px #0007;background:#fffdf8!important;color:#161616!important;opacity:1!important;isolation:isolate}
+.quote-modal{width:min(700px,94vw);max-height:90vh;border:0;border-radius:20px;padding:0;overflow:auto;box-shadow:0 30px 80px #0007;background:#fffdf8!important;color:#161616!important;opacity:1!important;isolation:isolate;mix-blend-mode:normal!important}
 .quote-modal::backdrop{background:#00150fcc;backdrop-filter:blur(3px)}
 .quote-header{position:relative;z-index:1;padding:30px 34px 22px;border-bottom:1px solid #e7e0d4;background:#fffdf8!important;color:#161616!important;opacity:1!important;backdrop-filter:none!important}
 .quote-eyebrow{font-size:11px!important;letter-spacing:2.5px;color:var(--accent);font-weight:700;margin:0 0 8px!important;opacity:1!important}
@@ -500,12 +501,12 @@
 .quote-header>p:last-child{margin:0;color:#5b5b5b!important;line-height:1.6;font-size:14px;opacity:1!important}
 #quoteForm{padding:28px 34px 30px}
 .quote-form-group{margin-bottom:20px}
-.quote-form-group>label,.quote-fieldset legend{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+.quote-form-group>label,.quote-fieldset legend{display:block;font-size:13px;font-weight:700;color:#111111!important;margin-bottom:8px}.quote-form-group label,.quote-fieldset legend,.quote-fieldset legend span,.reference-group label{color:#111111!important;text-shadow:none!important;opacity:1!important}.quote-fieldset legend span{color:#111111!important}.quote-form-group label{color:#111111!important}
 #quoteForm textarea,#quoteForm input[type="number"]{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--text);padding:12px 13px;font:inherit;outline:none;box-sizing:border-box;transition:border-color .2s,box-shadow .2s}
 #quoteForm textarea{resize:vertical;min-height:120px}
 #quoteForm textarea:focus,#quoteForm input[type="number"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px #d9a52022}
 .quote-fieldset{border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 20px}
-.quote-fieldset legend{padding:0 7px;margin:0}.quote-fieldset legend span{font-weight:400;color:var(--text-dim)}
+.quote-fieldset legend{padding:0 7px;margin:0}.quote-fieldset legend span{font-weight:400;color:#111111!important}
 .dimensions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.dimensions-grid .quote-form-group{margin:0}.dimensions-grid label{font-size:12px}
 .reference-group{margin-top:4px}
 .upload-box{position:relative;border:1.5px dashed var(--line);border-radius:14px;padding:20px;text-align:center;background:var(--surface-2);cursor:pointer;transition:.2s}.upload-box:hover,.upload-box.dragover{border-color:var(--accent);background:var(--surface)}
