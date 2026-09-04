@@ -24,6 +24,7 @@
     .admin-item-body{padding:13px}
     .admin-item-body h3{font-size:14px;margin:0 0 5px;color:var(--g)}
     .admin-item-body p{font-size:11px;color:var(--muted);min-height:32px;margin:0 0 10px}
+    .category-thumb{background:#eef3ef}.category-thumb span{font-size:58px;color:var(--g)}
     .admin-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:10px}
     .status{font-weight:700}
     .status.on{color:#2d7c50}.status.off{color:#a35b4a}
@@ -72,7 +73,7 @@
     <div>
       <label>ERALIS • ADMINISTRAÇÃO</label>
       <h1>Gerenciar conteúdo</h1>
-      <p>Gerencie produtos e imagens da área “Criamos ideias”.</p>
+      <p>Gerencie categorias e produtos do catálogo.</p>
     </div>
     <div class="admin-actions">
       <button class="btn outline" id="exportBtn" type="button">Exportar dados</button>
@@ -96,26 +97,28 @@
     </form>
   </section>
 
+
+
   <section class="admin-card">
     <div class="admin-toolbar">
       <div>
-        <h2>Produtos</h2>
-        <p>Produtos exibidos no catálogo e na página principal.</p>
+        <h2>Categorias</h2>
+        <p>Crie, renomeie, ative ou desative as categorias usadas no catálogo.</p>
       </div>
-      <button class="btn" id="addProductBtn" type="button">+ Adicionar produto</button>
+      <button class="btn" id="addCategoryBtn" type="button">+ Nova categoria</button>
     </div>
-    <div class="admin-grid" id="productsAdmin"></div>
+    <div class="admin-grid" id="categoriesAdmin"></div>
   </section>
 
   <section class="admin-card">
     <div class="admin-toolbar">
       <div>
-        <h2>Criamos ideias</h2>
-        <p>Imagens utilizadas no carrossel da área principal.</p>
+        <h2>Produtos</h2>
+        <p>Produtos exibidos no catálogo. Cada produto pode pertencer a uma categoria.</p>
       </div>
-      <button class="btn" id="addIdeaBtn" type="button">+ Adicionar imagem</button>
+      <button class="btn" id="addProductBtn" type="button">+ Adicionar produto</button>
     </div>
-    <div class="admin-grid" id="ideasAdmin"></div>
+    <div class="admin-grid" id="productsAdmin"></div>
   </section>
 </main>
 
@@ -123,6 +126,15 @@
   <span>© 2026 ERALIS Impressão 3D</span>
   <a href="index.html">← Voltar para o site</a>
 </footer>
+
+<dialog id="categoryDialog" class="admin-modal">
+  <div class="admin-modal-head"><label>CATEGORIA</label><h2 id="categoryDialogTitle">Nova categoria</h2></div>
+  <form id="categoryForm" class="admin-form">
+    <input type="hidden" id="categoryId">
+    <div class="field"><label for="categoryName">Nome</label><input id="categoryName" required maxlength="80" placeholder="Ex.: Colecionáveis"></div>
+    <div class="admin-form-actions"><button class="btn outline" type="button" data-close="categoryDialog">Cancelar</button><button class="btn" type="submit">Salvar categoria</button></div>
+  </form>
+</dialog>
 
 <dialog id="productDialog" class="admin-modal">
   <div class="admin-modal-head"><label>PRODUTO</label><h2 id="productDialogTitle">Adicionar produto</h2></div>
@@ -151,6 +163,7 @@
     </div>
     <div class="field"><label for="productName">Nome</label><input id="productName" required></div>
     <div class="field"><label for="productDescription">Descrição</label><textarea id="productDescription"></textarea></div>
+    <div class="field"><label for="productCategory">Categoria</label><select id="productCategory" required></select></div>
     <div class="admin-form form-row">
       <div class="field"><label for="productPrice">Preço (R$)</label><input id="productPrice" type="number" min="0" step="0.01"></div>
       <div class="field"><label for="productActive">Ativo</label><select id="productActive"><option value="true">SIM</option><option value="false">NÃO</option></select></div>
@@ -160,18 +173,7 @@
   </form>
 </dialog>
 
-<dialog id="ideaDialog" class="admin-modal">
-  <div class="admin-modal-head"><label>CRIAMOS IDEIAS</label><h2>Adicionar imagem</h2></div>
-  <form id="ideaForm" class="admin-form">
-    <div class="field">
-      <label for="ideaImage">Imagem</label>
-      <div class="image-preview" id="ideaPreview">Nenhuma imagem selecionada</div>
-      <input id="ideaImage" type="file" accept="image/*" required>
-    </div>
-    <div class="field"><label for="ideaTitle">Nome/identificação (opcional)</label><input id="ideaTitle" placeholder="Ex.: Chaveiro ERALIS"></div>
-    <div class="admin-form-actions"><button class="btn outline" type="button" data-close="ideaDialog">Cancelar</button><button class="btn" type="submit">Adicionar imagem</button></div>
-  </form>
-</dialog>
+
 
 <script src="supabase-config.js"></script>
 <script src="admin.js?v=20260821-multimedia2"></script>

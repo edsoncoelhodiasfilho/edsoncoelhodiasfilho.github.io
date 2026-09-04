@@ -25,7 +25,7 @@
   setupWhatsApp();
 
   function normalize(p){
-    return {id:p.id,name:p.name||'Produto ERALIS',price:Number(p.price||0),description:p.description||'',measurements:p.measurements||'',payment_url:p.payment_url||'',image_url:p.image_url||'',image_url_2:p.image_url_2||'',video_url:p.video_url||''};
+    return {id:p.id,name:p.name||'Produto ERALIS',price:Number(p.price||0),description:p.description||'',measurements:p.measurements||'',category:p.category?.name||p.category||'Produtos',payment_url:p.payment_url||'',image_url:p.image_url||'',image_url_2:p.image_url_2||'',video_url:p.video_url||''};
   }
   function images(p){return [p.image_url,p.image_url_2].filter(Boolean).slice(0,3);}
 
