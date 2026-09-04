@@ -11,7 +11,6 @@
   const size=document.getElementById('modal-size');
   const desc=document.getElementById('modal-desc');
   const price=document.getElementById('modal-price');
-  const buy=document.getElementById('modal-buy');
   const thumbs=document.getElementById('modal-thumbs');
   const prev=document.getElementById('modal-prev');
   const next=document.getElementById('modal-next');
@@ -154,14 +153,14 @@
   }
 
   function openProduct(p){
-    currentProduct=p;current=images(p);index=0;title.textContent=p.name;size.textContent=p.measurements?`Tamanho: ${p.measurements}`:'';desc.textContent=p.description;price.textContent=fmt(p.price);buy.href=wa(`Olá! Quero pedir a peça "${p.name}" (${fmt(p.price)}) do catálogo da Eralis.`);renderProduct();overlay.hidden=false;document.body.style.overflow='hidden';
+    currentProduct=p;current=images(p);index=0;title.textContent=p.name;desc.textContent=p.description;size.textContent=p.measurements?`Medidas: ${p.measurements}`:'';price.textContent=fmt(p.price);renderProduct();overlay.hidden=false;document.body.style.overflow='hidden';
   }
   function renderProduct(){
     if(current.length){image.src=current[index];image.alt=currentProduct.name;image.hidden=false;} else {image.removeAttribute('src');image.hidden=true;}
     const multi=current.length>1;prev.hidden=!multi;next.hidden=!multi;thumbs.innerHTML='';
     current.forEach((src,i)=>{const b=document.createElement('button');b.className='modal-thumb'+(i===index?' active':'');b.innerHTML=`<img src="${esc(src)}" alt="">`;b.onclick=()=>{index=i;renderProduct()};thumbs.appendChild(b);});
     let add=document.getElementById('modal-add-cart');
-    if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-ghost';buy.parentNode.insertBefore(add,buy);}
+    if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-ghost';price.parentNode.appendChild(add);}
     add.textContent='Adicionar ao carrinho';add.onclick=()=>addToCart(currentProduct);
   }
   function closeProduct(){overlay.hidden=true;document.body.style.overflow='';}
