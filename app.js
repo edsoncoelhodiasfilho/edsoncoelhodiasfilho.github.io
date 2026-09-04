@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const phone=window.ERALIS_WHATSAPP||'5579998080301';
+  const phone='5579998080301';
   const defaultMsg='Olá! Vim do site da Eralis e quero saber mais sobre as peças 3D.';
   let products=[];
   let cart=JSON.parse(localStorage.getItem('eralisCart')||'[]');
@@ -25,7 +25,7 @@
   setupWhatsApp();
 
   function normalize(p){
-    return {id:p.id,name:p.name||'Produto ERALIS',price:Number(p.price||0),description:p.description||'',measurements:p.measurements||'',category:p.category?.name||p.category||'Produtos',payment_url:p.payment_url||'',image_url:p.image_url||'',image_url_2:p.image_url_2||'',video_url:p.video_url||''};
+    return {id:p.id,name:p.name||'Produto ERALIS',price:Number(p.price||0),description:p.description||'',measurements:p.measurements||'',category:p.category?.name||p.category||'Produtos',image_url:p.image_url||'',image_url_2:p.image_url_2||'',video_url:p.video_url||''};
   }
   function images(p){return [p.image_url,p.image_url_2].filter(Boolean).slice(0,3);}
 
@@ -86,7 +86,7 @@
   function removeItem(id){cart=cart.filter(i=>String(i.id)!==String(id));renderCart();}
   function openCart(){ensureCartUI();renderCart();document.getElementById('cart-overlay').hidden=false;document.body.style.overflow='hidden';}
   function closeCart(){document.getElementById('cart-overlay').hidden=true;document.body.style.overflow='';}
-  function checkout(){if(!cart.length){alert('Seu carrinho está vazio.');return;}const lines=cart.map(x=>{const p=products.find(y=>String(y.id)===String(x.id));return `• ${p.name} — ${x.qty} un. — ${fmt(p.price*x.qty)}`}).join('\n');const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nTotal estimado: ${fmt(totalCart())}\n\nGostaria de confirmar disponibilidade, frete e pagamento.`;window.open(wa(msg),'_blank','noopener');}
+  function checkout(){if(!cart.length){alert('Seu carrinho está vazio.');return;}const lines=cart.map(x=>{const p=products.find(y=>String(y.id)===String(x.id));return `• ${p.name} — ${x.qty} un. — ${fmt(p.price*x.qty)}`}).join('\n');const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nMe envie o link para pagamento pelo Mercado Pago.\n\nTotal estimado: ${fmt(totalCart())}\n\nGostaria de confirmar disponibilidade, frete e pagamento.`;window.open(wa(msg),'_blank','noopener');}
 
   window.addEventListener('eralis-content-loaded',e=>{products=(e.detail.products||[]).map(normalize);products.forEach(p=>{p.category=p.category||'Produtos'});renderCatalog();renderCart();});
   ensureCartUI();renderCart();

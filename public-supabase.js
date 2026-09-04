@@ -7,7 +7,7 @@
   }
   try{
     const headers={apikey:key,Authorization:`Bearer ${key}`};
-    const response=await fetch(`${url}/rest/v1/products?select=id,name,description,measurements,price,active,sort_order,category_id,category:product_categories(id,name,active),payment_url,image_url,image_path,image_url_2,image_path_2,video_url,video_path&active=eq.true&order=sort_order.asc,created_at.asc`,{headers});
+    const response=await fetch(`${url}/rest/v1/products?select=id,name,description,measurements,price,active,sort_order,category_id,category:product_categories(id,name,active),image_url,image_path,image_url_2,image_path_2,video_url,video_path&active=eq.true&order=sort_order.asc,created_at.asc`,{headers});
     if(!response.ok)throw new Error(`Produtos: HTTP ${response.status} ${await response.text()}`);
     const products=await response.json();
     window.ERALIS_CONTENT={products:products||[]};
