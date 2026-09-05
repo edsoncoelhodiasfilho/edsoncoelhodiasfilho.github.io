@@ -547,6 +547,39 @@
 }
 </style>
 
+
+<style id="eralis-mp-note">
+/* Aviso de parcelamento — somente nos cards do catálogo */
+.card .price .mp-installment-note{
+  display:block;
+  margin-top:3px;
+  color:var(--text-dim);
+  font-family:'Inter',sans-serif;
+  font-size:10.5px;
+  font-weight:400;
+  line-height:1.25;
+}
+</style>
+<script>
+(function(){
+  function addMercadoPagoNote(){
+    document.querySelectorAll('.card .price').forEach(function(price){
+      if(price.querySelector('.mp-installment-note')) return;
+      var note=document.createElement('small');
+      note.className='mp-installment-note';
+      note.textContent='Parcele pelo Mercado Pago.';
+      price.appendChild(note);
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', addMercadoPagoNote);
+  }else{
+    addMercadoPagoNote();
+  }
+  new MutationObserver(addMercadoPagoNote).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
 </html>
 <style>
