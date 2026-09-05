@@ -563,6 +563,34 @@
 </style>
 <script>
 (function(){
+  function formatModalMeasurements(){
+    var el = document.getElementById('modal-size');
+    if(!el || el.dataset.measurementsObserver) return;
+    function format(){
+      var text = (el.textContent || '').trim();
+      if(!text || text.indexOf('Medidas:') !== 0 || el.querySelector('.measurements-value')) return;
+      var value = text.substring('Medidas:'.length).trim();
+      el.textContent = '';
+      var label = document.createElement('span');
+      label.textContent = 'Medidas:';
+      var br = document.createElement('br');
+      var valueSpan = document.createElement('span');
+      valueSpan.className = 'measurements-value';
+      valueSpan.textContent = value;
+      el.appendChild(label);
+      el.appendChild(br);
+      el.appendChild(valueSpan);
+    }
+    new MutationObserver(format).observe(el,{childList:true,characterData:true,subtree:true});
+    el.dataset.measurementsObserver = '1';
+    format();
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', formatModalMeasurements);
+  }else{
+    formatModalMeasurements();
+  }
+
   function addMercadoPagoNote(){
     document.querySelectorAll('.card .price').forEach(function(price){
       if(price.querySelector('.mp-installment-note')) return;
@@ -614,5 +642,5 @@
 </style>
 
 <style>
-.modal-measurements{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:.9rem;line-height:1.6;color:var(--text);font-weight:600;white-space:pre-line}.modal-measurements:empty{display:none}
+.modal-measurements{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:.9rem;line-height:1.6;color:var(--text);font-weight:600;white-space:pre-line}.modal-measurements:empty{display:none}.modal-measurements .measurements-value{font-weight:400;display:inline-block;margin-top:2px}
 </style>
