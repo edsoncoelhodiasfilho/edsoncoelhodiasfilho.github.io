@@ -181,15 +181,8 @@
     const item=current[index];
     const video=document.getElementById('modal-video');
     if(item?.type==='video'){
-      image.pause?.();
       image.hidden=true; image.removeAttribute('src');
-      video.hidden=false; video.controls=false; video.removeAttribute('controls');
-      video.muted=true; video.playsInline=true; video.autoplay=true;
-      video.setAttribute('muted',''); video.setAttribute('playsinline',''); video.setAttribute('autoplay','');
-      video.src=item.src; video.load();
-      const playVideo=()=>video.play().catch(()=>{});
-      video.addEventListener('loadedmetadata',playVideo,{once:true});
-      playVideo();
+      video.controls=false; video.removeAttribute('controls'); video.src=item.src; video.hidden=false; video.muted=true; video.playsInline=true; video.autoplay=true; video.setAttribute('autoplay',''); video.load(); video.play().catch(()=>{});
     }else if(item?.type==='image'){
       video.pause(); video.hidden=true; video.removeAttribute('src'); video.removeAttribute('autoplay');
       image.src=item.src; image.alt=currentProduct.name; image.hidden=false;
@@ -206,7 +199,7 @@
       b.onclick=()=>{index=i;renderProduct()}; thumbs.appendChild(b);
     });
     let add=document.getElementById('modal-add-cart');
-    if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-accent btn-sm add';price.parentNode.appendChild(add);}
+    if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-accent btn-sm add';document.querySelector('.modal-bottom-row').appendChild(add);}
     add.textContent='Adicionar ao carrinho'; add.onclick=(e)=>{e.preventDefault();e.stopPropagation();addToCart(currentProduct,1,add);};
   }
   function closeProduct(){
