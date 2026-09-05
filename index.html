@@ -162,8 +162,49 @@
   }
   .card-body{ padding: 18px 18px 20px; display:flex; flex-direction:column; gap: 10px; flex:1; }
   .card-body h3{ margin:0; font-size: 17px; font-weight: 600; }
-  .card-body .desc{ color: var(--text-dim); font-size: 14px; margin:0; flex:1; }
+  .card-body .desc{
+    color: var(--text-dim);
+    font-size: 14px;
+    margin:0;
+    flex:1;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+  }
   .card-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:4px; }
+  .card-more{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:30px;
+    height:30px;
+    padding:0;
+    margin-left:8px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:transparent;
+    color:var(--text);
+    font-family:'Space Grotesk',sans-serif;
+    font-size:20px;
+    font-weight:500;
+    line-height:1;
+    cursor:pointer;
+    flex:0 0 30px;
+  }
+  .card-more:hover{
+    border-color:rgba(242,239,233,0.3);
+    background:var(--surface-2);
+  }
+  .card-foot-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-left:8px;
+  }
+  .card-foot-actions .add{
+    margin-left:0;
+  }
   .price{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size: 16px; }
   .price small{ color: var(--text-dim); font-weight: 400; font-size: 12.5px; display:block; }
 
