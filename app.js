@@ -181,8 +181,15 @@
     const item=current[index];
     const video=document.getElementById('modal-video');
     if(item?.type==='video'){
+      image.pause?.();
       image.hidden=true; image.removeAttribute('src');
-      video.controls=false; video.removeAttribute('controls'); video.src=item.src; video.hidden=false; video.muted=true; video.playsInline=true; video.autoplay=true; video.setAttribute('autoplay',''); video.load(); video.play().catch(()=>{});
+      video.hidden=false; video.controls=false; video.removeAttribute('controls');
+      video.muted=true; video.playsInline=true; video.autoplay=true;
+      video.setAttribute('muted',''); video.setAttribute('playsinline',''); video.setAttribute('autoplay','');
+      video.src=item.src; video.load();
+      const playVideo=()=>video.play().catch(()=>{});
+      video.addEventListener('loadedmetadata',playVideo,{once:true});
+      playVideo();
     }else if(item?.type==='image'){
       video.pause(); video.hidden=true; video.removeAttribute('src'); video.removeAttribute('autoplay');
       image.src=item.src; image.alt=currentProduct.name; image.hidden=false;
