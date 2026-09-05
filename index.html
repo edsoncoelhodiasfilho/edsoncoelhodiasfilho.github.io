@@ -264,10 +264,10 @@
     border: 1px solid var(--line); background: var(--surface-2); color: var(--text);
     font-size: 18px; line-height: 1; cursor: pointer;
   }
-  .modal-body{ display:flex; gap: 26px; }
-  @media (max-width: 620px){ .modal-body{ flex-direction: column; } }
+  .modal-body{ display:block; }
+  @media (max-width: 620px){ .modal-body{ display:block; } }
 
-  .modal-gallery{ flex: 1 1 50%; min-width: 0; }
+  .modal-gallery{ width:100%; min-width:0; }
   .modal-main{ position: relative; }
   .modal-image{
     display:block; width: 100%; aspect-ratio: 4/3; object-fit: contain;
@@ -292,9 +292,11 @@
   .modal-thumb.video-thumb::after{ content:'▶'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.28); color:#fff; font-size:18px; pointer-events:none; }
   .modal-thumb.active{ border-color: var(--accent); }
   .modal-video{ display:block; width:100%; aspect-ratio:4/3; object-fit:contain; background:var(--surface-2); border-radius:10px; }
+  .modal-video[hidden]{display:none;}
+  .modal-thumb.video-thumb video{ pointer-events:none; }
 
 
-  .modal-info{ flex: 1 1 50%; min-width: 0; display:flex; flex-direction:column; gap: 10px; }
+  .modal-info{ width:100%; min-width:0; display:flex; flex-direction:column; gap:10px; margin-top:18px; }
   .modal-title{ margin: 0; font-size: 19px; font-weight: 600; }
   .modal-size{ margin: 0; font-size: 13.5px; color: var(--text-dim); }
   .modal-size strong{ color: var(--text); font-weight: 600; }
@@ -452,7 +454,7 @@
         <div class="modal-main">
           <button class="modal-nav modal-prev" id="modal-prev" aria-label="Foto anterior">‹</button>
           <img class="modal-image" id="modal-image" src="" alt="">
-          <video class="modal-video" id="modal-video" controls playsinline preload="metadata" hidden></video>
+          <video class="modal-video" id="modal-video" playsinline preload="metadata" hidden></video>
           <button class="modal-nav modal-next" id="modal-next" aria-label="Próxima foto">›</button>
         </div>
         <div class="modal-thumbs" id="modal-thumbs"></div>

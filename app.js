@@ -182,19 +182,19 @@
     const video=document.getElementById('modal-video');
     if(item?.type==='video'){
       image.hidden=true; image.removeAttribute('src');
-      video.src=item.src; video.hidden=false; video.load();
+      video.controls=false; video.removeAttribute('controls'); video.src=item.src; video.hidden=false; video.muted=true; video.playsInline=true; video.autoplay=true; video.setAttribute('autoplay',''); video.load(); video.play().catch(()=>{});
     }else if(item?.type==='image'){
-      video.pause(); video.hidden=true; video.removeAttribute('src');
+      video.pause(); video.hidden=true; video.removeAttribute('src'); video.removeAttribute('autoplay');
       image.src=item.src; image.alt=currentProduct.name; image.hidden=false;
     }else{
-      video.pause(); video.hidden=true; video.removeAttribute('src');
+      video.pause(); video.hidden=true; video.removeAttribute('src'); video.removeAttribute('autoplay');
       image.removeAttribute('src'); image.hidden=true;
     }
     const multi=current.length>1; prev.hidden=!multi; next.hidden=!multi; thumbs.innerHTML='';
     current.forEach((m,i)=>{
       const b=document.createElement('button'); b.className='modal-thumb'+(i===index?' active':'')+(m.type==='video'?' video-thumb':'');
       if(m.type==='video'){
-        const v=document.createElement('video'); v.src=m.src; v.muted=true; v.playsInline=true; v.preload='auto'; v.setAttribute('aria-label','Vídeo'); b.appendChild(v);
+        const v=document.createElement('video'); v.src=m.src; v.muted=true; v.playsInline=true; v.autoplay=true; v.loop=true; v.preload='auto'; v.controls=false; v.setAttribute('aria-label','Vídeo'); v.setAttribute('autoplay',''); v.setAttribute('playsinline',''); v.play().catch(()=>{}); b.appendChild(v);
       }else{ const im=document.createElement('img'); im.src=m.src; im.alt=''; b.appendChild(im); }
       b.onclick=()=>{index=i;renderProduct()}; thumbs.appendChild(b);
     });
