@@ -407,7 +407,7 @@
 
 <footer class="wrap">
   <span>Eralis — peças impressas em 3D, sob encomenda</span>
-  <span>Aracaju/SE · <a href="admin.html">Administração</a></span>
+  <span>Aracaju/SE</span>
 </footer>
 
 <a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
@@ -567,7 +567,7 @@
       if(price.querySelector('.mp-installment-note')) return;
       var note=document.createElement('small');
       note.className='mp-installment-note';
-      note.textContent='Parcele pelo Mercado Pago.';
+      note.textContent='Parcele no cartão.';
       price.appendChild(note);
     });
   }
@@ -577,6 +577,21 @@
     addMercadoPagoNote();
   }
   new MutationObserver(addMercadoPagoNote).observe(document.body,{childList:true,subtree:true});
+
+  function addModalMercadoPagoNote(){
+    var price = document.getElementById('modal-price');
+    if(!price || price.querySelector('.mp-installment-note')) return;
+    var note = document.createElement('small');
+    note.className = 'mp-installment-note';
+    note.textContent = 'Parcele no cartão.';
+    price.appendChild(note);
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', addModalMercadoPagoNote);
+  }else{
+    addModalMercadoPagoNote();
+  }
+  new MutationObserver(addModalMercadoPagoNote).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
 
