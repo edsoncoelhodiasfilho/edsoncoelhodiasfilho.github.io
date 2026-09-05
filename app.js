@@ -181,14 +181,15 @@
     const item=current[index];
     const video=document.getElementById('modal-video');
     if(item?.type==='video'){
-      image.hidden=true; image.removeAttribute('src');
-      video.controls=false; video.removeAttribute('controls'); video.src=item.src; video.hidden=false; video.muted=true; video.playsInline=true; video.autoplay=true; video.setAttribute('autoplay',''); video.load(); video.play().catch(()=>{});
+      image.hidden=true; image.style.display='none'; image.removeAttribute('src');
+      video.hidden=false; video.style.display='block';
+      video.controls=false; video.removeAttribute('controls'); video.src=item.src; video.hidden=false; video.style.display='block'; video.muted=true; video.playsInline=true; video.autoplay=true; video.setAttribute('autoplay',''); video.load(); video.play().catch(()=>{});
     }else if(item?.type==='image'){
-      video.pause(); video.hidden=true; video.removeAttribute('src'); video.removeAttribute('autoplay');
-      image.src=item.src; image.alt=currentProduct.name; image.hidden=false;
+      video.pause(); video.hidden=true; video.style.display='none'; video.removeAttribute('src'); video.removeAttribute('autoplay');
+      image.src=item.src; image.alt=currentProduct.name; image.hidden=false; image.style.display='block';
     }else{
-      video.pause(); video.hidden=true; video.removeAttribute('src'); video.removeAttribute('autoplay');
-      image.removeAttribute('src'); image.hidden=true;
+      video.pause(); video.hidden=true; video.style.display='none'; video.removeAttribute('src'); video.removeAttribute('autoplay');
+      image.removeAttribute('src'); image.hidden=true; image.style.display='none';
     }
     const multi=current.length>1; prev.hidden=!multi; next.hidden=!multi; thumbs.innerHTML='';
     current.forEach((m,i)=>{
@@ -199,7 +200,7 @@
       b.onclick=()=>{index=i;renderProduct()}; thumbs.appendChild(b);
     });
     let add=document.getElementById('modal-add-cart');
-    if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-accent btn-sm add';document.querySelector('.modal-bottom-row').appendChild(add);}
+    if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-accent btn-sm add';document.querySelector('.modal-purchase').appendChild(add);}
     add.textContent='Adicionar ao carrinho'; add.onclick=(e)=>{e.preventDefault();e.stopPropagation();addToCart(currentProduct,1,add);};
   }
   function closeProduct(){
