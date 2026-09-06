@@ -722,3 +722,61 @@
 <style>
 .modal-measurements{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:.9rem;line-height:1.6;color:var(--text);font-weight:600;white-space:pre-line}.modal-measurements:empty{display:none}.modal-measurements .measurements-value{font-weight:400;display:inline-block;margin-top:2px}
 </style>
+
+
+<style id="eralis-mobile-measurements-fix">
+/* Correção definitiva das medidas no modal em celulares. */
+@media (max-width: 620px){
+  .modal-info{
+    overflow:visible !important;
+    min-height:0;
+  }
+  .modal-bottom-row{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:8px !important;
+    width:100% !important;
+    flex:0 0 auto !important;
+  }
+  .modal-bottom-row .modal-measurements{
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    flex:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    border-top:0 !important;
+    color:var(--text-dim) !important;
+    font-size:12px !important;
+    line-height:1.4 !important;
+    white-space:normal !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    visibility:visible !important;
+    opacity:1 !important;
+  }
+  .modal-bottom-row .modal-measurements:empty{
+    display:none !important;
+  }
+  .modal-bottom-row .modal-measurements br{
+    display:none !important;
+  }
+  .modal-bottom-row .modal-measurements .measurements-value{
+    display:inline !important;
+    margin:0 !important;
+    white-space:normal !important;
+    font-weight:400 !important;
+  }
+  .modal-purchase{
+    width:100% !important;
+    margin-left:0 !important;
+    display:flex !important;
+    align-items:flex-end !important;
+    justify-content:flex-end !important;
+    gap:8px !important;
+    flex:none !important;
+  }
+}
+</style>
+
