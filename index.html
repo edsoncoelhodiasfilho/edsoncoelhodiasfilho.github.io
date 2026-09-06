@@ -322,21 +322,25 @@
   .modal-purchase #modal-add-cart{ margin:0; white-space:nowrap; flex:0 0 auto; }
   @media (max-width: 620px){
     .modal-overlay{ align-items:center; justify-content:center; padding:8px; overflow:hidden; }
-    .modal-box{ width:100%; max-width:520px; height:calc(100vh - 16px); max-height:calc(100vh - 16px); padding:42px 14px 14px; overflow:hidden; display:flex; flex-direction:column; }
+    .modal-box{ width:100%; max-width:520px; height:calc(100vh - 16px); max-height:calc(100vh - 16px); padding:42px 14px 88px; overflow:hidden; display:flex; flex-direction:column; }
     .modal-body{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
     .modal-main{ flex:0 0 clamp(190px, 34vh, 250px); height:clamp(190px, 34vh, 250px); }
     .modal-thumbs{ flex:0 0 56px; overflow-x:auto; overflow-y:hidden; padding-bottom:2px; }
     .modal-info{ flex:1 1 auto; min-height:0; margin-top:10px; gap:6px; overflow:hidden; }
     .modal-title{ font-size:18px; }
     .modal-desc{ font-size:13.5px; line-height:1.45; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; }
-    .modal-bottom-row{ flex:0 0 auto; align-items:flex-end; gap:8px; margin-top:4px; }
+    .modal-bottom-row{ flex:0 0 auto; align-items:flex-end; gap:8px; margin-top:4px; margin-bottom:4px; }
     .modal-purchase{ gap:8px; }
     .modal-purchase #modal-add-cart{ font-size:12px; padding:9px 11px; }
     .modal-purchase .modal-price{ font-size:18px; }
     .modal-price .mp-installment-note{ font-size:10px; white-space:nowrap; }
     .modal-measurements{ font-size:12px; line-height:1.35; white-space:normal; }
-    .modal-measurements br{ display:none; }
-    .modal-measurements .measurements-value{ display:inline; margin-top:0; font-weight:400; }
+    .modal-measurements br{ display:none !important; }
+    .modal-measurements{ white-space:nowrap !important; overflow:hidden; text-overflow:ellipsis; }
+     .modal-measurements .measurements-value{ display:inline !important; margin-top:0; font-weight:400; white-space:nowrap !important; }
+    /* O modal deve ficar acima do botão flutuante do carrinho. */
+    .modal-overlay{ z-index:150 !important; }
+    .modal-box{ position:relative; z-index:151; }
   }
 
   .modal-image{ cursor:zoom-in; }
@@ -640,6 +644,10 @@
       var text = (el.textContent || '').trim();
       if(!text || text.indexOf('Medidas:') !== 0 || el.querySelector('.measurements-value')) return;
       var value = text.substring('Medidas:'.length).trim();
+      // No celular, cada medida deve voltar a ficar em uma única linha,
+      // separada por vírgulas, como no layout anterior.
+      value = value.replace(/\s*[\r\n]+\s*/g, ', ');
+      value = value.replace(/(?:,\s*){2,}/g, ', ');
       el.textContent = '';
       var label = document.createElement('span');
       label.textContent = 'Medidas:';
