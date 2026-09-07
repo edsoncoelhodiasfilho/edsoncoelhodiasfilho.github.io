@@ -171,8 +171,16 @@
 
   function openProduct(p){
     currentProduct=p; current=media(p); index=0;
-    title.textContent=p.name; desc.textContent=p.description;
+    title.textContent=p.name;
+    desc.textContent=p.description;
     size.textContent=p.measurements?`Medidas: ${p.measurements}`:'';
+
+    // Preserva no modal as quebras de linha digitadas no cadastro.
+    desc.style.whiteSpace='pre-wrap';
+    size.style.whiteSpace='pre-wrap';
+    desc.style.wordBreak='break-word';
+    size.style.wordBreak='break-word';
+
     price.textContent=fmt(p.price);
     renderProduct(); overlay.hidden=false; document.body.style.overflow='hidden';
   }
