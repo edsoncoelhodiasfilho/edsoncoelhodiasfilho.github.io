@@ -69,14 +69,14 @@ async function uploadMedia(file,folder,type){
 }
 async function removeImage(path){if(path)await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`,{method:"DELETE",headers:headers({"Content-Type":"application/json"}),body:JSON.stringify({prefixes:[path]})});}
 
-window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";document.querySelector("#productMeasurements").value=p.measurements||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);populateCategorySelect(p.category_id);document.querySelector("#productImage1").value="";document.querySelector("#productImage2").value="";document.querySelector("#productVideo").value="";document.querySelector("#productPreview1").innerHTML=p.image_url?`<img src="${p.image_url}" alt="">`:"Nenhuma imagem";document.querySelector("#productPreview2").innerHTML=p.image_url_2?`<img src="${p.image_url_2}" alt="">`:"Nenhuma imagem";document.querySelector("#productVideoPreview").innerHTML=p.video_url?`<video src="${p.video_url}" controls muted></video>`:"Nenhum vídeo";document.querySelector("#productDialog").showModal();};
+window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";document.querySelector("#productMeasurements").value=p.measurements||"";document.querySelector("#productPrice").value=p.price;resetPricingCalculator();document.querySelector("#productActive").value=String(p.active);populateCategorySelect(p.category_id);document.querySelector("#productImage1").value="";document.querySelector("#productImage2").value="";document.querySelector("#productVideo").value="";document.querySelector("#productPreview1").innerHTML=p.image_url?`<img src="${p.image_url}" alt="">`:"Nenhuma imagem";document.querySelector("#productPreview2").innerHTML=p.image_url_2?`<img src="${p.image_url_2}" alt="">`:"Nenhuma imagem";document.querySelector("#productVideoPreview").innerHTML=p.video_url?`<video src="${p.video_url}" controls muted></video>`:"Nenhum vídeo";document.querySelector("#productDialog").showModal();};
 window.toggleProduct=async id=>{try{const p=products.find(x=>x.id===id);await api(`/rest/v1/products?id=eq.${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({active:!p.active})});await loadData();}catch(e){showError(e);}};
 window.deleteProduct=async id=>{if(!confirm("Excluir este produto?"))return;try{const p=products.find(x=>x.id===id);await api(`/rest/v1/products?id=eq.${id}`,{method:"DELETE"});await removeImage(p?.image_path);await removeImage(p?.image_path_2);await removeImage(p?.video_path);await loadData();}catch(e){showError(e);}};
 
 document.querySelector("#addCategoryBtn").onclick=()=>{document.querySelector("#categoryForm").reset();document.querySelector("#categoryId").value="";document.querySelector("#categoryDialogTitle").textContent="Nova categoria";document.querySelector("#categoryDialog").showModal();};
 document.querySelector("#categoryForm").onsubmit=async e=>{e.preventDefault();if(!await requireAdmin())return;try{const id=Number(document.querySelector("#categoryId").value),name=document.querySelector("#categoryName").value.trim();if(!name)throw new Error("Informe o nome da categoria.");if(categories.some(c=>c.name.trim().toLowerCase()===name.toLowerCase()&&String(c.id)!==String(id)))throw new Error("Já existe uma categoria com esse nome.");if(id)await api(`/rest/v1/product_categories?id=eq.${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({name})});else{const max=categories.reduce((m,c)=>Math.max(m,Number(c.sort_order||0)),0);await api("/rest/v1/product_categories",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({name,active:true,sort_order:max+1})});}document.querySelector("#categoryDialog").close();await loadData();}catch(e){showError(e);}};
 
-document.querySelector("#addProductBtn").onclick=()=>{document.querySelector("#productForm").reset();document.querySelector("#productId").value="";document.querySelector("#productDialogTitle").textContent="Adicionar produto";document.querySelector("#productPreview1").textContent="Nenhuma imagem selecionada";document.querySelector("#productPreview2").textContent="Nenhuma imagem selecionada";document.querySelector("#productVideoPreview").textContent="Nenhum vídeo selecionado";populateCategorySelect(categories.find(c=>c.active)?.id);document.querySelector("#productDialog").showModal();};
+document.querySelector("#addProductBtn").onclick=()=>{document.querySelector("#productForm").reset();resetPricingCalculator();document.querySelector("#productId").value="";document.querySelector("#productDialogTitle").textContent="Adicionar produto";document.querySelector("#productPreview1").textContent="Nenhuma imagem selecionada";document.querySelector("#productPreview2").textContent="Nenhuma imagem selecionada";document.querySelector("#productVideoPreview").textContent="Nenhum vídeo selecionado";populateCategorySelect(categories.find(c=>c.active)?.id);document.querySelector("#productDialog").showModal();};
 function bindImagePreview(inputId,previewId){document.querySelector("#"+inputId).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>document.querySelector("#"+previewId).innerHTML=`<img src="${r.result}" alt="">`;r.readAsDataURL(f);};}
 bindImagePreview("productImage1","productPreview1");bindImagePreview("productImage2","productPreview2");
 document.querySelector("#productVideo").onchange=e=>{const f=e.target.files[0];if(!f)return;document.querySelector("#productVideoPreview").innerHTML=`<video src="${URL.createObjectURL(f)}" controls muted></video>`;};
@@ -88,4 +88,66 @@ document.querySelector("#logoutBtn").onclick=()=>{localStorage.removeItem(TOKEN_
 document.querySelector("#resetBtn").onclick=async()=>{if(confirm("Restaurar os exemplos? Isso apagará os produtos do Supabase."))try{await api("/rest/v1/products?id=gt.0",{method:"DELETE"});await loadData();}catch(e){showError(e);}};
 document.querySelector("#exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify({products,categories},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="eralis-conteudo.json";a.click();};
 document.querySelector("#loginForm").addEventListener("submit",e=>{e.preventDefault();signIn();});
+
+/* CALCULADORA DE PREÇO ERALIS — V1 */
+const PRICING={
+  filamentKg:102, energyKwh:0.80, laborHour:20, packaging:3.50, markup:0.80,
+  printers:{
+    p2s:{type:"fdm",name:"Bambu Lab P2S",watts:200,purchase:9980,lifeHours:20000},
+    mars5:{type:"resin",name:"Elegoo Mars 5",watts:72,purchase:3800,lifeHours:10000}
+  },
+  mercury:{watts:48}
+};
+function pricingMoney(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});}
+function pricingNumber(id){const e=document.getElementById(id);return e?Math.max(0,Number(e.value||0)):0;}
+function updatePricingPrinterOptions(){
+  const type=document.getElementById("pricingType")?.value||"fdm", printer=document.getElementById("pricingPrinter");
+  if(!printer)return;
+  [...printer.options].forEach(o=>{const d=PRICING.printers[o.value];o.hidden=!!d&&d.type!==type;});
+  const selected=PRICING.printers[printer.value];
+  if(!selected||selected.type!==type){const first=[...printer.options].find(o=>!o.hidden);if(first)printer.value=first.value;}
+  document.querySelectorAll(".pricing-resin-only").forEach(el=>el.classList.toggle("pricing-hidden",type!=="resin"));
+}
+function calculatePricing(){
+  const type=document.getElementById("pricingType")?.value||"fdm";
+  const printer=PRICING.printers[document.getElementById("pricingPrinter")?.value]||PRICING.printers.p2s;
+  const grams=pricingNumber("pricingWeight");
+  const printTime=pricingNumber("pricingPrintHours")+Math.min(59,pricingNumber("pricingPrintMinutes"))/60;
+  const postHours=type==="resin"?(pricingNumber("pricingWashMinutes")+pricingNumber("pricingCureMinutes"))/60:0;
+  const materialCost=grams*(PRICING.filamentKg/1000);
+  const printerEnergy=printTime*printer.watts/1000*PRICING.energyKwh;
+  const mercuryEnergy=type==="resin"?postHours*PRICING.mercury.watts/1000*PRICING.energyKwh:0;
+  const energyCost=printerEnergy+mercuryEnergy;
+  const machineCost=printTime*(printer.purchase/printer.lifeHours);
+  const laborCost=pricingNumber("pricingLaborHours")*PRICING.laborHour;
+  const total=materialCost+energyCost+machineCost+laborCost+PRICING.packaging;
+  const profit=total*PRICING.markup, suggested=total+profit;
+  document.getElementById("pricingMaterialCost").textContent=pricingMoney(materialCost);
+  document.getElementById("pricingEnergyCost").textContent=pricingMoney(energyCost);
+  document.getElementById("pricingMachineCost").textContent=pricingMoney(machineCost);
+  document.getElementById("pricingWashCureCost").textContent=pricingMoney(mercuryEnergy);
+  document.getElementById("pricingLaborCost").textContent=pricingMoney(laborCost);
+  document.getElementById("pricingPackagingCost").textContent=pricingMoney(PRICING.packaging);
+  document.getElementById("pricingTotalCost").textContent=pricingMoney(total);
+  document.getElementById("pricingProfit").textContent=pricingMoney(profit);
+  document.getElementById("pricingSuggested").textContent=pricingMoney(suggested);
+  return suggested;
+}
+function resetPricingCalculator(){
+  ["pricingWeight","pricingPrintHours","pricingPrintMinutes","pricingWashMinutes","pricingCureMinutes"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("pricingLaborHours").value="0";
+  document.getElementById("pricingType").value="fdm";document.getElementById("pricingPrinter").value="p2s";
+  updatePricingPrinterOptions();calculatePricing();
+}
+function bindPricingCalculator(){
+  ["pricingType","pricingPrinter","pricingWeight","pricingPrintHours","pricingPrintMinutes","pricingWashMinutes","pricingCureMinutes","pricingLaborHours"].forEach(id=>{
+    const e=document.getElementById(id);if(!e)return;
+    e.addEventListener("input",()=>{if(id==="pricingType")updatePricingPrinterOptions();calculatePricing();});
+    e.addEventListener("change",()=>{if(id==="pricingType")updatePricingPrinterOptions();calculatePricing();});
+  });
+  document.getElementById("pricingUseBtn")?.addEventListener("click",()=>{const v=calculatePricing();document.getElementById("productPrice").value=v>0?v.toFixed(2):"";});
+  updatePricingPrinterOptions();calculatePricing();
+}
+bindPricingCalculator();
+
 if(SB_URL&&SB_KEY)loadData();else document.querySelector("#supabaseNotice").innerHTML="<strong>Supabase não configurado.</strong>";
