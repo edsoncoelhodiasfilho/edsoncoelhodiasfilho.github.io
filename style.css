@@ -1180,20 +1180,6 @@ footer .brand-name strong{
   -webkit-line-clamp:unset;
 }
 
-/* DESCRIÇÃO COMPLETA NO MODAL — a redução fica somente nos cards */
-.modal-info .modal-desc,
-#modal-desc{
-  display:block !important;
-  height:auto !important;
-  max-height:none !important;
-  overflow:visible !important;
-  -webkit-line-clamp:unset !important;
-  -webkit-box-orient:initial !important;
-  text-overflow:clip !important;
-  white-space:pre-wrap !important;
-  word-break:break-word !important;
-}
-
 /* =========================================================
    BOTÃO E-MAIL — ABRE MODAL
    ========================================================= */

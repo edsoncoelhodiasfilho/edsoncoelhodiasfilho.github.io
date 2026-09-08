@@ -151,9 +151,10 @@
 
   function buildCard(p){
     const imgs=images(p), card=document.createElement('article'); card.className='card';
-    card.innerHTML=`<div class="card-art ${imgs.length?'has-images':''}">${imgs[0]?`<img src="${esc(imgs[0])}" alt="${esc(p.name)}" loading="lazy">`:''}</div><div class="card-body"><h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p><div class="card-foot"><div class="price">${fmt(p.price)}</div><div class="card-foot-actions"><button class="btn btn-accent btn-sm add">Adicionar</button></div></div></div>`;
+    card.innerHTML=`<div class="card-art ${imgs.length?'has-images':''}">${imgs[0]?`<img src="${esc(imgs[0])}" alt="${esc(p.name)}" loading="lazy">`:''}</div><div class="card-body"><h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p><div class="card-foot"><div class="price">${fmt(p.price)}</div><div class="card-foot-actions"><button class="card-more" type="button" aria-label="Ver detalhes de ${esc(p.name)}" title="Ver detalhes">+</button><button class="btn btn-accent btn-sm add">Adicionar</button></div></div></div>`;
     card.querySelector('.card-art').addEventListener('click',()=>openProduct(p));
     card.querySelector('.card-body h3').addEventListener('click',()=>openProduct(p));
+    card.querySelector('.card-more').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openProduct(p);});
     card.querySelector('.add').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();addToCart(p,1,e.currentTarget);});
     return card;
   }
@@ -171,16 +172,8 @@
 
   function openProduct(p){
     currentProduct=p; current=media(p); index=0;
-    title.textContent=p.name;
-    desc.textContent=p.description;
+    title.textContent=p.name; desc.textContent=p.description;
     size.textContent=p.measurements?`Medidas: ${p.measurements}`:'';
-
-    // Preserva no modal as quebras de linha digitadas no cadastro.
-    desc.style.whiteSpace='pre-wrap';
-    size.style.whiteSpace='pre-wrap';
-    desc.style.wordBreak='break-word';
-    size.style.wordBreak='break-word';
-
     price.textContent=fmt(p.price);
     renderProduct(); overlay.hidden=false; document.body.style.overflow='hidden';
   }
@@ -221,98 +214,20 @@ overlay.hidden=true;document.body.style.overflow='';}
 
   function ensureCartUI(){
     if(document.getElementById('cart-float'))return;
-    const b=document.createElement('button');
-    b.id='cart-float';
-    b.className='btn btn-accent cart-float';
-    b.innerHTML='Carrinho <span id="cart-count">0</span>';
-    b.onclick=openCart;
-    document.body.appendChild(b);
-
-    const o=document.createElement('div');
-    o.id='cart-overlay';
-    o.hidden=true;
-    o.className='cart-overlay';
-    o.innerHTML=`
-      <aside class="cart-panel" aria-label="Carrinho de compras">
-        <header class="cart-header">
-          <div>
-            <span class="cart-eyebrow">SEU PEDIDO</span>
-            <h2>Meu carrinho</h2>
-            <p><span id="cart-header-count">0</span> item(ns) selecionado(s)</p>
-          </div>
-          <button class="cart-close" id="cart-close" type="button" aria-label="Fechar carrinho">×</button>
-        </header>
-        <div class="cart-items-wrap">
-          <div id="cart-items"></div>
-        </div>
-        <footer class="cart-footer">
-          <div class="cart-summary-row"><span>Subtotal</span><strong id="cart-total-value">R$ 0,00</strong></div>
-          <p class="cart-summary-note">Frete e prazo de entrega serão combinados pelo WhatsApp.</p>
-          <button id="cart-whatsapp" class="btn btn-accent cart-checkout" type="button">
-            Finalizar pedido pelo WhatsApp <span aria-hidden="true">→</span>
-          </button>
-          <a href="#catalogo" id="cart-continue" class="cart-continue">← Continuar comprando</a>
-        </footer>
-      </aside>`;
-    document.body.appendChild(o);
-    document.getElementById('cart-close').onclick=closeCart;
-    o.addEventListener('click',e=>{if(e.target===o)closeCart()});
-    document.getElementById('cart-whatsapp').onclick=checkout;
+    const b=document.createElement('button');b.id='cart-float';b.className='btn btn-accent cart-float';b.innerHTML='Carrinho <span id="cart-count">0</span>';b.onclick=openCart;document.body.appendChild(b);
+    const o=document.createElement('div');o.id='cart-overlay';o.hidden=true;o.className='cart-overlay';o.innerHTML='<aside class="cart-panel"><button class="modal-close" id="cart-close">×</button><h2>Seu carrinho</h2><div id="cart-items"></div><div class="cart-total"><span>Total estimado</span><strong id="cart-total-value">R$ 0,00</strong></div><button id="cart-whatsapp" class="btn btn-accent">Finalizar pelo WhatsApp</button><a href="#catalogo" id="cart-continue" class="cart-continue">Continuar comprando</a></aside>';document.body.appendChild(o);document.getElementById('cart-close').onclick=closeCart;o.addEventListener('click',e=>{if(e.target===o)closeCart()});document.getElementById('cart-whatsapp').onclick=checkout;
   }
-
-  function renderCart(){
-    ensureCartUI();
-    document.getElementById('cart-count').textContent=countCart();
-    const headerCount=document.getElementById('cart-header-count');
-    if(headerCount)headerCount.textContent=countCart();
-    const box=document.getElementById('cart-items');
-    box.innerHTML='';
+  function renderCart(){ensureCartUI();document.getElementById('cart-count').textContent=countCart();const box=document.getElementById('cart-items');box.innerHTML='';
     cart=cart.filter(x=>products.some(p=>String(p.id)===String(x.id)));
-
-    if(!cart.length){
-      box.innerHTML=`<div class="cart-empty-state">
-        <div class="cart-empty-icon">🛒</div>
-        <h3>Seu carrinho está vazio</h3>
-        <p>Escolha uma peça no catálogo para começar seu pedido.</p>
-        <a href="#catalogo" id="cart-empty-continue" class="btn btn-ghost">Ver catálogo</a>
-      </div>`;
-    }else{
-      cart.forEach(x=>{
-        const p=products.find(y=>String(y.id)===String(x.id));
-        if(!p)return;
-        const item=document.createElement('article');
-        item.className='cart-item';
-        const img=images(p)[0]||'';
-        item.innerHTML=`
-          <div class="cart-item-image">${img?`<img src="${esc(img)}" alt="${esc(p.name)}">`:'<span>3D</span>'}</div>
-          <div class="cart-item-info">
-            <strong class="cart-item-name">${esc(p.name)}</strong>
-            <span class="cart-item-unit">${fmt(p.price)} cada</span>
-            <div class="cart-item-bottom">
-              <div class="cart-qty" aria-label="Quantidade">
-                <button data-act="dec" type="button" aria-label="Diminuir quantidade">−</button>
-                <b>${x.qty}</b>
-                <button data-act="inc" type="button" aria-label="Aumentar quantidade">+</button>
-              </div>
-              <strong class="cart-item-subtotal">${fmt(p.price*x.qty)}</strong>
-            </div>
-          </div>
-          <button class="cart-item-remove" data-act="del" type="button" aria-label="Remover ${esc(p.name)}">×</button>`;
-        item.querySelector('[data-act="dec"]').onclick=()=>changeQty(p.id,-1);
-        item.querySelector('[data-act="inc"]').onclick=()=>changeQty(p.id,1);
-        item.querySelector('[data-act="del"]').onclick=()=>removeItem(p.id);
-        box.appendChild(item);
-      });
-    }
-    document.getElementById('cart-total-value').textContent=fmt(totalCart());
-    saveCart();
+    if(!cart.length){box.innerHTML='<p class="cart-empty">Seu carrinho está vazio.</p>';}else cart.forEach(x=>{const p=products.find(y=>String(y.id)===String(x.id));const item=document.createElement('div');item.className='cart-item';item.innerHTML=`<div><strong>${esc(p.name)}</strong><small>${fmt(p.price)} cada</small></div><div class="cart-controls"><button data-act="dec">−</button><b>${x.qty}</b><button data-act="inc">+</button><button data-act="del" aria-label="Remover">×</button></div>`;item.querySelector('[data-act="dec"]').onclick=()=>changeQty(p.id,-1);item.querySelector('[data-act="inc"]').onclick=()=>changeQty(p.id,1);item.querySelector('[data-act="del"]').onclick=()=>removeItem(p.id);box.appendChild(item);});
+    document.getElementById('cart-total-value').textContent=fmt(totalCart());saveCart();
   }
-
   function changeQty(id,d){const x=cart.find(i=>String(i.id)===String(id));if(!x)return;x.qty+=d;if(x.qty<=0)cart=cart.filter(i=>String(i.id)!==String(id));renderCart();}
   function removeItem(id){cart=cart.filter(i=>String(i.id)!==String(id));renderCart();}
   function openCart(){ensureCartUI();renderCart();document.getElementById('cart-overlay').hidden=false;document.body.style.overflow='hidden';}
-  function closeCart(){const el=document.getElementById('cart-overlay');if(el)el.hidden=true;document.body.style.overflow='';}
-  document.addEventListener('click',e=>{if(e.target&&['cart-continue','cart-empty-continue'].includes(e.target.id)){closeCart();}});
+  function closeCart(){document.getElementById('cart-overlay').hidden=true;document.body.style.overflow='';}
+  document.addEventListener('click',e=>{if(e.target&&e.target.id==='cart-continue'){closeCart();}});
+  function checkout(){if(!cart.length){alert('Seu carrinho está vazio.');return;}const lines=cart.map(x=>{const p=products.find(y=>String(y.id)===String(x.id));return `• ${p.name} — ${x.qty} un. — ${fmt(p.price*x.qty)}`}).join('\n');const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nMe envie o link para pagamento pelo Mercado Pago.\n\nTotal estimado: ${fmt(totalCart())}`;window.open(wa(msg),'_blank','noopener');}
 
   window.addEventListener('eralis-content-loaded',e=>{products=(e.detail.products||[]).map(normalize);products.forEach(p=>{p.category=p.category||'Produtos'});renderCatalog();renderCart();});
   ensureCartUI();renderCart();

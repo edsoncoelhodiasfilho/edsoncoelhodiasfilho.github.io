@@ -8,21 +8,6 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .admin-page{background:#f7f3eb;min-height:100vh}
-    .pricing-box{border:1px solid var(--line);border-radius:14px;background:#faf7f0;padding:16px;margin:6px 0 18px}
-    .pricing-box h3{margin:0 0 4px;color:var(--g);font-size:16px}
-    .pricing-box>p{margin:0 0 14px;color:var(--muted);font-size:12px}
-    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .pricing-grid .field{margin-bottom:0}
-    .pricing-result{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;margin-top:14px;padding:13px;border-radius:10px;background:#eef5f0;border:1px solid #c9ded0}
-    .pricing-result strong{color:var(--g);font-size:13px}.pricing-result .price{font-size:22px;font-weight:800;color:var(--g)}
-    .pricing-breakdown{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 18px;margin-top:10px;font-size:11px;color:var(--muted)}
-    .pricing-breakdown span{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #ddd5c8;padding-bottom:4px}
-    .pricing-note{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.45}
-    #productMarginLabel{display:block;margin-top:5px;font-size:11px;color:var(--muted)}
-    .pricing-actions{display:flex;justify-content:flex-end;margin-top:10px}
-    @media(max-width:700px){.pricing-grid{grid-template-columns:1fr 1fr}.pricing-breakdown{grid-template-columns:1fr}}
-    @media(max-width:500px){.pricing-grid{grid-template-columns:1fr}}
-
     .admin-wrap{max-width:1250px;margin:auto;padding:45px 5% 70px}
     .admin-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:30px}
     .admin-head h1{color:var(--g);margin:5px 0;font-size:34px}
@@ -180,27 +165,8 @@
     <div class="field"><label for="productDescription">Descrição</label><textarea id="productDescription"></textarea></div>
     <div class="field"><label for="productMeasurements">Medidas</label><textarea id="productMeasurements" rows="3" placeholder="Ex.: Altura: 10 cm | Largura: 8 cm | Comprimento: 15 cm | Profundidade: 5 cm"></textarea><small class="field-help">Informe as medidas que serão exibidas separadamente abaixo da descrição do produto.</small></div>
     <div class="field"><label for="productCategory">Categoria</label><select id="productCategory" required></select></div>
-    <section class="pricing-box">
-      <h3>Calculadora de preço</h3>
-      <p>Preencha os dados da produção. O custo é calculado primeiro e, depois, aplicada a margem configurada de 100%.</p>
-      <div class="pricing-grid">
-        <div class="field"><label for="calcWeight">Peso da peça (g)</label><input id="calcWeight" type="number" min="0" step="0.1" placeholder="Ex.: 73"></div>
-        <div class="field"><label for="calcHours">Tempo de impressão (h)</label><input id="calcHours" type="number" min="0" step="0.01" placeholder="Ex.: 4.42"></div>
-        <div class="field"><label for="calcMaterialPrice">Material (R$/kg)</label><input id="calcMaterialPrice" type="number" min="0" step="0.01" value="102"></div>
-        <div class="field"><label for="calcMachine">Máquina</label><select id="calcMachine"><option value="p2s">Bambu Lab P2S</option><option value="mars5">Elegoo Mars 5 + Wash & Cure</option></select></div>
-        <div class="field"><label for="calcLaborCost">Mão de obra / acabamento (R$)</label><input id="calcLaborCost" type="number" min="0" step="0.01" value="0" placeholder="Ex.: 20"></div>
-        <div class="field"><label for="calcPackaging">Embalagem (R$)</label><input id="calcPackaging" type="number" min="0" step="0.01" value="3.50"></div>
-      </div>
-      <div class="pricing-result">
-        <div><strong>Preço sugerido</strong><div class="pricing-note">Custo total + 100% de acréscimo (multiplicador 2,00).</div></div>
-        <div class="price" id="calcSuggestedPrice">R$ 0,00</div>
-      </div>
-      <div class="pricing-breakdown" id="calcBreakdown"></div>
-      <div class="pricing-actions"><button class="btn outline" type="button" id="useCalculatedPrice">Usar preço calculado</button></div>
-      <div class="pricing-note">Referências configuradas: filamento médio R$ 102/kg; energia R$ 0,80/kWh; P2S 200 W e depreciação R$ 0,499/h; Mars 5 72 W; Mercury Plus V2.0 48 W. O valor de R$ 3.800 informado para Mars 5 + Wash & Cure é mantido como referência conjunta e não é usado como depreciação separada para evitar duplicidade.</div>
-    </section>
     <div class="admin-form form-row">
-      <div class="field"><label for="productPrice">Preço final (R$)</label><input id="productPrice" type="number" min="0" step="0.01"><small class="field-help" id="productMarginLabel">Margem aplicada: 100%</small></div>
+      <div class="field"><label for="productPrice">Preço (R$)</label><input id="productPrice" type="number" min="0" step="0.01"></div>
       <div class="field"><label for="productActive">Ativo</label><select id="productActive"><option value="true">SIM</option><option value="false">NÃO</option></select></div>
     </div>
     <div class="admin-form-actions"><button class="btn outline" type="button" data-close="productDialog">Cancelar</button><button class="btn" type="submit">Salvar produto</button></div>
