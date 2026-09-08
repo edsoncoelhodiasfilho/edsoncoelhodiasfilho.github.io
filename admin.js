@@ -69,7 +69,7 @@ async function uploadMedia(file,folder,type){
 }
 async function removeImage(path){if(path)await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`,{method:"DELETE",headers:headers({"Content-Type":"application/json"}),body:JSON.stringify({prefixes:[path]})});}
 
-const PRICING={markup:0.80,energy:0.80,filamentKg:102,p2sPowerKw:0.20,p2sDepHour:9980/20000,mars5PowerKw:0.072,mercuryPowerKw:0.048,packaging:3.50};
+const PRICING={markup:1.00,energy:0.80,filamentKg:102,p2sPowerKw:0.20,p2sDepHour:9980/20000,mars5PowerKw:0.072,mercuryPowerKw:0.048,packaging:3.50};
 function num(id){const el=document.querySelector('#'+id);return Math.max(0,Number(el?.value||0));}
 function calcPricing(){
   const weight=num('calcWeight'), hours=num('calcHours'), materialKg=num('calcMaterialPrice'), machine=document.querySelector('#calcMachine')?.value||'p2s', labor=num('calcLaborCost'), packaging=num('calcPackaging');
@@ -89,7 +89,7 @@ function calcPricing(){
   const suggested=total*(1+PRICING.markup);
   const fmt=money;
   const bd=document.querySelector('#calcBreakdown');
-  if(bd)bd.innerHTML=`<span><b>Material</b><em>${fmt(material)}</em></span><span><b>Energia</b><em>${fmt(energy)}</em></span><span><b>Depreciação</b><em>${fmt(depreciation)}</em></span><span><b>Mão de obra</b><em>${fmt(labor)}</em></span><span><b>Embalagem</b><em>${fmt(packaging)}</em></span><span><b>Custo total</b><em>${fmt(total)}</em></span><span><b>Máquina</b><em>${machineLabel}</em></span><span><b>Acréscimo</b><em>80%</em></span>`;
+  if(bd)bd.innerHTML=`<span><b>Material</b><em>${fmt(material)}</em></span><span><b>Energia</b><em>${fmt(energy)}</em></span><span><b>Depreciação</b><em>${fmt(depreciation)}</em></span><span><b>Mão de obra</b><em>${fmt(labor)}</em></span><span><b>Embalagem</b><em>${fmt(packaging)}</em></span><span><b>Custo total</b><em>${fmt(total)}</em></span><span><b>Máquina</b><em>${machineLabel}</em></span><span><b>Acréscimo</b><em>100%</em></span>`;
   const out=document.querySelector('#calcSuggestedPrice');if(out)out.textContent=fmt(suggested);
   return suggested;
 }
