@@ -18,6 +18,7 @@
     .pricing-breakdown{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 18px;margin-top:10px;font-size:11px;color:var(--muted)}
     .pricing-breakdown span{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #ddd5c8;padding-bottom:4px}
     .pricing-note{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.45}
+    #productMarginLabel{display:block;margin-top:5px;font-size:11px;color:var(--muted)}
     .pricing-actions{display:flex;justify-content:flex-end;margin-top:10px}
     @media(max-width:700px){.pricing-grid{grid-template-columns:1fr 1fr}.pricing-breakdown{grid-template-columns:1fr}}
     @media(max-width:500px){.pricing-grid{grid-template-columns:1fr}}
@@ -181,7 +182,7 @@
     <div class="field"><label for="productCategory">Categoria</label><select id="productCategory" required></select></div>
     <section class="pricing-box">
       <h3>Calculadora de preço</h3>
-      <p>Preencha os dados da produção. O custo é calculado primeiro e, depois, aplicado o acréscimo de 80%.</p>
+      <p>Preencha os dados da produção. O custo é calculado primeiro e, depois, aplicada a margem configurada de 100%.</p>
       <div class="pricing-grid">
         <div class="field"><label for="calcWeight">Peso da peça (g)</label><input id="calcWeight" type="number" min="0" step="0.1" placeholder="Ex.: 73"></div>
         <div class="field"><label for="calcHours">Tempo de impressão (h)</label><input id="calcHours" type="number" min="0" step="0.01" placeholder="Ex.: 4.42"></div>
@@ -191,7 +192,7 @@
         <div class="field"><label for="calcPackaging">Embalagem (R$)</label><input id="calcPackaging" type="number" min="0" step="0.01" value="3.50"></div>
       </div>
       <div class="pricing-result">
-        <div><strong>Preço sugerido</strong><div class="pricing-note">Custo total + 80% de acréscimo (multiplicador 1,80).</div></div>
+        <div><strong>Preço sugerido</strong><div class="pricing-note">Custo total + 100% de acréscimo (multiplicador 2,00).</div></div>
         <div class="price" id="calcSuggestedPrice">R$ 0,00</div>
       </div>
       <div class="pricing-breakdown" id="calcBreakdown"></div>
@@ -199,7 +200,7 @@
       <div class="pricing-note">Referências configuradas: filamento médio R$ 102/kg; energia R$ 0,80/kWh; P2S 200 W e depreciação R$ 0,499/h; Mars 5 72 W; Mercury Plus V2.0 48 W. O valor de R$ 3.800 informado para Mars 5 + Wash & Cure é mantido como referência conjunta e não é usado como depreciação separada para evitar duplicidade.</div>
     </section>
     <div class="admin-form form-row">
-      <div class="field"><label for="productPrice">Preço final (R$)</label><input id="productPrice" type="number" min="0" step="0.01"></div>
+      <div class="field"><label for="productPrice">Preço final (R$)</label><input id="productPrice" type="number" min="0" step="0.01"><small class="field-help" id="productMarginLabel">Margem aplicada: 100%</small></div>
       <div class="field"><label for="productActive">Ativo</label><select id="productActive"><option value="true">SIM</option><option value="false">NÃO</option></select></div>
     </div>
     <div class="admin-form-actions"><button class="btn outline" type="button" data-close="productDialog">Cancelar</button><button class="btn" type="submit">Salvar produto</button></div>

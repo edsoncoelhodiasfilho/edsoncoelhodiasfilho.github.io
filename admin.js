@@ -90,7 +90,7 @@ function calcPricing(){
   const fmt=money;
   const bd=document.querySelector('#calcBreakdown');
   if(bd)bd.innerHTML=`<span><b>Material</b><em>${fmt(material)}</em></span><span><b>Energia</b><em>${fmt(energy)}</em></span><span><b>Depreciação</b><em>${fmt(depreciation)}</em></span><span><b>Mão de obra</b><em>${fmt(labor)}</em></span><span><b>Embalagem</b><em>${fmt(packaging)}</em></span><span><b>Custo total</b><em>${fmt(total)}</em></span><span><b>Máquina</b><em>${machineLabel}</em></span><span><b>Acréscimo</b><em>100%</em></span>`;
-  const out=document.querySelector('#calcSuggestedPrice');if(out)out.textContent=fmt(suggested);
+  const out=document.querySelector('#calcSuggestedPrice');if(out)out.textContent=fmt(suggested);const marginLabel=document.querySelector('#productMarginLabel');if(marginLabel)marginLabel.textContent='Margem aplicada: 100%';
   return suggested;
 }
 function resetCalculator(){
