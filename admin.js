@@ -90,8 +90,21 @@ function calcPricing(){
   const fmt=money;
   const bd=document.querySelector('#calcBreakdown');
   if(bd)bd.innerHTML=`<span><b>Material</b><em>${fmt(material)}</em></span><span><b>Energia</b><em>${fmt(energy)}</em></span><span><b>Depreciação</b><em>${fmt(depreciation)}</em></span><span><b>Mão de obra</b><em>${fmt(labor)}</em></span><span><b>Embalagem</b><em>${fmt(packaging)}</em></span><span><b>Custo total</b><em>${fmt(total)}</em></span><span><b>Máquina</b><em>${machineLabel}</em></span><span><b>Acréscimo</b><em>100%</em></span>`;
-  const out=document.querySelector('#calcSuggestedPrice');if(out)out.textContent=fmt(suggested);const marginLabel=document.querySelector('#productMarginLabel');if(marginLabel)marginLabel.textContent='Margem aplicada: 100%';
+  const out=document.querySelector('#calcSuggestedPrice');if(out)out.textContent=fmt(suggested);
+  updateMarginLabel(total);
   return suggested;
+}
+function updateMarginLabel(totalCost){
+  const marginLabel=document.querySelector('#productMarginLabel');
+  const priceEl=document.querySelector('#productPrice');
+  if(!marginLabel||!priceEl)return;
+  const price=Number(priceEl.value||0);
+  if(totalCost>0&&price>0){
+    const markup=((price-totalCost)/totalCost)*100;
+    marginLabel.textContent=`Margem aplicada: ${markup.toFixed(0)}%`;
+  }else{
+    marginLabel.textContent='Margem aplicada: —';
+  }
 }
 function resetCalculator(){
   const vals={calcWeight:'',calcHours:'',calcMaterialPrice:'102',calcMachine:'p2s',calcLaborCost:'0',calcPackaging:'3.50'};
@@ -117,6 +130,8 @@ function bindImagePreview(inputId,previewId){document.querySelector("#"+inputId)
 bindImagePreview("productImage1","productPreview1");bindImagePreview("productImage2","productPreview2");
 document.querySelector("#productVideo").onchange=e=>{const f=e.target.files[0];if(!f)return;document.querySelector("#productVideoPreview").innerHTML=`<video src="${URL.createObjectURL(f)}" controls muted></video>`;};
 bindPricingCalculator();
+const productPriceInput=document.querySelector("#productPrice");
+if(productPriceInput)productPriceInput.addEventListener("input",()=>calcPricing());
 
 document.querySelector("#productForm").onsubmit=async e=>{e.preventDefault();if(!await requireAdmin())return;try{const id=Number(document.querySelector("#productId").value),old=products.find(p=>p.id===id),file1=document.querySelector("#productImage1").files[0],file2=document.querySelector("#productImage2").files[0],video=document.querySelector("#productVideo").files[0];let image_url=old?.image_url||null,image_path=old?.image_path||null,image_url_2=old?.image_url_2||null,image_path_2=old?.image_path_2||null,video_url=old?.video_url||null,video_path=old?.video_path||null;if(file1){const u=await uploadMedia(file1,"products","image");image_url=u.url;image_path=u.path;}if(file2){const u=await uploadMedia(file2,"products","image");image_url_2=u.url;image_path_2=u.path;}if(video){const u=await uploadMedia(video,"products","video");video_url=u.url;video_path=u.path;}const category_id=Number(document.querySelector("#productCategory").value);if(!category_id)throw new Error("Selecione uma categoria.");const payload={name:document.querySelector("#productName").value.trim(),description:document.querySelector("#productDescription").value.trim(),measurements:document.querySelector("#productMeasurements").value.trim(),price:Number(document.querySelector("#productPrice").value||0),active:document.querySelector("#productActive").value==="true",category_id,image_url,image_path,image_url_2,image_path_2,video_url,video_path};if(id)await api(`/rest/v1/products?id=eq.${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});else{const max=products.reduce((m,p)=>Math.max(m,p.sort_order||0),0);await api("/rest/v1/products",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({...payload,sort_order:max+1})});}if(file1&&old?.image_path&&old.image_path!==image_path)await removeImage(old.image_path);if(file2&&old?.image_path_2&&old.image_path_2!==image_path_2)await removeImage(old.image_path_2);if(video&&old?.video_path&&old.video_path!==video_path)await removeImage(old.video_path);document.querySelector("#productDialog").close();await loadData();}catch(e){showError(e);}};
 
