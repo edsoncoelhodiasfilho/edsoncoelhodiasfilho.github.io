@@ -88,18 +88,96 @@ document.querySelector("#logoutBtn").onclick=()=>{localStorage.removeItem(TOKEN_
 document.querySelector("#resetBtn").onclick=async()=>{if(confirm("Restaurar os exemplos? Isso apagará os produtos do Supabase."))try{await api("/rest/v1/products?id=gt.0",{method:"DELETE"});await loadData();}catch(e){showError(e);}};
 document.querySelector("#exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify({products,categories},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="eralis-conteudo.json";a.click();};
 document.querySelector("#loginForm").addEventListener("submit",e=>{e.preventDefault();signIn();});
-/* CALCULADORA DE PREÇO ERALIS — V1 REVISADA */
-const PRICING={filamentKg:102,energyKwh:.80,laborHour:20,packaging:3.50,markup:.80,
-  printers:{p2s:{type:"fdm",watts:200,purchase:9980,lifeHours:20000},mars5:{type:"resin",watts:72,purchase:3800,lifeHours:10000}},
-  mercury:{watts:48}};
+
+/* CALCULADORA DE PREÇO ERALIS — V2 */
+const PRICING={
+  filamentKg:102,
+  energyKwh:0.80,
+  laborHour:20,
+  packaging:3.50,
+  markup:0.80,
+  printers:{
+    p2s:{type:"fdm",watts:200,purchase:9980,lifeHours:20000},
+    mars5:{type:"resin",watts:72,purchase:3800,lifeHours:10000}
+  },
+  mercury:{watts:48}
+};
 function pricingMoney(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});}
-function pricingNumber(id){const e=document.getElementById(id);return e?Math.max(0,Number(e.value||0)):0;}
-function updatePricingPrinterOptions(){const type=document.getElementById("pricingType")?.value||"fdm",s=document.getElementById("pricingPrinter");if(!s)return;[...s.options].forEach(o=>{const d=PRICING.printers[o.value];o.hidden=!!d&&d.type!==type;});const d=PRICING.printers[s.value];if(!d||d.type!==type){const f=[...s.options].find(o=>!o.hidden);if(f)s.value=f.value;}document.querySelectorAll(".pricing-resin-only").forEach(e=>e.classList.toggle("pricing-hidden",type!=="resin"));}
-function calculatePricing(){const type=document.getElementById("pricingType")?.value||"fdm",p=PRICING.printers[document.getElementById("pricingPrinter")?.value]||PRICING.printers.p2s,g=pricingNumber("pricingWeight"),printTime=pricingNumber("pricingPrintHours")+Math.min(59,pricingNumber("pricingPrintMinutes"))/60,post=(pricingNumber("pricingWashMinutes")+pricingNumber("pricingCureMinutes"))/60,laborTime=pricingNumber("pricingLaborHours")+Math.min(59,pricingNumber("pricingLaborMinutes"))/60;
-const material=g*PRICING.filamentKg/1000,printerEnergy=printTime*p.watts/1000*PRICING.energyKwh,mercuryEnergy=type==="resin"?post*PRICING.mercury.watts/1000*PRICING.energyKwh:0,energy=printerEnergy+mercuryEnergy,machine=printTime*p.purchase/p.lifeHours,labor=laborTime*PRICING.laborHour,total=material+energy+machine+labor+PRICING.packaging,profit=total*PRICING.markup,suggested=total+profit;
-document.getElementById("pricingMaterialCost").textContent=pricingMoney(material);document.getElementById("pricingEnergyCost").textContent=pricingMoney(energy);document.getElementById("pricingMachineCost").textContent=pricingMoney(machine);document.getElementById("pricingWashCureCost").textContent=pricingMoney(mercuryEnergy);document.getElementById("pricingLaborCost").textContent=pricingMoney(labor);document.getElementById("pricingPackagingCost").textContent=pricingMoney(PRICING.packaging);document.getElementById("pricingTotalCost").textContent=pricingMoney(total);document.getElementById("pricingProfit").textContent=pricingMoney(profit);document.getElementById("pricingSuggested").textContent=pricingMoney(suggested);return suggested;}
-function resetPricingCalculator(){["pricingWeight","pricingPrintHours","pricingPrintMinutes","pricingWashMinutes","pricingCureMinutes","pricingLaborMinutes"].forEach(id=>document.getElementById(id).value="");document.getElementById("pricingLaborHours").value="0";document.getElementById("pricingType").value="fdm";document.getElementById("pricingPrinter").value="p2s";updatePricingPrinterOptions();calculatePricing();}
-function bindPricingCalculator(){["pricingType","pricingPrinter","pricingWeight","pricingPrintHours","pricingPrintMinutes","pricingWashMinutes","pricingCureMinutes","pricingLaborHours","pricingLaborMinutes"].forEach(id=>{const e=document.getElementById(id);if(!e)return;e.addEventListener("input",()=>{if(id==="pricingType")updatePricingPrinterOptions();calculatePricing();});e.addEventListener("change",()=>{if(id==="pricingType")updatePricingPrinterOptions();calculatePricing();});});document.getElementById("pricingUseBtn")?.addEventListener("click",()=>{const v=calculatePricing();document.getElementById("productPrice").value=v>0?v.toFixed(2):"";});updatePricingPrinterOptions();calculatePricing();}
+function pricingNumber(id){const e=document.getElementById(id);if(!e)return 0;const n=Number(String(e.value||"").replace(",","."));return Number.isFinite(n)&&n>0?n:0;}
+function updatePricingPrinterOptions(){
+  const type=document.getElementById("pricingType")?.value||"fdm",s=document.getElementById("pricingPrinter");
+  if(!s)return;
+  [...s.options].forEach(o=>{const d=PRICING.printers[o.value];o.hidden=!!d&&d.type!==type;});
+  const d=PRICING.printers[s.value];
+  if(!d||d.type!==type){const f=[...s.options].find(o=>!o.hidden);if(f)s.value=f.value;}
+  document.querySelectorAll(".pricing-resin-only").forEach(e=>e.classList.toggle("pricing-hidden",type!=="resin"));
+}
+function calculatePricing(){
+  const type=document.getElementById("pricingType")?.value||"fdm";
+  const p=PRICING.printers[document.getElementById("pricingPrinter")?.value]||PRICING.printers.p2s;
+  const grams=pricingNumber("pricingWeight");
+  const printHours=pricingNumber("pricingPrintHours");
+  const printMinutes=Math.min(59,pricingNumber("pricingPrintMinutes"));
+  const printTime=printHours+printMinutes/60;
+  const washMinutes=type==="resin"?pricingNumber("pricingWashMinutes"):0;
+  const cureMinutes=type==="resin"?pricingNumber("pricingCureMinutes"):0;
+  const postHours=(washMinutes+cureMinutes)/60;
+
+  // Material: R$102/kg = R$0,102/g.
+  const materialCost=grams*(PRICING.filamentKg/1000);
+
+  // Electricity: printer plus Mercury only during the explicitly informed
+  // washing/curing time.
+  const printerEnergy=printTime*(p.watts/1000)*PRICING.energyKwh;
+  const mercuryEnergy=type==="resin"?postHours*(PRICING.mercury.watts/1000)*PRICING.energyKwh:0;
+  const energyCost=printerEnergy+mercuryEnergy;
+
+  // Machine depreciation.
+  const machineCost=printTime*(p.purchase/p.lifeHours);
+
+  // Labor is NEVER derived from printing time.
+  // It is only the manual finishing time entered by the user.
+  const laborHours=pricingNumber("pricingLaborHours");
+  const laborMinutes=Math.min(59,pricingNumber("pricingLaborMinutes"));
+  const laborTime=laborHours+laborMinutes/60;
+  const laborCost=laborTime*PRICING.laborHour;
+
+  const packagingCost=PRICING.packaging;
+  const total=materialCost+energyCost+machineCost+laborCost+packagingCost;
+  const profit=total*PRICING.markup;
+  const suggested=total+profit;
+
+  document.getElementById("pricingMaterialCost").textContent=pricingMoney(materialCost);
+  document.getElementById("pricingEnergyCost").textContent=pricingMoney(energyCost);
+  document.getElementById("pricingMachineCost").textContent=pricingMoney(machineCost);
+  document.getElementById("pricingWashCureCost").textContent=pricingMoney(mercuryEnergy);
+  document.getElementById("pricingLaborCost").textContent=pricingMoney(laborCost);
+  document.getElementById("pricingPackagingCost").textContent=pricingMoney(packagingCost);
+  document.getElementById("pricingTotalCost").textContent=pricingMoney(total);
+  document.getElementById("pricingProfit").textContent=pricingMoney(profit);
+  document.getElementById("pricingSuggested").textContent=pricingMoney(suggested);
+  return suggested;
+}
+function resetPricingCalculator(){
+  ["pricingWeight","pricingPrintHours","pricingPrintMinutes","pricingWashMinutes","pricingCureMinutes"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";});
+  const lh=document.getElementById("pricingLaborHours"),lm=document.getElementById("pricingLaborMinutes");
+  if(lh)lh.value="0";if(lm)lm.value="0";
+  const t=document.getElementById("pricingType"),p=document.getElementById("pricingPrinter");
+  if(t)t.value="fdm";if(p)p.value="p2s";
+  updatePricingPrinterOptions();calculatePricing();
+}
+function bindPricingCalculator(){
+  ["pricingType","pricingPrinter","pricingWeight","pricingPrintHours","pricingPrintMinutes","pricingWashMinutes","pricingCureMinutes","pricingLaborHours","pricingLaborMinutes"].forEach(id=>{
+    const e=document.getElementById(id);if(!e)return;
+    e.addEventListener("input",()=>{if(id==="pricingType")updatePricingPrinterOptions();calculatePricing();});
+    e.addEventListener("change",()=>{if(id==="pricingType")updatePricingPrinterOptions();calculatePricing();});
+  });
+  document.getElementById("pricingUseBtn")?.addEventListener("click",()=>{
+    const v=calculatePricing();
+    document.getElementById("productPrice").value=v>0?v.toFixed(2):"";
+  });
+  updatePricingPrinterOptions();calculatePricing();
+}
 bindPricingCalculator();
 
 if(SB_URL&&SB_KEY)loadData();else document.querySelector("#supabaseNotice").innerHTML="<strong>Supabase não configurado.</strong>";
