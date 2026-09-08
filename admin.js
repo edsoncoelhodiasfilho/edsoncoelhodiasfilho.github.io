@@ -69,17 +69,54 @@ async function uploadMedia(file,folder,type){
 }
 async function removeImage(path){if(path)await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`,{method:"DELETE",headers:headers({"Content-Type":"application/json"}),body:JSON.stringify({prefixes:[path]})});}
 
-window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";document.querySelector("#productMeasurements").value=p.measurements||"";document.querySelector("#productPrice").value=p.price;resetPricingCalculator();document.querySelector("#productActive").value=String(p.active);populateCategorySelect(p.category_id);document.querySelector("#productImage1").value="";document.querySelector("#productImage2").value="";document.querySelector("#productVideo").value="";document.querySelector("#productPreview1").innerHTML=p.image_url?`<img src="${p.image_url}" alt="">`:"Nenhuma imagem";document.querySelector("#productPreview2").innerHTML=p.image_url_2?`<img src="${p.image_url_2}" alt="">`:"Nenhuma imagem";document.querySelector("#productVideoPreview").innerHTML=p.video_url?`<video src="${p.video_url}" controls muted></video>`:"Nenhum vídeo";document.querySelector("#productDialog").showModal();};
+const PRICING={markup:0.80,energy:0.80,filamentKg:102,p2sPowerKw:0.20,p2sDepHour:9980/20000,mars5PowerKw:0.072,mercuryPowerKw:0.048,packaging:3.50};
+function num(id){const el=document.querySelector('#'+id);return Math.max(0,Number(el?.value||0));}
+function calcPricing(){
+  const weight=num('calcWeight'), hours=num('calcHours'), materialKg=num('calcMaterialPrice'), machine=document.querySelector('#calcMachine')?.value||'p2s', labor=num('calcLaborCost'), packaging=num('calcPackaging');
+  const material=weight*(materialKg/1000);
+  let energy=0,depreciation=0,machineLabel='Bambu Lab P2S';
+  if(machine==='mars5'){
+    machineLabel='Elegoo Mars 5 + Wash & Cure';
+    energy=hours*(PRICING.mars5PowerKw+PRICING.mercuryPowerKw)*PRICING.energy;
+    // O preço de aquisição de R$ 3.800 é conjunto; não há divisão fornecida entre Mars 5 e Mercury.
+    // Portanto, a calculadora não inventa uma depreciação individual para este conjunto.
+    depreciation=0;
+  }else{
+    energy=hours*PRICING.p2sPowerKw*PRICING.energy;
+    depreciation=hours*PRICING.p2sDepHour;
+  }
+  const total=material+energy+depreciation+labor+packaging;
+  const suggested=total*(1+PRICING.markup);
+  const fmt=money;
+  const bd=document.querySelector('#calcBreakdown');
+  if(bd)bd.innerHTML=`<span><b>Material</b><em>${fmt(material)}</em></span><span><b>Energia</b><em>${fmt(energy)}</em></span><span><b>Depreciação</b><em>${fmt(depreciation)}</em></span><span><b>Mão de obra</b><em>${fmt(labor)}</em></span><span><b>Embalagem</b><em>${fmt(packaging)}</em></span><span><b>Custo total</b><em>${fmt(total)}</em></span><span><b>Máquina</b><em>${machineLabel}</em></span><span><b>Acréscimo</b><em>80%</em></span>`;
+  const out=document.querySelector('#calcSuggestedPrice');if(out)out.textContent=fmt(suggested);
+  return suggested;
+}
+function resetCalculator(){
+  const vals={calcWeight:'',calcHours:'',calcMaterialPrice:'102',calcMachine:'p2s',calcLaborCost:'0',calcPackaging:'3.50'};
+  Object.entries(vals).forEach(([id,v])=>{const el=document.querySelector('#'+id);if(el)el.value=v;});
+  calcPricing();
+}
+function bindPricingCalculator(){
+  ['calcWeight','calcHours','calcMaterialPrice','calcMachine','calcLaborCost','calcPackaging'].forEach(id=>{const el=document.querySelector('#'+id);if(el)el.addEventListener('input',calcPricing);});
+  const use=document.querySelector('#useCalculatedPrice');
+  if(use)use.onclick=()=>{const price=calcPricing();document.querySelector('#productPrice').value=price.toFixed(2);};
+  calcPricing();
+}
+
+window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;document.querySelector("#productDialogTitle").textContent="Editar produto";document.querySelector("#productId").value=p.id;document.querySelector("#productName").value=p.name;document.querySelector("#productDescription").value=p.description||"";document.querySelector("#productMeasurements").value=p.measurements||"";document.querySelector("#productPrice").value=p.price;document.querySelector("#productActive").value=String(p.active);populateCategorySelect(p.category_id);resetCalculator();document.querySelector("#productImage1").value="";document.querySelector("#productImage2").value="";document.querySelector("#productVideo").value="";document.querySelector("#productPreview1").innerHTML=p.image_url?`<img src="${p.image_url}" alt="">`:"Nenhuma imagem";document.querySelector("#productPreview2").innerHTML=p.image_url_2?`<img src="${p.image_url_2}" alt="">`:"Nenhuma imagem";document.querySelector("#productVideoPreview").innerHTML=p.video_url?`<video src="${p.video_url}" controls muted></video>`:"Nenhum vídeo";document.querySelector("#productDialog").showModal();};
 window.toggleProduct=async id=>{try{const p=products.find(x=>x.id===id);await api(`/rest/v1/products?id=eq.${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({active:!p.active})});await loadData();}catch(e){showError(e);}};
 window.deleteProduct=async id=>{if(!confirm("Excluir este produto?"))return;try{const p=products.find(x=>x.id===id);await api(`/rest/v1/products?id=eq.${id}`,{method:"DELETE"});await removeImage(p?.image_path);await removeImage(p?.image_path_2);await removeImage(p?.video_path);await loadData();}catch(e){showError(e);}};
 
 document.querySelector("#addCategoryBtn").onclick=()=>{document.querySelector("#categoryForm").reset();document.querySelector("#categoryId").value="";document.querySelector("#categoryDialogTitle").textContent="Nova categoria";document.querySelector("#categoryDialog").showModal();};
 document.querySelector("#categoryForm").onsubmit=async e=>{e.preventDefault();if(!await requireAdmin())return;try{const id=Number(document.querySelector("#categoryId").value),name=document.querySelector("#categoryName").value.trim();if(!name)throw new Error("Informe o nome da categoria.");if(categories.some(c=>c.name.trim().toLowerCase()===name.toLowerCase()&&String(c.id)!==String(id)))throw new Error("Já existe uma categoria com esse nome.");if(id)await api(`/rest/v1/product_categories?id=eq.${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({name})});else{const max=categories.reduce((m,c)=>Math.max(m,Number(c.sort_order||0)),0);await api("/rest/v1/product_categories",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({name,active:true,sort_order:max+1})});}document.querySelector("#categoryDialog").close();await loadData();}catch(e){showError(e);}};
 
-document.querySelector("#addProductBtn").onclick=()=>{document.querySelector("#productForm").reset();resetPricingCalculator();document.querySelector("#productId").value="";document.querySelector("#productDialogTitle").textContent="Adicionar produto";document.querySelector("#productPreview1").textContent="Nenhuma imagem selecionada";document.querySelector("#productPreview2").textContent="Nenhuma imagem selecionada";document.querySelector("#productVideoPreview").textContent="Nenhum vídeo selecionado";populateCategorySelect(categories.find(c=>c.active)?.id);document.querySelector("#productDialog").showModal();};
+document.querySelector("#addProductBtn").onclick=()=>{document.querySelector("#productForm").reset();document.querySelector("#productId").value="";document.querySelector("#productDialogTitle").textContent="Adicionar produto";document.querySelector("#productPreview1").textContent="Nenhuma imagem selecionada";document.querySelector("#productPreview2").textContent="Nenhuma imagem selecionada";document.querySelector("#productVideoPreview").textContent="Nenhum vídeo selecionado";populateCategorySelect(categories.find(c=>c.active)?.id);resetCalculator();document.querySelector("#productDialog").showModal();};
 function bindImagePreview(inputId,previewId){document.querySelector("#"+inputId).onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>document.querySelector("#"+previewId).innerHTML=`<img src="${r.result}" alt="">`;r.readAsDataURL(f);};}
 bindImagePreview("productImage1","productPreview1");bindImagePreview("productImage2","productPreview2");
 document.querySelector("#productVideo").onchange=e=>{const f=e.target.files[0];if(!f)return;document.querySelector("#productVideoPreview").innerHTML=`<video src="${URL.createObjectURL(f)}" controls muted></video>`;};
+bindPricingCalculator();
 
 document.querySelector("#productForm").onsubmit=async e=>{e.preventDefault();if(!await requireAdmin())return;try{const id=Number(document.querySelector("#productId").value),old=products.find(p=>p.id===id),file1=document.querySelector("#productImage1").files[0],file2=document.querySelector("#productImage2").files[0],video=document.querySelector("#productVideo").files[0];let image_url=old?.image_url||null,image_path=old?.image_path||null,image_url_2=old?.image_url_2||null,image_path_2=old?.image_path_2||null,video_url=old?.video_url||null,video_path=old?.video_path||null;if(file1){const u=await uploadMedia(file1,"products","image");image_url=u.url;image_path=u.path;}if(file2){const u=await uploadMedia(file2,"products","image");image_url_2=u.url;image_path_2=u.path;}if(video){const u=await uploadMedia(video,"products","video");video_url=u.url;video_path=u.path;}const category_id=Number(document.querySelector("#productCategory").value);if(!category_id)throw new Error("Selecione uma categoria.");const payload={name:document.querySelector("#productName").value.trim(),description:document.querySelector("#productDescription").value.trim(),measurements:document.querySelector("#productMeasurements").value.trim(),price:Number(document.querySelector("#productPrice").value||0),active:document.querySelector("#productActive").value==="true",category_id,image_url,image_path,image_url_2,image_path_2,video_url,video_path};if(id)await api(`/rest/v1/products?id=eq.${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});else{const max=products.reduce((m,p)=>Math.max(m,p.sort_order||0),0);await api("/rest/v1/products",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({...payload,sort_order:max+1})});}if(file1&&old?.image_path&&old.image_path!==image_path)await removeImage(old.image_path);if(file2&&old?.image_path_2&&old.image_path_2!==image_path_2)await removeImage(old.image_path_2);if(video&&old?.video_path&&old.video_path!==video_path)await removeImage(old.video_path);document.querySelector("#productDialog").close();await loadData();}catch(e){showError(e);}};
 
@@ -88,96 +125,4 @@ document.querySelector("#logoutBtn").onclick=()=>{localStorage.removeItem(TOKEN_
 document.querySelector("#resetBtn").onclick=async()=>{if(confirm("Restaurar os exemplos? Isso apagará os produtos do Supabase."))try{await api("/rest/v1/products?id=gt.0",{method:"DELETE"});await loadData();}catch(e){showError(e);}};
 document.querySelector("#exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify({products,categories},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="eralis-conteudo.json";a.click();};
 document.querySelector("#loginForm").addEventListener("submit",e=>{e.preventDefault();signIn();});
-
-/* CALCULADORA DE PREÇO ERALIS — V2 */
-const PRICING={
-  filamentKg:102,
-  energyKwh:0.80,
-  laborHour:20,
-  packaging:3.50,
-  markup:0.80,
-  printers:{
-    p2s:{type:"fdm",watts:200,purchase:9980,lifeHours:20000},
-    mars5:{type:"resin",watts:72,purchase:3800,lifeHours:10000}
-  },
-  mercury:{watts:48}
-};
-function pricingMoney(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});}
-function pricingNumber(id){const e=document.getElementById(id);if(!e)return 0;const n=Number(String(e.value||"").replace(",","."));return Number.isFinite(n)&&n>0?n:0;}
-function updatePricingPrinterOptions(){
-  const type=document.getElementById("pricingType")?.value||"fdm",s=document.getElementById("pricingPrinter");
-  if(!s)return;
-  [...s.options].forEach(o=>{const d=PRICING.printers[o.value];o.hidden=!!d&&d.type!==type;});
-  const d=PRICING.printers[s.value];
-  if(!d||d.type!==type){const f=[...s.options].find(o=>!o.hidden);if(f)s.value=f.value;}
-  document.querySelectorAll(".pricing-resin-only").forEach(e=>e.classList.toggle("pricing-hidden",type!=="resin"));
-}
-function calculatePricing(){
-  const type=document.getElementById("pricingType")?.value||"fdm";
-  const p=PRICING.printers[document.getElementById("pricingPrinter")?.value]||PRICING.printers.p2s;
-  const grams=pricingNumber("pricingWeight");
-  const printHours=pricingNumber("pricingPrintHours");
-  const printMinutes=Math.min(59,pricingNumber("pricingPrintMinutes"));
-  const printTime=printHours+printMinutes/60;
-  const washMinutes=type==="resin"?pricingNumber("pricingWashMinutes"):0;
-  const cureMinutes=type==="resin"?pricingNumber("pricingCureMinutes"):0;
-  const postHours=(washMinutes+cureMinutes)/60;
-
-  // Material: R$102/kg = R$0,102/g.
-  const materialCost=grams*(PRICING.filamentKg/1000);
-
-  // Electricity: printer plus Mercury only during the explicitly informed
-  // washing/curing time.
-  const printerEnergy=printTime*(p.watts/1000)*PRICING.energyKwh;
-  const mercuryEnergy=type==="resin"?postHours*(PRICING.mercury.watts/1000)*PRICING.energyKwh:0;
-  const energyCost=printerEnergy+mercuryEnergy;
-
-  // Machine depreciation.
-  const machineCost=printTime*(p.purchase/p.lifeHours);
-
-  // Labor is NEVER derived from printing time.
-  // It is only the manual finishing time entered by the user.
-  const laborHours=pricingNumber("pricingLaborHours");
-  const laborMinutes=Math.min(59,pricingNumber("pricingLaborMinutes"));
-  const laborTime=laborHours+laborMinutes/60;
-  const laborCost=laborTime*PRICING.laborHour;
-
-  const packagingCost=PRICING.packaging;
-  const total=materialCost+energyCost+machineCost+laborCost+packagingCost;
-  const profit=total*PRICING.markup;
-  const suggested=total+profit;
-
-  document.getElementById("pricingMaterialCost").textContent=pricingMoney(materialCost);
-  document.getElementById("pricingEnergyCost").textContent=pricingMoney(energyCost);
-  document.getElementById("pricingMachineCost").textContent=pricingMoney(machineCost);
-  document.getElementById("pricingWashCureCost").textContent=pricingMoney(mercuryEnergy);
-  document.getElementById("pricingLaborCost").textContent=pricingMoney(laborCost);
-  document.getElementById("pricingPackagingCost").textContent=pricingMoney(packagingCost);
-  document.getElementById("pricingTotalCost").textContent=pricingMoney(total);
-  document.getElementById("pricingProfit").textContent=pricingMoney(profit);
-  document.getElementById("pricingSuggested").textContent=pricingMoney(suggested);
-  return suggested;
-}
-function resetPricingCalculator(){
-  ["pricingWeight","pricingPrintHours","pricingPrintMinutes","pricingWashMinutes","pricingCureMinutes"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";});
-  const lh=document.getElementById("pricingLaborHours"),lm=document.getElementById("pricingLaborMinutes");
-  if(lh)lh.value="0";if(lm)lm.value="0";
-  const t=document.getElementById("pricingType"),p=document.getElementById("pricingPrinter");
-  if(t)t.value="fdm";if(p)p.value="p2s";
-  updatePricingPrinterOptions();calculatePricing();
-}
-function bindPricingCalculator(){
-  ["pricingType","pricingPrinter","pricingWeight","pricingPrintHours","pricingPrintMinutes","pricingWashMinutes","pricingCureMinutes","pricingLaborHours","pricingLaborMinutes"].forEach(id=>{
-    const e=document.getElementById(id);if(!e)return;
-    e.addEventListener("input",()=>{if(id==="pricingType")updatePricingPrinterOptions();calculatePricing();});
-    e.addEventListener("change",()=>{if(id==="pricingType")updatePricingPrinterOptions();calculatePricing();});
-  });
-  document.getElementById("pricingUseBtn")?.addEventListener("click",()=>{
-    const v=calculatePricing();
-    document.getElementById("productPrice").value=v>0?v.toFixed(2):"";
-  });
-  updatePricingPrinterOptions();calculatePricing();
-}
-bindPricingCalculator();
-
 if(SB_URL&&SB_KEY)loadData();else document.querySelector("#supabaseNotice").innerHTML="<strong>Supabase não configurado.</strong>";

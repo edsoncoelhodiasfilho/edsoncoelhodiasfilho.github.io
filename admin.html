@@ -8,6 +8,20 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .admin-page{background:#f7f3eb;min-height:100vh}
+    .pricing-box{border:1px solid var(--line);border-radius:14px;background:#faf7f0;padding:16px;margin:6px 0 18px}
+    .pricing-box h3{margin:0 0 4px;color:var(--g);font-size:16px}
+    .pricing-box>p{margin:0 0 14px;color:var(--muted);font-size:12px}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .pricing-grid .field{margin-bottom:0}
+    .pricing-result{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;margin-top:14px;padding:13px;border-radius:10px;background:#eef5f0;border:1px solid #c9ded0}
+    .pricing-result strong{color:var(--g);font-size:13px}.pricing-result .price{font-size:22px;font-weight:800;color:var(--g)}
+    .pricing-breakdown{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 18px;margin-top:10px;font-size:11px;color:var(--muted)}
+    .pricing-breakdown span{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #ddd5c8;padding-bottom:4px}
+    .pricing-note{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.45}
+    .pricing-actions{display:flex;justify-content:flex-end;margin-top:10px}
+    @media(max-width:700px){.pricing-grid{grid-template-columns:1fr 1fr}.pricing-breakdown{grid-template-columns:1fr}}
+    @media(max-width:500px){.pricing-grid{grid-template-columns:1fr}}
+
     .admin-wrap{max-width:1250px;margin:auto;padding:45px 5% 70px}
     .admin-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:30px}
     .admin-head h1{color:var(--g);margin:5px 0;font-size:34px}
@@ -48,32 +62,6 @@
     .notice{background:#eef5f0;border:1px solid #c9ded0;color:#315b45;border-radius:10px;padding:12px;font-size:12px;margin-bottom:20px}
     .danger{color:#a34e43!important}
     .admin-foot{padding:20px 5%;background:#062f25;color:#fff;display:flex;justify-content:space-between;gap:15px;align-items:center;font-size:12px}
-
-    /* CALCULADORA DE PREÇO ERALIS — V2 */
-    .pricing-box{margin:20px 0 18px;border:1px solid #d9d1c3;border-radius:16px;background:linear-gradient(180deg,#fbfaf6 0%,#f5f0e7 100%);overflow:hidden}
-    .pricing-head{padding:16px 18px 13px;border-bottom:1px solid #ddd5c8;background:#fffdf9}
-    .pricing-head h3{margin:0;color:var(--g);font-size:17px}
-    .pricing-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
-    .pricing-content{padding:18px}
-    .pricing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .pricing-field label{display:block;color:var(--g);font-size:12px;font-weight:700;margin-bottom:7px}
-    .pricing-field input,.pricing-field select{width:100%;padding:11px;border:1px solid #d7d1c6;border-radius:9px;font:inherit;background:#fff;outline:none;box-sizing:border-box}
-    .pricing-field small{display:block;margin-top:5px;color:var(--muted);font-size:10px}
-    .pricing-results{margin-top:16px;border-top:1px solid #ddd5c8;padding-top:14px}
-    .pricing-line{display:flex;justify-content:space-between;gap:15px;color:#5d665f;font-size:12px;padding:4px 0}
-    .pricing-line strong{color:#29382f}
-    .pricing-total{display:flex;justify-content:space-between;gap:15px;margin-top:7px;padding:11px 0;border-top:1px dashed #cfc5b6;font-size:14px;font-weight:800;color:var(--g)}
-    .pricing-profit{display:flex;justify-content:space-between;gap:15px;color:#315b45;font-size:12px;padding:4px 0}
-    .pricing-suggested{margin-top:10px;padding:15px;border-radius:12px;background:#062f25;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .pricing-suggested span{font-size:11px;opacity:.82}
-    .pricing-suggested strong{font-size:21px}
-    .pricing-use{margin-top:12px;width:100%;padding:11px 14px;border:1px solid var(--g);border-radius:9px;background:#fff;color:var(--g);font-weight:800;cursor:pointer}
-    .pricing-use:hover{background:#eef5f0}
-    .pricing-note{margin:12px 0 0;color:var(--muted);font-size:10px;line-height:1.45}
-    .pricing-hidden{display:none!important}
-    .pricing-zero-note{margin:8px 0 0;padding:9px 10px;border-radius:8px;background:#eef5f0;color:#315b45;font-size:10px;line-height:1.4}
-    @media(max-width:600px){.pricing-grid{grid-template-columns:1fr}.pricing-suggested{align-items:flex-start;flex-direction:column}}
-
     @media(max-width:900px){.admin-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:600px){
       .admin-wrap{padding:30px 4%}.admin-head{display:block}.admin-actions{margin-top:18px}
@@ -191,74 +179,27 @@
     <div class="field"><label for="productDescription">Descrição</label><textarea id="productDescription"></textarea></div>
     <div class="field"><label for="productMeasurements">Medidas</label><textarea id="productMeasurements" rows="3" placeholder="Ex.: Altura: 10 cm | Largura: 8 cm | Comprimento: 15 cm | Profundidade: 5 cm"></textarea><small class="field-help">Informe as medidas que serão exibidas separadamente abaixo da descrição do produto.</small></div>
     <div class="field"><label for="productCategory">Categoria</label><select id="productCategory" required></select></div>
-
-    <section class="pricing-box" aria-label="Calculadora de preço">
-      <div class="pricing-head">
-        <h3>🧮 Formação de preço</h3>
-        <p>O tempo de impressão não é mão de obra. Acabamento só entra quando houver trabalho manual.</p>
+    <section class="pricing-box">
+      <h3>Calculadora de preço</h3>
+      <p>Preencha os dados da produção. O custo é calculado primeiro e, depois, aplicado o acréscimo de 80%.</p>
+      <div class="pricing-grid">
+        <div class="field"><label for="calcWeight">Peso da peça (g)</label><input id="calcWeight" type="number" min="0" step="0.1" placeholder="Ex.: 73"></div>
+        <div class="field"><label for="calcHours">Tempo de impressão (h)</label><input id="calcHours" type="number" min="0" step="0.01" placeholder="Ex.: 4.42"></div>
+        <div class="field"><label for="calcMaterialPrice">Material (R$/kg)</label><input id="calcMaterialPrice" type="number" min="0" step="0.01" value="102"></div>
+        <div class="field"><label for="calcMachine">Máquina</label><select id="calcMachine"><option value="p2s">Bambu Lab P2S</option><option value="mars5">Elegoo Mars 5 + Wash & Cure</option></select></div>
+        <div class="field"><label for="calcLaborCost">Mão de obra / acabamento (R$)</label><input id="calcLaborCost" type="number" min="0" step="0.01" value="0" placeholder="Ex.: 20"></div>
+        <div class="field"><label for="calcPackaging">Embalagem (R$)</label><input id="calcPackaging" type="number" min="0" step="0.01" value="3.50"></div>
       </div>
-      <div class="pricing-content">
-        <div class="pricing-grid">
-          <div class="pricing-field">
-            <label for="pricingType">Tipo de impressão</label>
-            <select id="pricingType"><option value="fdm">FDM</option><option value="resin">Resina</option></select>
-          </div>
-          <div class="pricing-field">
-            <label for="pricingPrinter">Impressora</label>
-            <select id="pricingPrinter"><option value="p2s">Bambu Lab P2S</option><option value="mars5">Elegoo Mars 5</option></select>
-          </div>
-          <div class="pricing-field">
-            <label for="pricingWeight">Peso da peça (g)</label>
-            <input id="pricingWeight" type="number" min="0" step="0.01" placeholder="Ex.: 73">
-            <small>FDM: filamento • Resina: resina utilizada</small>
-          </div>
-          <div class="pricing-field">
-            <label>Tempo de impressão</label>
-            <div class="admin-form form-row" style="padding:0;gap:8px">
-              <input id="pricingPrintHours" type="number" min="0" step="1" placeholder="Horas">
-              <input id="pricingPrintMinutes" type="number" min="0" max="59" step="1" placeholder="Minutos">
-            </div>
-          </div>
-          <div class="pricing-field pricing-resin-only">
-            <label for="pricingWashMinutes">Lavagem (minutos)</label>
-            <input id="pricingWashMinutes" type="number" min="0" step="1" placeholder="0">
-          </div>
-          <div class="pricing-field pricing-resin-only">
-            <label for="pricingCureMinutes">Cura (minutos)</label>
-            <input id="pricingCureMinutes" type="number" min="0" step="1" placeholder="0">
-          </div>
-          <div class="pricing-field">
-            <label>Tempo de mão de obra / acabamento</label>
-            <div class="admin-form form-row" style="padding:0;gap:8px">
-              <input id="pricingLaborHours" type="number" min="0" step="1" value="0" placeholder="Horas">
-              <input id="pricingLaborMinutes" type="number" min="0" max="59" step="1" value="0" placeholder="Minutos">
-            </div>
-            <small>Começa em 0h 0min. Só informe se você realmente trabalhou na peça.</small>
-          </div>
-          <div class="pricing-field">
-            <label>Embalagem</label>
-            <input type="text" value="R$ 3,50" readonly>
-          </div>
-        </div>
-        <div class="pricing-zero-note">Sem acabamento manual? Deixe <strong>0h 0min</strong>. As 4h25, 6h ou 10h de impressão não entram neste campo.</div>
-        <div class="pricing-results">
-          <div class="pricing-line"><span>Material</span><strong id="pricingMaterialCost">R$ 0,00</strong></div>
-          <div class="pricing-line"><span>Energia</span><strong id="pricingEnergyCost">R$ 0,00</strong></div>
-          <div class="pricing-line"><span>Impressora</span><strong id="pricingMachineCost">R$ 0,00</strong></div>
-          <div class="pricing-line pricing-resin-only"><span>Wash &amp; Cure</span><strong id="pricingWashCureCost">R$ 0,00</strong></div>
-          <div class="pricing-line"><span>Mão de obra</span><strong id="pricingLaborCost">R$ 0,00</strong></div>
-          <div class="pricing-line"><span>Embalagem</span><strong id="pricingPackagingCost">R$ 3,50</strong></div>
-          <div class="pricing-total"><span>CUSTO TOTAL</span><strong id="pricingTotalCost">R$ 0,00</strong></div>
-          <div class="pricing-profit"><span>Acréscimo de lucro (80%)</span><strong id="pricingProfit">R$ 0,00</strong></div>
-          <div class="pricing-suggested"><span>PREÇO SUGERIDO</span><strong id="pricingSuggested">R$ 0,00</strong></div>
-          <button class="pricing-use" id="pricingUseBtn" type="button">Usar preço sugerido</button>
-          <p class="pricing-note">V2: mão de obra é calculada exclusivamente pelo tempo manual informado. Valor: R$ 20,00/h. Filamento: R$ 102,00/kg. Energia: R$ 0,80/kWh. Embalagem: R$ 3,50. Lucro: +80% sobre o custo.</p>
-        </div>
+      <div class="pricing-result">
+        <div><strong>Preço sugerido</strong><div class="pricing-note">Custo total + 80% de acréscimo (multiplicador 1,80).</div></div>
+        <div class="price" id="calcSuggestedPrice">R$ 0,00</div>
       </div>
+      <div class="pricing-breakdown" id="calcBreakdown"></div>
+      <div class="pricing-actions"><button class="btn outline" type="button" id="useCalculatedPrice">Usar preço calculado</button></div>
+      <div class="pricing-note">Referências configuradas: filamento médio R$ 102/kg; energia R$ 0,80/kWh; P2S 200 W e depreciação R$ 0,499/h; Mars 5 72 W; Mercury Plus V2.0 48 W. O valor de R$ 3.800 informado para Mars 5 + Wash & Cure é mantido como referência conjunta e não é usado como depreciação separada para evitar duplicidade.</div>
     </section>
-
     <div class="admin-form form-row">
-      <div class="field"><label for="productPrice">Preço (R$)</label><input id="productPrice" type="number" min="0" step="0.01"></div>
+      <div class="field"><label for="productPrice">Preço final (R$)</label><input id="productPrice" type="number" min="0" step="0.01"></div>
       <div class="field"><label for="productActive">Ativo</label><select id="productActive"><option value="true">SIM</option><option value="false">NÃO</option></select></div>
     </div>
     <div class="admin-form-actions"><button class="btn outline" type="button" data-close="productDialog">Cancelar</button><button class="btn" type="submit">Salvar produto</button></div>
