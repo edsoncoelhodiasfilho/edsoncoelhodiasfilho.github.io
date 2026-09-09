@@ -2597,3 +2597,12 @@ dialog.email-modal::backdrop{
   .wrap{padding-left:16px;padding-right:16px;}
   .custom{width:92%;}
 }
+
+
+/* ERALIS - MODAL: descrição sempre completa */
+.modal-box .modal-info #modal-desc,
+.modal-box .modal-info .modal-desc {
+  display:block !important; width:100% !important; height:auto !important; min-height:0 !important; max-height:none !important; overflow:visible !important;
+  -webkit-line-clamp:unset !important; -webkit-box-orient:initial !important; text-overflow:clip !important;
+  white-space:pre-wrap !important; word-break:break-word !important; margin-top:8px !important; margin-bottom:8px !important; clear:both !important;
+}
