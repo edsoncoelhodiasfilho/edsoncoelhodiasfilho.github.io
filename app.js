@@ -150,8 +150,11 @@
   function totalCart(){return cart.reduce((s,x)=>{const p=products.find(y=>String(y.id)===String(x.id));return s+(p?Number(p.price)*Number(x.qty):0)},0);}
 
   function buildCard(p){
-    const imgs=images(p), card=document.createElement('article'); card.className='card';
-    card.innerHTML=`<div class="card-art ${imgs.length?'has-images':''}">${imgs[0]?`<img src="${esc(imgs[0])}" alt="${esc(p.name)}" loading="lazy">`:''}</div><div class="card-body"><h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p><div class="card-foot"><div class="price">${fmt(p.price)});
+    const imgs=images(p), card=document.createElement('article');
+    card.className='card';
+    card.innerHTML=`<div class="card-art ${imgs.length?'has-images':''}">${imgs[0]?`<img src="${esc(imgs[0])}" alt="${esc(p.name)}" loading="lazy">`:''}</div><div class="card-body"><h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p><div class="card-foot"><div class="price">${fmt(p.price)}</div><button class="btn btn-accent btn-sm add">Adicionar</button></div></div>`;
+    card.querySelector('.card-art').addEventListener('click',()=>openProduct(p));
+    card.querySelector('.card-body h3').addEventListener('click',()=>openProduct(p));
     card.querySelector('.add').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();addToCart(p,1,e.currentTarget);});
     return card;
   }
