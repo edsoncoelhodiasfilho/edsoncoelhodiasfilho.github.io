@@ -158,11 +158,32 @@
     card.querySelector('.add').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();addToCart(p,1,e.currentTarget);});
     return card;
   }
+  function slugifyCategory(value){
+    return String(value||'categoria').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'categoria';
+  }
+
+  function renderQuickCategories(categories){
+    const box=document.getElementById('quick-categories');
+    if(!box)return;
+    box.innerHTML='';
+    const icons=['🎁','🏠','📦','🎮','✨','⭐','🧩','🪴'];
+    const colors=['cat-orange','cat-blue','cat-yellow','cat-pink','cat-purple','cat-green','cat-cyan','cat-coral'];
+    categories.forEach((cat,i)=>{
+      const a=document.createElement('a');
+      a.className=`cat-pill ${colors[i%colors.length]}`;
+      a.href=`#categoria-${slugifyCategory(cat)}`;
+      a.innerHTML=`<span>${icons[i%icons.length]}</span><b>${esc(cat)}</b>`;
+      box.appendChild(a);
+    });
+  }
+
   function renderCatalog(){
     container.innerHTML='';
     if(!products.length){container.innerHTML='<p class="loading-products">Nenhum produto disponível no momento.</p>';return;}
-    [...new Set(products.map(p=>p.category||'Produtos'))].forEach(cat=>{
-      const items=products.filter(p=>(p.category||'Produtos')===cat),row=document.createElement('div');row.className='cat-row';
+    const categories=[...new Set(products.map(p=>p.category).filter(Boolean))];
+    renderQuickCategories(categories);
+    categories.forEach(cat=>{
+      const items=products.filter(p=>(p.category||'Produtos')===cat),row=document.createElement('div');row.className='cat-row';row.id=`categoria-${slugifyCategory(cat)}`;
       row.innerHTML=`<div class="cat-row-head"><h3>${esc(cat)}<span class="cat-count">${items.length} peças</span></h3><div class="cat-arrows"><button class="arrow-btn" data-dir="-1">‹</button><button class="arrow-btn" data-dir="1">›</button></div></div><div class="carousel-wrap"><div class="carousel-track"></div></div>`;
       const track=row.querySelector('.carousel-track');items.forEach(p=>track.appendChild(buildCard(p)));
       row.querySelectorAll('.arrow-btn').forEach(b=>b.addEventListener('click',()=>track.scrollBy({left:track.clientWidth*.85*Number(b.dataset.dir),behavior:'smooth'})));
