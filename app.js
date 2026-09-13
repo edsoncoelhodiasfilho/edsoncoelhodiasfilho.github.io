@@ -58,6 +58,8 @@
   const fileName=document.getElementById('fileName');
 
   if(quoteBtn&&quoteModal) quoteBtn.addEventListener('click',()=>quoteModal.showModal());
+  const heroQuoteBtn=document.getElementById('heroQuoteBtn');
+  if(heroQuoteBtn&&quoteModal) heroQuoteBtn.addEventListener('click',()=>quoteModal.showModal());
   if(quoteClose&&quoteModal) quoteClose.addEventListener('click',()=>quoteModal.close());
   if(quoteCancel&&quoteModal) quoteCancel.addEventListener('click',()=>quoteModal.close());
   if(quoteModal) quoteModal.addEventListener('click',e=>{
@@ -158,12 +160,24 @@
     card.querySelector('.add').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();addToCart(p,1,e.currentTarget);});
     return card;
   }
+  function renderCategoryChips(categories){
+    const chips=document.getElementById('category-chips');
+    if(!chips)return;
+    const icons=['🎨','🪴','🎁','🧩','✨','🏠','🎮','📦'];
+    chips.innerHTML=categories.map((cat,i)=>`<button class="category-chip" type="button" data-category="${esc(cat)}">${icons[i%icons.length]} ${esc(cat)}</button>`).join('');
+    chips.querySelectorAll('.category-chip').forEach(btn=>btn.addEventListener('click',()=>{
+      const target=[...document.querySelectorAll('.cat-row')].find(row=>row.dataset.category===btn.dataset.category);
+      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    }));
+  }
   function renderCatalog(){
     container.innerHTML='';
     if(!products.length){container.innerHTML='<p class="loading-products">Nenhum produto disponível no momento.</p>';return;}
-    [...new Set(products.map(p=>p.category||'Produtos'))].forEach(cat=>{
+    const categories=[...new Set(products.map(p=>p.category||'Produtos'))];
+    renderCategoryChips(categories);
+    categories.forEach(cat=>{
       const items=products.filter(p=>(p.category||'Produtos')===cat),row=document.createElement('div');row.className='cat-row';
-      row.innerHTML=`<div class="cat-row-head"><h3>${esc(cat)}<span class="cat-count">${items.length} peças</span></h3><div class="cat-arrows"><button class="arrow-btn" data-dir="-1">‹</button><button class="arrow-btn" data-dir="1">›</button></div></div><div class="carousel-wrap"><div class="carousel-track"></div></div>`;
+      row.dataset.category=cat; row.innerHTML=`<div class="cat-row-head"><h3>${esc(cat)}<span class="cat-count">${items.length} peças</span></h3><div class="cat-arrows"><button class="arrow-btn" data-dir="-1">‹</button><button class="arrow-btn" data-dir="1">›</button></div></div><div class="carousel-wrap"><div class="carousel-track"></div></div>`;
       const track=row.querySelector('.carousel-track');items.forEach(p=>track.appendChild(buildCard(p)));
       row.querySelectorAll('.arrow-btn').forEach(b=>b.addEventListener('click',()=>track.scrollBy({left:track.clientWidth*.85*Number(b.dataset.dir),behavior:'smooth'})));
       container.appendChild(row);
