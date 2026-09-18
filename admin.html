@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .admin-page{background:#f7f3eb;min-height:100vh}
+    /* Cabeçalho exclusivo da administração: logo sempre proporcional e compacto. */
+    .admin-page>header{height:68px;background:#fffdf9;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,5%);box-sizing:border-box;position:sticky;top:0;z-index:30}
+    .admin-page>header .brand{display:flex;align-items:center;gap:9px;text-decoration:none;min-width:0;height:44px}
+    .admin-page>header .brand-logo{display:block !important;width:40px !important;height:40px !important;max-width:40px !important;max-height:40px !important;min-width:40px !important;min-height:40px !important;object-fit:contain !important;flex:0 0 40px !important}
+    .admin-page>header nav{display:flex;align-items:center;gap:22px;font-size:12px;font-weight:700}
+    .admin-page>header nav a:hover{color:var(--orange)}
     .admin-wrap{max-width:1250px;margin:auto;padding:45px 5% 70px}
     .admin-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:30px}
     .admin-head h1{color:var(--g);margin:5px 0;font-size:34px}
@@ -50,6 +56,10 @@
     .admin-foot{padding:20px 5%;background:#062f25;color:#fff;display:flex;justify-content:space-between;gap:15px;align-items:center;font-size:12px}
     @media(max-width:900px){.admin-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:600px){
+      .admin-page>header{height:62px;padding:0 16px}
+      .admin-page>header .brand{height:40px}
+      .admin-page>header .brand-logo{width:36px !important;height:36px !important;max-width:36px !important;max-height:36px !important;min-width:36px !important;min-height:36px !important;flex-basis:36px !important}
+      .admin-page>header nav{gap:12px;font-size:11px}
       .admin-wrap{padding:30px 4%}.admin-head{display:block}.admin-actions{margin-top:18px}
       .admin-grid{grid-template-columns:1fr}.admin-form .form-row{grid-template-columns:1fr}
       .admin-toolbar{display:block}.admin-toolbar .btn{margin-top:12px}
