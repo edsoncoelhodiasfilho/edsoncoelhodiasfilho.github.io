@@ -59,6 +59,8 @@ begin
 end $$;
 
 
--- Até 3 fotos por produto (a terceira é opcional).
+-- Até 4 fotos por produto (todas opcionais).
 alter table public.products add column if not exists image_url_3 text;
 alter table public.products add column if not exists image_path_3 text;
+alter table public.products add column if not exists image_url_4 text;
+alter table public.products add column if not exists image_path_4 text;
