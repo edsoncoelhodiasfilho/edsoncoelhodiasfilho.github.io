@@ -57,3 +57,8 @@ begin
       with check (true);
   end if;
 end $$;
+
+
+-- Até 3 fotos por produto (a terceira é opcional).
+alter table public.products add column if not exists image_url_3 text;
+alter table public.products add column if not exists image_path_3 text;
