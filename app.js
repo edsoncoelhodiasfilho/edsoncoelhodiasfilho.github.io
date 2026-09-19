@@ -119,9 +119,9 @@
   }
 
   function normalize(p){
-    return {id:p.id,name:p.name||'Produto ERALIS',price:Number(p.price||0),description:p.description||'',measurements:p.measurements||'',category:p.category?.name||p.category||'Produtos',image_url:p.image_url||'',image_url_2:p.image_url_2||'',image_url_3:p.image_url_3||'',image_url_4:p.image_url_4||'',video_url:p.video_url||p.video_path||''};
+    return {id:p.id,name:p.name||'Produto ERALIS',price:Number(p.price||0),description:p.description||'',measurements:p.measurements||'',category:p.category?.name||p.category||'Produtos',image_url:p.image_url||'',image_url_2:p.image_url_2||'',video_url:p.video_url||p.video_path||''};
   }
-  function media(p){const m=[]; if(p.image_url)m.push({type:'image',src:p.image_url}); if(p.image_url_2)m.push({type:'image',src:p.image_url_2}); if(p.image_url_3)m.push({type:'image',src:p.image_url_3}); if(p.image_url_4)m.push({type:'image',src:p.image_url_4}); if(p.video_url)m.push({type:'video',src:p.video_url}); return m;}
+  function media(p){const m=[]; if(p.image_url)m.push({type:'image',src:p.image_url}); if(p.image_url_2)m.push({type:'image',src:p.image_url_2}); if(p.video_url)m.push({type:'video',src:p.video_url}); return m;}
   function images(p){return media(p).filter(x=>x.type==='image').map(x=>x.src);}
 
   function updateCartCount(){

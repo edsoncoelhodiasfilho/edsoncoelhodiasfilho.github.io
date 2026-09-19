@@ -22,3 +22,25 @@ footer{border-top:1px solid var(--line);background:#fff}.footer-inner{min-height
 /* Categorias rápidas: geradas somente a partir das categorias reais presentes no catálogo. */
 .cat-green{background:#eaf8ef;border-color:#ccebd7}.cat-cyan{background:#e8f8fa;border-color:#c8e9ed}.cat-coral{background:#fff0ee;border-color:#ffd3cd}
 .cat-row{scroll-margin-top:92px}
+
+
+/* Logo oficial dourado ERALIS — igual ao utilizado na área administrativa */
+.brand-logo{
+  display:block;
+  width:40px;
+  height:40px;
+  object-fit:contain;
+  flex:0 0 40px;
+}
+.footer-brand .brand-logo{
+  width:32px;
+  height:32px;
+  flex-basis:32px;
+}
+@media(max-width:760px){
+  .site-header .brand-logo{
+    width:46px;
+    height:46px;
+    flex-basis:46px;
+  }
+}
