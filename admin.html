@@ -47,6 +47,13 @@
     .admin-form-actions{display:flex;justify-content:flex-end;gap:10px;padding-top:8px}
     .notice{background:#eef5f0;border:1px solid #c9ded0;color:#315b45;border-radius:10px;padding:12px;font-size:12px;margin-bottom:20px}
     .danger{color:#a34e43!important}
+
+    .media-file-actions{display:flex;align-items:center;gap:8px;margin-top:8px}
+    .media-file-actions input{flex:1;min-width:0}
+    .media-delete-btn{flex:0 0 auto;padding:10px 13px;border:1px solid #d6b6b0;border-radius:9px;background:#fff;color:#a34e43;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+    .media-delete-btn:hover{background:#fff5f3}
+    .media-delete-btn:disabled{opacity:.45;cursor:not-allowed}
+    @media(max-width:600px){.media-file-actions{align-items:stretch}.media-file-actions input{min-width:0}.media-delete-btn{padding:10px 11px}}
     .admin-foot{padding:20px 5%;background:#062f25;color:#fff;display:flex;justify-content:space-between;gap:15px;align-items:center;font-size:12px}
     @media(max-width:900px){.admin-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:600px){
@@ -146,29 +153,29 @@
         <div>
           <span class="media-label">Imagem 1</span>
           <div class="image-preview media-preview" id="productPreview1">Nenhuma imagem selecionada</div>
-          <input id="productImage1" type="file" accept="image/*">
+          <div class="media-file-actions"><input id="productImage1" type="file" accept="image/*"><button type="button" class="media-delete-btn" data-media-delete="1">Excluir</button></div>
         </div>
         <div>
           <span class="media-label">Imagem 2</span>
           <div class="image-preview media-preview" id="productPreview2">Nenhuma imagem selecionada</div>
-          <input id="productImage2" type="file" accept="image/*">
+          <div class="media-file-actions"><input id="productImage2" type="file" accept="image/*"><button type="button" class="media-delete-btn" data-media-delete="2">Excluir</button></div>
         </div>
         <div>
           <span class="media-label">Imagem 3</span>
           <div class="image-preview media-preview" id="productPreview3">Nenhuma imagem selecionada</div>
-          <input id="productImage3" type="file" accept="image/*">
+          <div class="media-file-actions"><input id="productImage3" type="file" accept="image/*"><button type="button" class="media-delete-btn" data-media-delete="3">Excluir</button></div>
         </div>
         <div>
           <span class="media-label">Imagem 4</span>
           <div class="image-preview media-preview" id="productPreview4">Nenhuma imagem selecionada</div>
-          <input id="productImage4" type="file" accept="image/*">
+          <div class="media-file-actions"><input id="productImage4" type="file" accept="image/*"><button type="button" class="media-delete-btn" data-media-delete="4">Excluir</button></div>
         </div>
       </div>
     </div>
     <div class="field">
       <label for="productVideo">Vídeo <small>(1 arquivo)</small></label>
       <div class="image-preview media-preview video-preview" id="productVideoPreview">Nenhum vídeo selecionado</div>
-      <input id="productVideo" type="file" accept="video/mp4,video/webm,video/quicktime,video/*">
+      <div class="media-file-actions"><input id="productVideo" type="file" accept="video/mp4,video/webm,video/quicktime,video/*"><button type="button" class="media-delete-btn" data-media-delete="video">Excluir</button></div>
       <small class="field-help">Recomendado: MP4 (H.264), até 30 MB.</small>
     </div>
     <div class="field"><label for="productName">Nome</label><input id="productName" required></div>
