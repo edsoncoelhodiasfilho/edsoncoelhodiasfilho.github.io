@@ -3,6 +3,7 @@
   const phone='5579998080301';
   const defaultMsg='Olá! Vim do site da Eralis e quero saber mais sobre as peças 3D.';
   let products=[];
+  let productsLoaded=false;
   let cart=JSON.parse(localStorage.getItem('eralisCart')||'[]');
   const container=document.getElementById('catalog-rows');
   const overlay=document.getElementById('modal-overlay');
@@ -320,10 +321,16 @@ overlay.hidden=true;document.body.style.overflow='';}
     const o=document.createElement('div');o.id='cart-overlay';o.hidden=true;o.className='cart-overlay';o.innerHTML='<aside class="cart-panel"><button class="modal-close" id="cart-close">×</button><h2>Seu carrinho</h2><div id="cart-items"></div><div class="cart-total"><span>Total estimado</span><strong id="cart-total-value">R$ 0,00</strong></div><button id="cart-checkout" class="btn btn-primary">Finalizar compra →</button><a href="#catalogo" id="cart-continue" class="cart-continue">Continuar comprando</a></aside>';document.body.appendChild(o);document.getElementById('cart-close').onclick=closeCart;o.addEventListener('click',e=>{if(e.target===o)closeCart()});document.getElementById('cart-checkout').onclick=checkout;
   }
   function renderCart(){ensureCartUI();document.getElementById('cart-count').textContent=countCart();const box=document.getElementById('cart-items');box.innerHTML='';
-    cart=cart.filter(x=>products.some(p=>String(p.id)===String(x.id)));
-    cart.forEach(x=>{const p=products.find(y=>String(y.id)===String(x.id));if(p){x.name=p.name;x.price=Number(p.price||0);x.image_url=p.image_url||'';}});
-    if(!cart.length){box.innerHTML='<p class="cart-empty">Seu carrinho está vazio.</p>';}else cart.forEach(x=>{const p=products.find(y=>String(y.id)===String(x.id));const item=document.createElement('div');item.className='cart-item';item.innerHTML=`<div><strong>${esc(p.name)}</strong><small>${fmt(p.price)} cada</small></div><div class="cart-controls"><button data-act="dec">−</button><b>${x.qty}</b><button data-act="inc">+</button><button data-act="del" aria-label="Remover">×</button></div>`;item.querySelector('[data-act="dec"]').onclick=()=>changeQty(p.id,-1);item.querySelector('[data-act="inc"]').onclick=()=>changeQty(p.id,1);item.querySelector('[data-act="del"]').onclick=()=>removeItem(p.id);box.appendChild(item);});
-    document.getElementById('cart-total-value').textContent=fmt(totalCart());saveCart();
+    // Na primeira renderização, os produtos ainda podem estar sendo carregados do Supabase.
+    // Nunca filtre nem grave o carrinho nesse momento, pois isso poderia apagar o localStorage
+    // ao voltar do checkout para a loja antes do evento eralis-content-loaded.
+    if(productsLoaded){
+      cart=cart.filter(x=>products.some(p=>String(p.id)===String(x.id)));
+      cart.forEach(x=>{const p=products.find(y=>String(y.id)===String(x.id));if(p){x.name=p.name;x.price=Number(p.price||0);x.image_url=p.image_url||'';}});
+    }
+    if(!cart.length){box.innerHTML='<p class="cart-empty">Seu carrinho está vazio.</p>';}else if(!productsLoaded){box.innerHTML='<p class="cart-empty">Carregando produtos...</p>';}else cart.forEach(x=>{const p=products.find(y=>String(y.id)===String(x.id));if(!p)return;const item=document.createElement('div');item.className='cart-item';item.innerHTML=`<div><strong>${esc(p.name)}</strong><small>${fmt(p.price)} cada</small></div><div class="cart-controls"><button data-act="dec">−</button><b>${x.qty}</b><button data-act="inc">+</button><button data-act="del" aria-label="Remover">×</button></div>`;item.querySelector('[data-act="dec"]').onclick=()=>changeQty(p.id,-1);item.querySelector('[data-act="inc"]').onclick=()=>changeQty(p.id,1);item.querySelector('[data-act="del"]').onclick=()=>removeItem(p.id);box.appendChild(item);});
+    document.getElementById('cart-total-value').textContent=fmt(totalCart());
+    if(productsLoaded)saveCart();
   }
   function changeQty(id,d){const x=cart.find(i=>String(i.id)===String(id));if(!x)return;x.qty+=d;if(x.qty<=0)cart=cart.filter(i=>String(i.id)!==String(id));renderCart();}
   function removeItem(id){cart=cart.filter(i=>String(i.id)!==String(id));renderCart();}
@@ -340,7 +347,7 @@ overlay.hidden=true;document.body.style.overflow='';}
 
   updateNavAccount();
 
-  window.addEventListener('eralis-content-loaded',e=>{products=(e.detail.products||[]).map(normalize);products.forEach(p=>{p.category=p.category||'Produtos'});renderCatalog();renderCart();});
+  window.addEventListener('eralis-content-loaded',e=>{products=(e.detail.products||[]).map(normalize);products.forEach(p=>{p.category=p.category||'Produtos'});productsLoaded=true;renderCatalog();renderCart();});
   ensureCartUI();renderCart();
   window.addEventListener('storage',e=>{if(e.key==='eralisAuth')updateNavAccount();});
 })();
