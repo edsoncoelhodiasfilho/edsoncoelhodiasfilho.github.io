@@ -44,3 +44,130 @@ footer{border-top:1px solid var(--line);background:#fff}.footer-inner{min-height
     flex-basis:46px;
   }
 }
+
+
+/* =========================================================
+   ERALIS — Animação geométrica do Hero
+   As formas "ganham vida" enquanto o cubo 3D permanece
+   como elemento central. Apenas CSS: leve e responsivo.
+   ========================================================= */
+
+@keyframes eralisBlobYellow {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-18px, 12px, 0) scale(1.045); }
+}
+
+@keyframes eralisBlobBlue {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(22px, -14px, 0) scale(1.06); }
+}
+
+@keyframes eralisBlobPink {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-10px, -18px, 0) scale(1.08); }
+}
+
+@keyframes eralisCube {
+  0%, 100% { transform: rotate(-12deg) translate3d(0, 0, 0); }
+  50%      { transform: rotate(-7deg) translate3d(0, -8px, 0); }
+}
+
+@keyframes eralisStar {
+  0%, 100% { transform: rotate(15deg) translate3d(0, 0, 0) scale(1); }
+  50%      { transform: rotate(28deg) translate3d(-13px, 13px, 0) scale(1.08); }
+}
+
+@keyframes eralisCircle {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: .9; }
+  50%      { transform: translate3d(18px, 25px, 0) scale(1.35); opacity: .65; }
+}
+
+@keyframes eralisConfetti1 {
+  0%, 100% { transform: rotate(0deg) translate3d(0, 0, 0); }
+  50%      { transform: rotate(30deg) translate3d(12px, -18px, 0); }
+}
+
+@keyframes eralisConfetti2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-15px, -12px, 0) scale(1.18); }
+}
+
+@keyframes eralisConfetti3 {
+  0%, 100% { transform: rotate(0deg) translate3d(0, 0, 0); }
+  50%      { transform: rotate(-25deg) translate3d(10px, 15px, 0); }
+}
+
+@keyframes eralisCaption {
+  0%, 100% { transform: rotate(3deg) translate3d(0, 0, 0); }
+  50%      { transform: rotate(1deg) translate3d(0, -5px, 0); }
+}
+
+/* Movimento contínuo e sincronizado das formas */
+.hero .blob-yellow {
+  animation: eralisBlobYellow 6s ease-in-out infinite;
+}
+
+.hero .blob-blue {
+  animation: eralisBlobBlue 7s ease-in-out infinite;
+}
+
+.hero .blob-pink {
+  animation: eralisBlobPink 5.5s ease-in-out infinite;
+}
+
+.hero .hero-cube {
+  animation: eralisCube 5s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+
+.hero .shape-star {
+  animation: eralisStar 4.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.hero .shape-circle {
+  animation: eralisCircle 4s ease-in-out infinite;
+}
+
+.hero .c1 {
+  animation: eralisConfetti1 3.8s ease-in-out infinite;
+}
+
+.hero .c2 {
+  animation: eralisConfetti2 4.2s ease-in-out infinite;
+}
+
+.hero .c3 {
+  animation: eralisConfetti3 4.6s ease-in-out infinite;
+}
+
+.hero .hero-caption {
+  animation: eralisCaption 4s ease-in-out infinite;
+}
+
+/* Pequeno atraso entre os elementos para criar sensação de composição */
+.hero .blob-blue { animation-delay: -.9s; }
+.hero .blob-pink { animation-delay: -1.7s; }
+.hero .hero-cube { animation-delay: -.5s; }
+.hero .shape-star { animation-delay: -1.2s; }
+.hero .shape-circle { animation-delay: -2s; }
+.hero .c1 { animation-delay: -1.5s; }
+.hero .c2 { animation-delay: -.7s; }
+.hero .c3 { animation-delay: -2.1s; }
+.hero .hero-caption { animation-delay: -1.3s; }
+
+/* Respeita usuários que preferem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .hero .blob-yellow,
+  .hero .blob-blue,
+  .hero .blob-pink,
+  .hero .hero-cube,
+  .hero .shape-star,
+  .hero .shape-circle,
+  .hero .c1,
+  .hero .c2,
+  .hero .c3,
+  .hero .hero-caption {
+    animation: none !important;
+  }
+}
