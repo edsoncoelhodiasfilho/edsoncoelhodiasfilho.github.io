@@ -16,14 +16,14 @@
 </div></header>
 <main class="checkout-main wrap">
 <div class="checkout-heading"><div><span class="section-kicker">FINALIZAR COMPRA</span><h1>Seu checkout</h1><p>Confira seus dados e escolha onde deseja receber seu pedido.</p></div><div class="checkout-steps"><span class="active">1</span><b>Dados e entrega</b><i></i><span>2</span><b>Pagamento</b></div></div>
-<div id="checkoutStatus" class="checkout-status" hidden role="alert"></div>
+<div id="checkoutStatus" class="checkout-status" hidden role="alert"></div><div class="shipping-test-banner"><strong>🚚 Frete em modo de teste</strong><span>Estamos simulando PAC e SEDEX dos Correios para validar o checkout. A integração oficial será conectada depois.</span></div>
 <div class="checkout-grid">
 <section class="checkout-left">
 <article class="checkout-card"><div class="checkout-card-title"><div><span class="section-kicker">CLIENTE</span><h2>Seus dados</h2></div></div><div class="customer-summary"><strong id="customerName">—</strong><span id="customerEmail">—</span><small id="customerPhone"></small></div></article>
 <article class="checkout-card"><div class="checkout-card-title"><div><span class="section-kicker">ENTREGA</span><h2>Endereço de entrega</h2></div><button id="newAddressBtn" class="outline-button" type="button">+ Novo endereço</button></div><div id="addressList" class="checkout-address-list"></div><div id="addressEmpty" class="checkout-empty" hidden>Nenhum endereço cadastrado. Adicione um endereço para continuar.</div></article>
 </section>
 <aside class="checkout-right">
-<article class="checkout-card order-summary"><div class="checkout-card-title"><div><span class="section-kicker">RESUMO</span><h2>Seu pedido</h2></div></div><div id="cartItems" class="checkout-items"></div><div class="summary-line"><span>Subtotal</span><strong id="subtotal">R$ 0,00</strong></div><div class="summary-line"><span>Frete</span><strong class="pending" id="shipping">A calcular</strong></div><div class="summary-total"><span>Total</span><strong id="total">R$ 0,00</strong></div><button id="continueBtn" class="btn btn-primary checkout-submit" type="button" disabled>Continuar para pagamento →</button><p class="checkout-note">O valor do frete será calculado na próxima etapa, conforme o endereço e as dimensões/peso do pedido.</p><a class="back-cart" href="index.html">← Voltar ao carrinho</a></article>
+<article class="checkout-card order-summary"><div class="checkout-card-title"><div><span class="section-kicker">RESUMO</span><h2>Seu pedido</h2></div></div><div id="cartItems" class="checkout-items"></div><div class="summary-line"><span>Subtotal</span><strong id="subtotal">R$ 0,00</strong></div><div class="summary-line"><span>Frete</span><strong class="pending" id="shipping">A calcular</strong></div><div id="shippingOptions" class="shipping-options" hidden></div><div class="summary-total"><span>Total</span><strong id="total">R$ 0,00</strong></div><button id="continueBtn" class="btn btn-primary checkout-submit" type="button" disabled>Continuar para pagamento →</button><p class="checkout-note" id="checkoutNote">O frete será simulado com base no CEP, peso e dimensões estimadas do pedido.</p><a class="back-cart" href="index.html">← Voltar ao carrinho</a></article>
 </aside>
 </div>
 </main>
