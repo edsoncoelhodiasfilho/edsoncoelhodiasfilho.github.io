@@ -1,8 +1,11 @@
+function readLocalAdmin(key,fallback=null){try{const v=localStorage.getItem(key);return v===null?fallback:v}catch(_){return fallback}}
+function writeLocalAdmin(key,value){try{localStorage.setItem(key,value)}catch(_){}}
+function removeLocalAdmin(key){try{localStorage.removeItem(key)}catch(_){}}
 const BUCKET=window.ERALIS_SUPABASE_BUCKET||"eralis-images";
 const SB_URL=window.ERALIS_SUPABASE_URL;
 const SB_KEY=window.ERALIS_SUPABASE_KEY;
 const TOKEN_KEY="eralis_supabase_access_token";
-let accessToken=localStorage.getItem(TOKEN_KEY);
+let accessToken=readLocalAdmin(TOKEN_KEY);
 let products=[],categories=[];
 
 function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});}
@@ -16,7 +19,7 @@ async function signIn(){
   try{const email=document.querySelector("#loginEmail").value.trim(),password=document.querySelector("#loginPassword").value;
     const res=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})});
     const data=await res.json();if(!res.ok)throw new Error(data.error_description||data.msg||"E-mail ou senha inválidos.");
-    accessToken=data.access_token;localStorage.setItem(TOKEN_KEY,accessToken);errorBox.textContent="";await loadData();
+    accessToken=data.access_token;writeLocalAdmin(TOKEN_KEY,accessToken);errorBox.textContent="";await loadData();
   }catch(e){errorBox.textContent=e.message;}
 }
 async function requireAdmin(){
@@ -24,7 +27,7 @@ async function requireAdmin(){
   if(!SB_URL||!SB_KEY||SB_URL.includes("COLE_AQUI")||SB_KEY.includes("COLE_AQUI")){notice.innerHTML="<strong>Supabase não configurado.</strong>";card.style.display="none";return false;}
   if(!accessToken){notice.innerHTML="<strong>Faça login para administrar o site.</strong>";card.style.display="block";return false;}
   try{const u=await api("/auth/v1/user");if(!u?.id)throw new Error("Sessão inválida.");card.style.display="none";notice.innerHTML="<strong>Supabase conectado.</strong> Você está autenticado.";return true;}
-  catch(e){localStorage.removeItem(TOKEN_KEY);accessToken=null;notice.innerHTML="<strong>Faça login para administrar o site.</strong>";card.style.display="block";return false;}
+  catch(e){removeLocalAdmin(TOKEN_KEY);accessToken=null;notice.innerHTML="<strong>Faça login para administrar o site.</strong>";card.style.display="block";return false;}
 }
 async function loadData(){
   if(!await requireAdmin())return;
@@ -92,7 +95,7 @@ document.querySelector("#productVideo").onchange=e=>{const f=e.target.files[0];i
 document.querySelector("#productForm").onsubmit=async e=>{e.preventDefault();if(!await requireAdmin())return;try{const id=Number(document.querySelector("#productId").value),old=products.find(p=>p.id===id),file1=document.querySelector("#productImage1").files[0],file2=document.querySelector("#productImage2").files[0],file3=document.querySelector("#productImage3").files[0],file4=document.querySelector("#productImage4").files[0],video=document.querySelector("#productVideo").files[0];if(file4)await ensureFourthImageColumns();let image_url=old?.image_url||null,image_path=old?.image_path||null,image_url_2=old?.image_url_2||null,image_path_2=old?.image_path_2||null,image_url_3=old?.image_url_3||null,image_path_3=old?.image_path_3||null,image_url_4=old?.image_url_4||null,image_path_4=old?.image_path_4||null,video_url=old?.video_url||null,video_path=old?.video_path||null;if(file1){const u=await uploadMedia(file1,"products","image");image_url=u.url;image_path=u.path;}if(file2){const u=await uploadMedia(file2,"products","image");image_url_2=u.url;image_path_2=u.path;}if(file3){const u=await uploadMedia(file3,"products","image");image_url_3=u.url;image_path_3=u.path;}if(file4){const u=await uploadMedia(file4,"products","image");image_url_4=u.url;image_path_4=u.path;}if(video){const u=await uploadMedia(video,"products","video");video_url=u.url;video_path=u.path;}const category_id=Number(document.querySelector("#productCategory").value);if(!category_id)throw new Error("Selecione uma categoria.");const weightValue=document.querySelector("#productWeightKg").value.trim();const widthValue=document.querySelector("#productPackageWidth").value.trim();const heightValue=document.querySelector("#productPackageHeight").value.trim();const lengthValue=document.querySelector("#productPackageLength").value.trim();if(!weightValue||!widthValue||!heightValue||!lengthValue)throw new Error("Informe peso e as três dimensões da embalagem para o cálculo do frete.");const weight_kg=Number(weightValue),package_width_cm=Number(widthValue),package_height_cm=Number(heightValue),package_length_cm=Number(lengthValue);if(!Number.isFinite(weight_kg)||weight_kg<=0)throw new Error("Informe um peso válido para o frete.");if([package_width_cm,package_height_cm,package_length_cm].some(v=>!Number.isFinite(v)||v<=0))throw new Error("Informe dimensões válidas para a embalagem.");const payload={name:document.querySelector("#productName").value.trim(),description:document.querySelector("#productDescription").value.trim(),measurements:document.querySelector("#productMeasurements").value.trim(),price:Number(document.querySelector("#productPrice").value||0),active:document.querySelector("#productActive").value==="true",category_id,weight_kg,package_width_cm,package_height_cm,package_length_cm,image_url,image_path,image_url_2,image_path_2,image_url_3,image_path_3,image_url_4,image_path_4,video_url,video_path};if(id)await api(`/rest/v1/products?id=eq.${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});else{const max=products.reduce((m,p)=>Math.max(m,p.sort_order||0),0);await api("/rest/v1/products",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({...payload,sort_order:max+1})});}if(file1&&old?.image_path&&old.image_path!==image_path)await removeImage(old.image_path);if(file2&&old?.image_path_2&&old.image_path_2!==image_path_2)await removeImage(old.image_path_2);if(file3&&old?.image_path_3&&old.image_path_3!==image_path_3)await removeImage(old.image_path_3);if(file4&&old?.image_path_4&&old.image_path_4!==image_path_4)await removeImage(old.image_path_4);if(video&&old?.video_path&&old.video_path!==video_path)await removeImage(old.video_path);document.querySelector("#productDialog").close();await loadData();}catch(e){showError(e);}};
 
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>document.querySelector("#"+b.dataset.close).close());
-document.querySelector("#logoutBtn").onclick=()=>{localStorage.removeItem(TOKEN_KEY);accessToken=null;location.reload();};
+document.querySelector("#logoutBtn").onclick=()=>{removeLocalAdmin(TOKEN_KEY);accessToken=null;location.reload();};
 document.querySelector("#resetBtn").onclick=async()=>{if(confirm("Restaurar os exemplos? Isso apagará os produtos do Supabase."))try{await api("/rest/v1/products?id=gt.0",{method:"DELETE"});await loadData();}catch(e){showError(e);}};
 document.querySelector("#exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify({products,categories},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="eralis-conteudo.json";a.click();};
 document.querySelector("#loginForm").addEventListener("submit",e=>{e.preventDefault();signIn();});

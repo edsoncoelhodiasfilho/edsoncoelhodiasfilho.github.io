@@ -4,7 +4,8 @@
   const defaultMsg='Olá! Vim do site da Eralis e quero saber mais sobre as peças 3D.';
   let products=[];
   let productsLoaded=false;
-  let cart=JSON.parse(localStorage.getItem('eralisCart')||'[]');
+  function readCart(){try{const raw=localStorage.getItem('eralisCart');return raw?JSON.parse(raw):[];}catch(_){return []}}
+  let cart=readCart();
   const container=document.getElementById('catalog-rows');
   const overlay=document.getElementById('modal-overlay');
   const image=document.getElementById('modal-image');
@@ -29,7 +30,7 @@
     const label=link.querySelector('span');
     if(!label)return;
 
-    const savedRaw=localStorage.getItem('eralisAuth');
+    let savedRaw=null;try{savedRaw=localStorage.getItem('eralisAuth')}catch(_){}
     if(!savedRaw){
       label.textContent='Minha conta';
       link.setAttribute('aria-label','Minha conta');
@@ -39,7 +40,7 @@
     try{
       const saved=JSON.parse(savedRaw);
       if(!saved?.access_token){
-        localStorage.removeItem('eralisAuth');
+        try{localStorage.removeItem('eralisAuth')}catch(_){}
         label.textContent='Minha conta';
         link.setAttribute('aria-label','Minha conta');
         return;
@@ -56,7 +57,7 @@
       );
 
       if(!userResponse.ok){
-        localStorage.removeItem('eralisAuth');
+        try{localStorage.removeItem('eralisAuth')}catch(_){}
         label.textContent='Minha conta';
         link.setAttribute('aria-label','Minha conta');
         return;
@@ -222,7 +223,7 @@
       setTimeout(()=>{button.textContent=original;button.classList.remove('cart-added-feedback');},900);
     }
   }
-  function saveCart(){localStorage.setItem('eralisCart',JSON.stringify(cart));}
+  function saveCart(){try{localStorage.setItem('eralisCart',JSON.stringify(cart));}catch(_){}}
   function countCart(){return cart.reduce((s,x)=>s+Number(x.qty||0),0);}
   function totalCart(){return cart.reduce((s,x)=>{const p=products.find(y=>String(y.id)===String(x.id));return s+(p?Number(p.price)*Number(x.qty):0)},0);}
 

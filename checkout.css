@@ -12,3 +12,6 @@ body.checkout-page{background:var(--paper)}
 @media(max-width:560px){.shipping-options{padding:12px}.shipping-option{grid-template-columns:18px 1fr auto}.shipping-options-title{align-items:flex-start}.shipping-options-title small{font-size:8px}}
 
 .shipping-test-banner{display:flex;align-items:center;gap:10px;padding:13px 16px;margin:-8px 0 20px;border:1px solid #d8eadf;border-radius:13px;background:#eef9f2;color:#236b45;font-size:11px;line-height:1.45}.shipping-test-banner strong{white-space:nowrap}.shipping-test-banner span{color:#4d705d}@media(max-width:560px){.shipping-test-banner{display:grid;gap:4px;margin-top:0}.shipping-test-banner strong{white-space:normal}}
+
+/* Dialog fallback for mobile browsers without showModal(). */
+dialog[open]{display:block;max-width:calc(100% - 20px);box-sizing:border-box}

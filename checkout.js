@@ -13,7 +13,10 @@
   const SUPABASE_KEY=window.ERALIS_SUPABASE_KEY;
   const $=s=>document.querySelector(s);
   let user=null,profile=null,addresses=[];
-  let cart=JSON.parse(localStorage.getItem('eralisCart')||'[]');
+  function readLocal(key,fallback=null){try{const v=localStorage.getItem(key);return v===null?fallback:v}catch(_){return fallback}}
+  function writeLocal(key,value){try{localStorage.setItem(key,value)}catch(_){}}
+  function removeLocal(key){try{localStorage.removeItem(key)}catch(_){}}
+  let cart=(()=>{try{return JSON.parse(readLocal('eralisCart','[]')||'[]')}catch(_){return []}})();
   let shippingQuotes=[];
   let selectedShipping=null;
   let freightCalculated=false;
@@ -29,7 +32,11 @@
 
   const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-  const authRaw=localStorage.getItem('eralisAuth');
+  const authRaw=readLocal('eralisAuth');
+
+  function openDialog(id){const d=$(id);if(!d)return;if(typeof d.showModal==='function'){d.showModal();}else{d.setAttribute('open','');d.style.display='block';}}
+  function closeDialog(id){const d=$(id);if(!d)return;if(typeof d.close==='function'){d.close();}else{d.removeAttribute('open');d.style.display='none';}}
+
   function status(msg,type='error'){const el=$('#checkoutStatus');if(!el)return;el.textContent=msg||'';el.className='checkout-status '+type;el.hidden=!msg;}
   function headers(){const saved=authRaw?JSON.parse(authRaw):null;return {apikey:SUPABASE_KEY,Authorization:`Bearer ${saved?.access_token||SUPABASE_KEY}`};}
   async function rest(path,options={}){const r=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{...headers(),...(options.headers||{})}});const text=await r.text();if(!r.ok)throw new Error(text||`HTTP ${r.status}`);return text?JSON.parse(text):null;}
@@ -56,7 +63,7 @@
     let saved;try{saved=JSON.parse(authRaw)}catch(_){saved=null}
     if(!saved?.access_token){window.location.href='cliente.html?redirect=checkout.html';return false;}
     const r=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:headers()});
-    if(!r.ok){localStorage.removeItem('eralisAuth');window.location.href='cliente.html?redirect=checkout.html';return false;}
+    if(!r.ok){removeLocal('eralisAuth');window.location.href='cliente.html?redirect=checkout.html';return false;}
     user=await r.json();
     await loadCartProducts();
     const ps=await rest(`customer_profiles?id=eq.${encodeURIComponent(user.id)}&select=*`);
@@ -124,7 +131,7 @@
     if(btn){btn.disabled=!$('input[name="deliveryAddress"]:checked');btn.textContent='Calcular frete →';}
     const note=$('#checkoutNote');
     if(note)note.textContent=shippingDataReady?'O frete será simulado com base no CEP, peso e dimensões da embalagem cadastradas no produto.':'Cadastre peso e dimensões da embalagem dos produtos antes de calcular o frete.';
-    localStorage.removeItem('eralisShippingQuote');
+    removeLocal('eralisShippingQuote');
   }
 
   function resetAddressForm(){ $('#addressForm').reset();$('#addressLabel').value='Casa';$('#addressDefault').checked=addresses.length===0; }
@@ -258,7 +265,7 @@
       shipping.textContent=money(selectedShipping.price);
       shipping.classList.remove('pending');
       $('#total').textContent=money(subtotal+selectedShipping.price);
-      localStorage.setItem('eralisShippingQuote',JSON.stringify(selectedShipping));
+      writeLocal('eralisShippingQuote',JSON.stringify(selectedShipping));
       $('#continueBtn').textContent='Continuar para pagamento →';
       $('#checkoutNote').textContent='Frete simulado selecionado. Na próxima etapa entraremos no pagamento.';
     }else{
@@ -312,9 +319,9 @@
       renderCart();
       renderAddresses();
       resetShipping();
-      $('#newAddressBtn').onclick=()=>{resetAddressForm();$('#addressDialog').showModal();};
-      $('#addressClose').onclick=()=>$('#addressDialog').close();
-      $('#addressCancel').onclick=()=>$('#addressDialog').close();
+      $('#newAddressBtn').onclick=()=>{resetAddressForm();openDialog('addressDialog');};
+      $('#addressClose').onclick=()=>closeDialog('addressDialog');
+      $('#addressCancel').onclick=()=>closeDialog('addressDialog');
       $('#addressForm').addEventListener('submit',saveAddress);
       $('#addressZipcode').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,8).replace(/(\d{5})(\d)/,'$1-$2');});
       $('#addressZipcode').addEventListener('blur',cepLookup);
