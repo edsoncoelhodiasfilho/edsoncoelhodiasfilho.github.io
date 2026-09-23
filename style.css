@@ -177,3 +177,6 @@ footer{border-top:1px solid var(--line);background:#fff}.footer-inner{min-height
 .nav-actions .nav-cart{position:relative}
 .nav-cart-count{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--orange);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;line-height:1;border:2px solid var(--paper);box-sizing:border-box}
 .cart-float{display:none!important}
+/* Área do cliente */
+.nav-account{height:38px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:11px;font-weight:800}.nav-account:hover{border-color:var(--orange);color:var(--orange)}
+@media(max-width:620px){.nav-account{width:38px;padding:0;font-size:16px}.nav-account span{display:none}.nav-links{display:none}.nav-actions{gap:7px}}

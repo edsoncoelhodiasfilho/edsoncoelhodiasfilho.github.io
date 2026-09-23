@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minha conta — ERALIS</title>
+<meta name="description" content="Área do cliente ERALIS — seus dados, endereços e pedidos.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="cliente.css">
+</head>
+<body class="account-page">
+<div class="announcement"><div class="wrap announcement-inner"><span>✨ Peças 3D que deixam o dia mais divertido</span><a href="index.html">Voltar para a loja →</a></div></div>
+<header class="site-header"><div class="wrap nav">
+  <a class="brand" href="index.html" aria-label="ERALIS início"><img src="assets/eralis-logo.png" alt="ERALIS" class="brand-logo"><span><b>ERALIS</b><small>IDEIAS QUE GANHAM FORMA</small></span></a>
+  <div class="nav-actions"><a class="nav-back" href="index.html">← Loja</a></div>
+</div></header>
+<main class="account-main wrap">
+  <div class="account-title"><div><span class="section-kicker">ÁREA DO CLIENTE</span><h1>Minha conta</h1><p>Gerencie seus dados e endereços para deixar suas próximas compras mais rápidas.</p></div></div>
+  <div id="accountStatus" class="account-status" hidden></div>
+
+  <section id="authView" class="auth-card">
+    <div class="auth-intro"><span class="auth-icon">◉</span><h2>Acesse sua conta</h2><p>Entre para salvar seus dados e endereços. Se ainda não tiver cadastro, escolha “Criar conta”.</p></div>
+    <form id="authForm" class="account-form">
+      <label>O que deseja fazer?<select id="authMode"><option value="login">Entrar</option><option value="signup">Criar conta</option></select></label>
+      <div id="signupFields" hidden>
+        <label>Nome completo<input id="signupName" type="text" autocomplete="name"></label>
+        <label>Celular / WhatsApp<input id="signupPhone" type="tel" autocomplete="tel" placeholder="(79) 99999-9999"></label>
+        <label>CPF<input id="signupCpf" type="text" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00"></label>
+      </div>
+      <label>E-mail<input id="loginEmail" type="email" autocomplete="email" required></label>
+      <label>Senha<input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required></label>
+      <button class="btn btn-primary" type="submit">Continuar →</button>
+      <button class="text-button" id="forgotPassword" type="button">Esqueci minha senha</button>
+    </form>
+  </section>
+
+  <section id="accountView" hidden>
+    <div class="account-grid">
+      <article class="account-card profile-card"><div class="card-title"><div><span class="section-kicker">MEUS DADOS</span><h2>Perfil</h2></div><button id="logoutBtn" class="outline-button" type="button">Sair</button></div>
+        <form id="profileForm" class="account-form profile-form">
+          <label>Nome completo<input id="profileName" type="text" required></label>
+          <label>E-mail<input id="profileEmail" type="email" disabled></label>
+          <label>Celular / WhatsApp<input id="profilePhone" type="tel"></label>
+          <label>CPF<input id="profileCpf" type="text" inputmode="numeric"></label>
+          <button class="btn btn-primary" type="submit">Salvar dados</button>
+        </form>
+      </article>
+
+      <article class="account-card"><div class="card-title"><div><span class="section-kicker">ENTREGA</span><h2>Meus endereços</h2></div><button id="newAddressBtn" class="outline-button" type="button">+ Novo</button></div>
+        <div id="addressList" class="address-list"></div>
+      </article>
+    </div>
+
+    <article class="account-card orders-card"><div class="card-title"><div><span class="section-kicker">HISTÓRICO</span><h2>Meus pedidos</h2></div></div><div id="orderList" class="order-list"></div></article>
+  </section>
+</main>
+<footer><div class="wrap footer-inner"><div class="footer-brand"><img src="assets/eralis-logo.png" alt="ERALIS" class="brand-logo"><div><b>ERALIS</b><small>IDEIAS QUE GANHAM FORMA</small></div></div><p>Eralis — peças impressas em 3D, sob encomenda</p><span>Aracaju/SE</span></div></footer>
+
+<dialog id="addressDialog" class="address-dialog"><button class="quote-modal-close" id="addressClose" type="button">×</button><div class="quote-header"><p class="quote-eyebrow">ENDEREÇO DE ENTREGA</p><h2 id="addressFormTitle">Novo endereço</h2><p>Esses dados serão usados no cálculo do frete na próxima etapa.</p></div><form id="addressForm" class="account-form"><input type="hidden" id="addressId"><div class="address-two"><label>Identificação<input id="addressLabel" type="text" value="Casa" required></label><label>CEP<input id="addressZipcode" type="text" inputmode="numeric" placeholder="00000-000" required></label></div><label>Rua / Logradouro<input id="addressStreet" type="text" required></label><div class="address-three"><label>Número<input id="addressNumber" type="text" required></label><label>Complemento<input id="addressComplement" type="text"></label><label>Bairro<input id="addressNeighborhood" type="text" required></label></div><div class="address-two"><label>Cidade<input id="addressCity" type="text" required></label><label>Estado<input id="addressState" type="text" maxlength="2" placeholder="SE" required></label></div><label class="check-row"><input id="addressDefault" type="checkbox"> Usar como endereço padrão</label><div class="dialog-actions"><button class="btn btn-light" id="addressCancel" type="button">Cancelar</button><button class="btn btn-primary" type="submit">Salvar endereço</button></div></form></dialog>
+<script src="supabase-config.js"></script><script src="cliente.js"></script>
+</body></html>
