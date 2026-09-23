@@ -6,7 +6,10 @@
   let sb=null, user=null, profile=null, addresses=[];
 
   function status(msg,type='info'){
-    const el=$('#accountStatus');
+    // Durante login/cadastro, mostre a mensagem dentro do formulário,
+    // logo abaixo dos campos, para que o usuário veja o erro imediatamente.
+    const authVisible=!$('#authView')?.hidden;
+    const el=authVisible?$('#authStatus'):$('#accountStatus');
     if(!el)return;
     el.textContent=msg||'';
     el.className='account-status '+type;
