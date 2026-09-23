@@ -208,7 +208,7 @@
 
   function addToCart(p,qty=1,button=null){
     const found=cart.find(x=>String(x.id)===String(p.id));
-    if(found) found.qty+=qty; else cart.push({id:p.id,qty});
+    if(found){ found.qty+=qty; found.name=p.name; found.price=Number(p.price||0); found.image_url=p.image_url||''; } else cart.push({id:p.id,qty,name:p.name,price:Number(p.price||0),image_url:p.image_url||''});
     saveCart();
     // Ao adicionar, atualiza somente o contador. O carrinho permanece fechado.
     updateCartCount();
@@ -317,10 +317,11 @@ overlay.hidden=true;document.body.style.overflow='';}
       navCart.onclick=e=>{e.preventDefault();openCart();};
     }
     if(document.getElementById('cart-overlay'))return;
-    const o=document.createElement('div');o.id='cart-overlay';o.hidden=true;o.className='cart-overlay';o.innerHTML='<aside class="cart-panel"><button class="modal-close" id="cart-close">×</button><h2>Seu carrinho</h2><div id="cart-items"></div><div class="cart-total"><span>Total estimado</span><strong id="cart-total-value">R$ 0,00</strong></div><button id="cart-whatsapp" class="btn btn-accent">Finalizar pelo WhatsApp</button><a href="#catalogo" id="cart-continue" class="cart-continue">Continuar comprando</a></aside>';document.body.appendChild(o);document.getElementById('cart-close').onclick=closeCart;o.addEventListener('click',e=>{if(e.target===o)closeCart()});document.getElementById('cart-whatsapp').onclick=checkout;
+    const o=document.createElement('div');o.id='cart-overlay';o.hidden=true;o.className='cart-overlay';o.innerHTML='<aside class="cart-panel"><button class="modal-close" id="cart-close">×</button><h2>Seu carrinho</h2><div id="cart-items"></div><div class="cart-total"><span>Total estimado</span><strong id="cart-total-value">R$ 0,00</strong></div><button id="cart-checkout" class="btn btn-primary">Finalizar compra →</button><a href="#catalogo" id="cart-continue" class="cart-continue">Continuar comprando</a></aside>';document.body.appendChild(o);document.getElementById('cart-close').onclick=closeCart;o.addEventListener('click',e=>{if(e.target===o)closeCart()});document.getElementById('cart-checkout').onclick=checkout;
   }
   function renderCart(){ensureCartUI();document.getElementById('cart-count').textContent=countCart();const box=document.getElementById('cart-items');box.innerHTML='';
     cart=cart.filter(x=>products.some(p=>String(p.id)===String(x.id)));
+    cart.forEach(x=>{const p=products.find(y=>String(y.id)===String(x.id));if(p){x.name=p.name;x.price=Number(p.price||0);x.image_url=p.image_url||'';}});
     if(!cart.length){box.innerHTML='<p class="cart-empty">Seu carrinho está vazio.</p>';}else cart.forEach(x=>{const p=products.find(y=>String(y.id)===String(x.id));const item=document.createElement('div');item.className='cart-item';item.innerHTML=`<div><strong>${esc(p.name)}</strong><small>${fmt(p.price)} cada</small></div><div class="cart-controls"><button data-act="dec">−</button><b>${x.qty}</b><button data-act="inc">+</button><button data-act="del" aria-label="Remover">×</button></div>`;item.querySelector('[data-act="dec"]').onclick=()=>changeQty(p.id,-1);item.querySelector('[data-act="inc"]').onclick=()=>changeQty(p.id,1);item.querySelector('[data-act="del"]').onclick=()=>removeItem(p.id);box.appendChild(item);});
     document.getElementById('cart-total-value').textContent=fmt(totalCart());saveCart();
   }
@@ -329,7 +330,13 @@ overlay.hidden=true;document.body.style.overflow='';}
   function openCart(){ensureCartUI();renderCart();document.getElementById('cart-overlay').hidden=false;document.body.style.overflow='hidden';}
   function closeCart(){document.getElementById('cart-overlay').hidden=true;document.body.style.overflow='';}
   document.addEventListener('click',e=>{if(e.target&&e.target.id==='cart-continue'){closeCart();}});
-  function checkout(){if(!cart.length){alert('Seu carrinho está vazio.');return;}const lines=cart.map(x=>{const p=products.find(y=>String(y.id)===String(x.id));return `• ${p.name} — ${x.qty} un. — ${fmt(p.price*x.qty)}`}).join('\n');const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nMe envie o link para pagamento pelo Mercado Pago.\n\nTotal estimado: ${fmt(totalCart())}`;window.open(wa(msg),'_blank','noopener');}
+  function checkout(){
+    if(!cart.length){alert('Seu carrinho está vazio.');return;}
+    saveCart();
+    const saved=localStorage.getItem('eralisAuth');
+    if(!saved){window.location.href='cliente.html?redirect=checkout.html';return;}
+    window.location.href='checkout.html';
+  }
 
   updateNavAccount();
 

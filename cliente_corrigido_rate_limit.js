@@ -6,10 +6,7 @@
   let sb=null, user=null, profile=null, addresses=[];
 
   function status(msg,type='info'){
-    // Durante login/cadastro, mostre a mensagem dentro do formulário,
-    // logo abaixo dos campos, para que o usuário veja o erro imediatamente.
-    const authVisible=!$('#authView')?.hidden;
-    const el=authVisible?$('#authStatus'):$('#accountStatus');
+    const el=$('#accountStatus');
     if(!el)return;
     el.textContent=msg||'';
     el.className='account-status '+type;
@@ -28,36 +25,45 @@
     const headers={apikey:SUPABASE_KEY,'Content-Type':'application/json',...(options.headers||{})};
     const r=await fetch(`${SUPABASE_URL}/auth/v1/${path}`,{...options,headers});
     const data=await r.json().catch(()=>({}));
-    if(!r.ok) throw new Error(data.msg||data.error_description||data.message||'Não foi possível concluir a operação.');
+    if(!r.ok){
+      const err=new Error(data.msg||data.error_description||data.message||'Não foi possível concluir a operação.');
+      err.status=r.status;
+      err.code=data.code||data.error_code||data.error||'';
+      throw err;
+    }
     return data;
+  }
+
+  function authErrorMessage(e,context=''){
+    const raw=String(e?.message||'').toLowerCase();
+    const code=String(e?.code||'').toLowerCase();
+    if(e?.status===429 || raw.includes('rate limit') || raw.includes('rate_limit') || code.includes('rate_limit')){
+      if(context==='signup'){
+        return 'O serviço de cadastro atingiu temporariamente o limite de tentativas. Aguarde alguns minutos antes de tentar novamente.';
+      }
+      return 'Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.';
+    }
+    return e?.message||'Não foi possível concluir a operação.';
   }
   async function signIn(email,password){
     const data=await auth('token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
-    localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
     sb={session:data,user:data.user}; user=data.user; await loadAccount(); render();
   }
   async function signUp(name,email,emailConfirm,phone,cpf,password){
     if(email.toLowerCase()!==emailConfirm.toLowerCase()) throw new Error('Os e-mails não coincidem. Confira os dois campos.');
-    const data=await auth('signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,phone,cpf}})});
+    const cpfDigits=String(cpf||'').replace(/\D/g,'');
+    if(cpfDigits.length!==11) throw new Error('Informe um CPF válido com 11 dígitos.');
+    const data=await auth('signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,phone,cpf:cpfDigits}})});
     if(data.access_token){
       localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
-      sb={session:data,user:data.user};user=data.user;
-      await loadAccount();
-      // O perfil é criado pelo trigger do Supabase; se ainda não estiver disponível,
-      // grava os dados básicos diretamente para que o cliente não precise clicar em Salvar.
-      if(!profile){
-        try{
-          await rest('customer_profiles',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({id:user.id,email:user.email,full_name:name,phone,cpf})});
-          await loadAccount();
-        }catch(_){}
-      }
-      render();
-    }else throw new Error('Não foi possível concluir o cadastro. Verifique as configurações de autenticação do Supabase.');
+      sb={session:data,user:data.user};user=data.user;await loadAccount();render();status('Cadastro realizado. Sua conta está pronta.','success');
+    }else{
+      throw new Error('O cadastro foi recebido, mas o Supabase ainda está exigindo confirmação por e-mail. Desative “Confirm email” em Authentication → Providers → Email.');
+    }
   }
   async function signOut(){
     if(sb?.session?.access_token){await fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:'POST',headers:authHeaders()}).catch(()=>{});}
-    sb=null;user=null;profile=null;addresses=[];localStorage.removeItem('eralisAuth');
-    window.location.href='index.html';
+    sb=null;user=null;profile=null;addresses=[];render();
   }
   async function loadAccount(){
     if(!user)return;
@@ -137,7 +143,7 @@
   async function resetPassword(){
     const email=$('#loginEmail').value.trim();
     if(!email){status('Informe seu e-mail primeiro.','error');return;}
-    try{const redirectTo=new URL('redefinir-senha.html',window.location.href).href; await auth('recover?redirect_to='+encodeURIComponent(redirectTo),{method:'POST',body:JSON.stringify({email,gotrue_meta_security:{}})});status('Enviamos um link para redefinir sua senha, se o e-mail estiver cadastrado.','success');}catch(e){status(e.message,'error');}
+    try{const redirectTo=window.location.origin + window.location.pathname; await auth('recover?redirect_to='+encodeURIComponent(redirectTo),{method:'POST',body:JSON.stringify({email,gotrue_meta_security:{}})});status('Enviamos um link para redefinir sua senha, se o e-mail estiver cadastrado.','success');}catch(e){status(e.message,'error');}
   }
   function formatCpf(value){
     const digits=String(value||'').replace(/\D/g,'').slice(0,11);
@@ -149,30 +155,8 @@
   function bindCpfMask(id){
     const el=$(id);
     if(!el)return;
-    const sanitize=()=>{
-      const digits=el.value.replace(/\D/g,'').slice(0,11);
-      el.value=formatCpf(digits);
-    };
-    el.addEventListener('input',sanitize);
-    el.addEventListener('paste',()=>setTimeout(sanitize,0));
-    el.addEventListener('keydown',e=>{
-      if(e.ctrlKey||e.metaKey||e.altKey)return;
-      const allowed=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
-      if(allowed.includes(e.key))return;
-      if(!/^[0-9]$/.test(e.key))e.preventDefault();
-    });
-  }
-
-  function getSafeReturnUrl(){
-    const raw=new URLSearchParams(window.location.search).get('redirect');
-    if(!raw)return 'index.html';
-    try{
-      const u=new URL(raw,window.location.href);
-      if(u.origin!==window.location.origin)return 'index.html';
-      const path=u.pathname.split('/').pop()||'';
-      if(['index.html','checkout.html','cliente.html'].includes(path))return u.pathname+u.search+u.hash;
-    }catch(_){}
-    return 'index.html';
+    el.addEventListener('input',()=>{el.value=formatCpf(el.value);});
+    el.addEventListener('paste',()=>setTimeout(()=>{el.value=formatCpf(el.value);},0));
   }
 
   function bind(){
@@ -194,10 +178,9 @@
         const pass=$('#loginPassword').value;
         if(mode==='signup'){
           const emailConfirm=$('#signupEmailConfirmInput').value.trim();
-          await signUp($('#signupName').value.trim(),email,emailConfirm,$('#signupPhone').value.trim(),$('#signupCpf').value.replace(/\D/g,''),pass);
+          await signUp($('#signupName').value.trim(),email,emailConfirm,$('#signupPhone').value.trim(),$('#signupCpf').value.trim(),pass);
         }else await signIn(email,pass);
-        window.location.href=getSafeReturnUrl();
-      }catch(e){status(e.message,'error');}
+      }catch(e){status(authErrorMessage(e,$('#authMode').value==='signup'?'signup':'login'),'error');}
       finally{submit.disabled=false;submit.textContent=originalText;}
     });
     $('#forgotPassword').addEventListener('click',resetPassword);
@@ -224,5 +207,7 @@
       render();
     }catch(e){status('Não foi possível carregar sua conta. '+e.message,'error');}
   }
+  // A autenticação já persiste o token nas funções signIn/signUp acima.\n  const oldSignOut=signOut;
+  signOut=async function(){await oldSignOut();localStorage.removeItem('eralisAuth');};
   init();
 })();
