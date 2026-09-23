@@ -132,8 +132,18 @@
   function bindCpfMask(id){
     const el=$(id);
     if(!el)return;
-    el.addEventListener('input',()=>{el.value=formatCpf(el.value);});
-    el.addEventListener('paste',()=>setTimeout(()=>{el.value=formatCpf(el.value);},0));
+    const sanitize=()=>{
+      const digits=el.value.replace(/\D/g,'').slice(0,11);
+      el.value=formatCpf(digits);
+    };
+    el.addEventListener('input',sanitize);
+    el.addEventListener('paste',()=>setTimeout(sanitize,0));
+    el.addEventListener('keydown',e=>{
+      if(e.ctrlKey||e.metaKey||e.altKey)return;
+      const allowed=['Backspace','Delete','Tab','ArrowLeft','ArrowRight','Home','End'];
+      if(allowed.includes(e.key))return;
+      if(!/^[0-9]$/.test(e.key))e.preventDefault();
+    });
   }
 
   function bind(){
@@ -155,7 +165,7 @@
         const pass=$('#loginPassword').value;
         if(mode==='signup'){
           const emailConfirm=$('#signupEmailConfirmInput').value.trim();
-          await signUp($('#signupName').value.trim(),email,emailConfirm,$('#signupPhone').value.trim(),$('#signupCpf').value.trim(),pass);
+          await signUp($('#signupName').value.trim(),email,emailConfirm,$('#signupPhone').value.trim(),$('#signupCpf').value.replace(/\D/g,''),pass);
         }else await signIn(email,pass);
       }catch(e){status(e.message,'error');}
       finally{submit.disabled=false;submit.textContent=originalText;}
