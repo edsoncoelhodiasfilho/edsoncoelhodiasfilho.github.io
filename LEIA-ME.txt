@@ -1,0 +1,14 @@
+ERALIS — Frete usando peso e dimensões do cadastro
+
+1. No Supabase, abra SQL Editor e execute shipping_schema.sql.
+2. Substitua admin.html e admin.js pelos arquivos deste pacote.
+3. Substitua checkout.html, checkout.js e checkout.css pelos arquivos deste pacote.
+4. No Admin, edite cada produto e informe:
+   - Peso para frete (kg)
+   - Largura da embalagem (cm)
+   - Altura da embalagem (cm)
+   - Comprimento da embalagem (cm)
+5. Salve o produto.
+6. Teste o checkout. O cálculo simulado de PAC/SEDEX passa a usar os dados salvos no Supabase.
+
+Observação: as dimensões devem ser da embalagem pronta para envio, e não apenas da peça. O módulo continua sendo uma simulação de Correios e está isolado para futura troca pela API oficial.

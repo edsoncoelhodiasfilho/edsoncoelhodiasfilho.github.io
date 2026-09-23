@@ -17,6 +17,7 @@
   let shippingQuotes=[];
   let selectedShipping=null;
   let freightCalculated=false;
+  let shippingDataReady=false;
 
   // Origem usada somente na simulação.
   // Quando houver integração real, esta informação deverá vir do backend/configuração segura.
@@ -24,7 +25,6 @@
     mode:'simulation',
     carrier:'Correios',
     originCep:'49000-000',
-    defaultPackage:{weightKg:.30,widthCm:20,heightCm:10,lengthCm:20}
   };
 
   const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
@@ -34,6 +34,23 @@
   function headers(){const saved=authRaw?JSON.parse(authRaw):null;return {apikey:SUPABASE_KEY,Authorization:`Bearer ${saved?.access_token||SUPABASE_KEY}`};}
   async function rest(path,options={}){const r=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{...headers(),...(options.headers||{})}});const text=await r.text();if(!r.ok)throw new Error(text||`HTTP ${r.status}`);return text?JSON.parse(text):null;}
 
+  async function loadCartProducts(){
+    const ids=[...new Set(cart.map(x=>String(x?.id||'')).filter(Boolean))];
+    if(!ids.length){shippingDataReady=false;return;}
+    const filter=ids.map(id=>encodeURIComponent(id)).join(',');
+    const rows=await rest(`products?id=in.(${filter})&select=id,name,description,price,image_url,measurements,weight_kg,package_width_cm,package_height_cm,package_length_cm`);
+    const byId=new Map((rows||[]).map(p=>[String(p.id),p]));
+    cart=cart.map(item=>{
+      const p=byId.get(String(item.id));
+      if(!p)return {...item,missingProduct:true};
+      return {...item,...p,qty:Number(item.qty||1)};
+    });
+    const missing=cart.filter(x=>x.missingProduct);
+    const incomplete=cart.filter(x=>!x.missingProduct && (!Number(x.weight_kg)||!Number(x.package_width_cm)||!Number(x.package_height_cm)||!Number(x.package_length_cm)));
+    shippingDataReady=!missing.length&&!incomplete.length;
+    if(missing.length)throw new Error('Um ou mais produtos do carrinho não foram encontrados no catálogo.');
+  }
+
   async function loadUser(){
     if(!authRaw){window.location.href='cliente.html?redirect=checkout.html';return false;}
     let saved;try{saved=JSON.parse(authRaw)}catch(_){saved=null}
@@ -41,6 +58,7 @@
     const r=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:headers()});
     if(!r.ok){localStorage.removeItem('eralisAuth');window.location.href='cliente.html?redirect=checkout.html';return false;}
     user=await r.json();
+    await loadCartProducts();
     const ps=await rest(`customer_profiles?id=eq.${encodeURIComponent(user.id)}&select=*`);
     profile=ps?.[0]||null;
     addresses=await rest(`customer_addresses?customer_id=eq.${encodeURIComponent(user.id)}&select=*&order=is_default.desc,created_at.desc`)||[];
@@ -55,7 +73,7 @@
 
   function renderCart(){
     const box=$('#cartItems');
-    cart=cart.filter(x=>x&&x.id);
+    cart=cart.filter(x=>x&&x.id&&!x.missingProduct);
     if(!cart.length){
       status('Seu carrinho está vazio.','error');
       $('#continueBtn').disabled=true;
@@ -105,7 +123,7 @@
     const btn=$('#continueBtn');
     if(btn){btn.disabled=!$('input[name="deliveryAddress"]:checked');btn.textContent='Calcular frete →';}
     const note=$('#checkoutNote');
-    if(note)note.textContent='O frete será simulado com base no CEP, peso e dimensões estimadas do pedido.';
+    if(note)note.textContent=shippingDataReady?'O frete será simulado com base no CEP, peso e dimensões da embalagem cadastradas no produto.':'Cadastre peso e dimensões da embalagem dos produtos antes de calcular o frete.';
     localStorage.removeItem('eralisShippingQuote');
   }
 
@@ -160,17 +178,17 @@
   // ---------------------------------------------------------
   function buildShipment(){
     // Estrutura propositalmente compatível com uma futura integração real.
-    // Quando produtos tiverem dados próprios, eles poderão sobrescrever os defaults.
+    // Os dados de peso e embalagem vêm diretamente do cadastro de cada produto.
     let weight=0;
     let volume=0;
     let maxWidth=0,maxHeight=0,maxLength=0;
     cart.forEach(item=>{
       const qty=Math.max(1,Number(item.qty||1));
-      const pkg=item.shipping||{};
-      const w=Number(pkg.weightKg||item.weight_kg||SHIPPING_CONFIG.defaultPackage.weightKg);
-      const width=Number(pkg.widthCm||item.width_cm||SHIPPING_CONFIG.defaultPackage.widthCm);
-      const height=Number(pkg.heightCm||item.height_cm||SHIPPING_CONFIG.defaultPackage.heightCm);
-      const length=Number(pkg.lengthCm||item.length_cm||SHIPPING_CONFIG.defaultPackage.lengthCm);
+      const w=Number(item.weight_kg);
+      const width=Number(item.package_width_cm);
+      const height=Number(item.package_height_cm);
+      const length=Number(item.package_length_cm);
+      if(!w||!width||!height||!length)throw new Error(`O produto \"${item.name||'sem nome'}\" está sem peso ou dimensões da embalagem cadastrados.`);
       weight+=w*qty;
       volume+=width*height*length*qty;
       maxWidth=Math.max(maxWidth,width);
@@ -179,8 +197,8 @@
     });
     return {
       originCep:SHIPPING_CONFIG.originCep.replace(/\D/g,''),
-      destinationCep:$('input[name="deliveryAddress"]:checked')?.closest('.checkout-address')?.querySelector('p')?.textContent.match(/CEP\s+(\d[\d.-]+)/i)?.[1]?.replace(/\D/g,'')||'',
-      weightKg:Math.max(.30,weight),
+      destinationCep:(()=>{const id=$('input[name="deliveryAddress"]:checked')?.value;const a=addresses.find(x=>String(x.id)===String(id));return String(a?.zipcode||'').replace(/\D/g,'');})(),
+      weightKg:weight,
       widthCm:Math.max(10,maxWidth),
       heightCm:Math.max(5,maxHeight),
       lengthCm:Math.max(15,maxLength),
@@ -254,6 +272,7 @@
   async function calculateShipping(){
     const selected=$('input[name="deliveryAddress"]:checked');
     if(!selected){status('Selecione um endereço de entrega.','error');return;}
+    if(!shippingDataReady){status('Cadastre peso e as três dimensões da embalagem em todos os produtos do carrinho antes de calcular o frete.','error');return;}
     if(freightCalculated && selectedShipping){
       status('Selecione outra opção ou continue para o pagamento.','success');
       return;
@@ -292,6 +311,7 @@
       renderCustomer();
       renderCart();
       renderAddresses();
+      resetShipping();
       $('#newAddressBtn').onclick=()=>{resetAddressForm();$('#addressDialog').showModal();};
       $('#addressClose').onclick=()=>$('#addressDialog').close();
       $('#addressCancel').onclick=()=>$('#addressDialog').close();
