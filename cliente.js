@@ -122,8 +122,24 @@
     if(!email){status('Informe seu e-mail primeiro.','error');return;}
     try{const redirectTo=window.location.origin + window.location.pathname; await auth('recover?redirect_to='+encodeURIComponent(redirectTo),{method:'POST',body:JSON.stringify({email,gotrue_meta_security:{}})});status('Enviamos um link para redefinir sua senha, se o e-mail estiver cadastrado.','success');}catch(e){status(e.message,'error');}
   }
+  function formatCpf(value){
+    const digits=String(value||'').replace(/\D/g,'').slice(0,11);
+    if(digits.length<=3)return digits;
+    if(digits.length<=6)return digits.replace(/(\d{3})(\d+)/,'$1.$2');
+    if(digits.length<=9)return digits.replace(/(\d{3})(\d{3})(\d+)/,'$1.$2.$3');
+    return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
+  }
+  function bindCpfMask(id){
+    const el=$(id);
+    if(!el)return;
+    el.addEventListener('input',()=>{el.value=formatCpf(el.value);});
+    el.addEventListener('paste',()=>setTimeout(()=>{el.value=formatCpf(el.value);},0));
+  }
+
   function bind(){
     $('#authMode').addEventListener('change',render);
+    bindCpfMask('#signupCpf');
+    bindCpfMask('#profileCpf');
     $('#authForm').addEventListener('submit',async e=>{
       e.preventDefault();
       const form=e.currentTarget;

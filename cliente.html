@@ -26,12 +26,11 @@
       <div id="signupFields" hidden>
         <label>Nome completo<input id="signupName" type="text" autocomplete="name"></label>
         <label>Celular / WhatsApp<input id="signupPhone" type="tel" autocomplete="tel" placeholder="(79) 99999-9999"></label>
-        <label>CPF<input id="signupCpf" type="text" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00"></label>
+        <label>CPF<input id="signupCpf" type="text" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" maxlength="14"></label>
       </div>
       <label>E-mail<input id="loginEmail" type="email" autocomplete="email" required></label>
       <div id="signupEmailConfirm" hidden>
-        <label>Confirme seu e-mail<input id="signupEmailConfirmInput" type="email" autocomplete="email" inputmode="email"></label>
-        <p class="field-help">Digite novamente o mesmo e-mail para evitar erros no cadastro.</p>
+        <label>Confirme seu e-mail<input id="signupEmailConfirmInput" type="email" autocomplete="email" inputmode="email" placeholder="Digite novamente o mesmo e-mail para evitar erros no cadastro."></label>
       </div>
       <label>Senha<input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required></label>
       <button class="btn btn-primary" id="authSubmit" type="submit">Continuar →</button>
@@ -46,7 +45,7 @@
           <label>Nome completo<input id="profileName" type="text" required></label>
           <label>E-mail<input id="profileEmail" type="email" disabled></label>
           <label>Celular / WhatsApp<input id="profilePhone" type="tel"></label>
-          <label>CPF<input id="profileCpf" type="text" inputmode="numeric"></label>
+          <label>CPF<input id="profileCpf" type="text" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" maxlength="14"></label>
           <button class="btn btn-primary" type="submit">Salvar dados</button>
         </form>
       </article>
