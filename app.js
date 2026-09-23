@@ -222,7 +222,7 @@
     });
     let add=document.getElementById('modal-add-cart');
     if(!add){add=document.createElement('button');add.id='modal-add-cart';add.className='btn btn-accent btn-sm add';document.querySelector('.modal-purchase').appendChild(add);}
-    add.textContent='Adicionar ao carrinho'; add.onclick=(e)=>{e.preventDefault();e.stopPropagation();addToCart(currentProduct,1,add);closeProduct();};
+    add.textContent='Adicionar ao carrinho'; add.onclick=(e)=>{e.preventDefault();e.stopPropagation();addToCart(currentProduct,1,add);setTimeout(()=>closeProduct(),2000);};
   }
   function closeProduct(){
 overlay.hidden=true;document.body.style.overflow='';}
