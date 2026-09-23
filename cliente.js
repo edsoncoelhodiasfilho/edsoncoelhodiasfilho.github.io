@@ -32,10 +32,11 @@
     const data=await auth('token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
     sb={session:data,user:data.user}; user=data.user; await loadAccount(); render();
   }
-  async function signUp(name,email,phone,cpf,password){
+  async function signUp(name,email,emailConfirm,phone,cpf,password){
+    if(email.toLowerCase()!==emailConfirm.toLowerCase()) throw new Error('Os e-mails não coincidem. Confira os dois campos.');
     const data=await auth('signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,phone,cpf}})});
     if(data.access_token){sb={session:data,user:data.user};user=data.user;await loadAccount();render();status('Cadastro realizado. Sua conta está pronta.','success');}
-    else status('Cadastro realizado. Verifique seu e-mail para confirmar a conta antes de entrar.','success');
+    else throw new Error('Não foi possível concluir o cadastro. Verifique as configurações de autenticação do Supabase.');
   }
   async function signOut(){
     if(sb?.session?.access_token){await fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:'POST',headers:authHeaders()}).catch(()=>{});}
@@ -51,7 +52,12 @@
     const logged=!!user;
     $('#authView').hidden=logged;
     $('#accountView').hidden=!logged;
-    $('#signupFields').hidden=$('#authMode')?.value!=='signup';
+    const isSignup=$('#authMode')?.value==='signup';
+    $('#signupFields').hidden=!isSignup;
+    $('#signupEmailConfirm').hidden=!isSignup;
+    $('#signupEmailConfirmInput').required=isSignup;
+    $('#signupName').required=isSignup;
+    $('#loginPassword').autocomplete=isSignup?'new-password':'current-password';
     if(!logged)return;
     $('#profileName').value=profile?.full_name||user.user_metadata?.full_name||'';
     $('#profileEmail').value=profile?.email||user.email||'';
@@ -114,11 +120,30 @@
   async function resetPassword(){
     const email=$('#loginEmail').value.trim();
     if(!email){status('Informe seu e-mail primeiro.','error');return;}
-    try{await auth('recover',{method:'POST',body:JSON.stringify({email,gotrue_meta_security:{},redirect_to:window.location.href})});status('Enviamos um link para redefinir sua senha, se o e-mail estiver cadastrado.','success');}catch(e){status(e.message,'error');}
+    try{const redirectTo=window.location.origin + window.location.pathname; await auth('recover?redirect_to='+encodeURIComponent(redirectTo),{method:'POST',body:JSON.stringify({email,gotrue_meta_security:{}})});status('Enviamos um link para redefinir sua senha, se o e-mail estiver cadastrado.','success');}catch(e){status(e.message,'error');}
   }
   function bind(){
     $('#authMode').addEventListener('change',render);
-    $('#authForm').addEventListener('submit',async e=>{e.preventDefault();status('');try{const mode=$('#authMode').value;const email=$('#loginEmail').value.trim();const pass=$('#loginPassword').value;if(mode==='signup'){await signUp($('#signupName').value.trim(),email,$('#signupPhone').value.trim(),$('#signupCpf').value.trim(),pass);}else await signIn(email,pass);}catch(e){status(e.message,'error');}});
+    $('#authForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const form=e.currentTarget;
+      const submit=$('#authSubmit');
+      if(submit.disabled)return;
+      status('');
+      submit.disabled=true;
+      const originalText=submit.textContent;
+      submit.textContent=$('#authMode').value==='signup'?'Criando sua conta...':'Entrando...';
+      try{
+        const mode=$('#authMode').value;
+        const email=$('#loginEmail').value.trim();
+        const pass=$('#loginPassword').value;
+        if(mode==='signup'){
+          const emailConfirm=$('#signupEmailConfirmInput').value.trim();
+          await signUp($('#signupName').value.trim(),email,emailConfirm,$('#signupPhone').value.trim(),$('#signupCpf').value.trim(),pass);
+        }else await signIn(email,pass);
+      }catch(e){status(e.message,'error');}
+      finally{submit.disabled=false;submit.textContent=originalText;}
+    });
     $('#forgotPassword').addEventListener('click',resetPassword);
     $('#profileForm').addEventListener('submit',saveProfile);
     $('#logoutBtn').addEventListener('click',signOut);
@@ -133,8 +158,6 @@
     if(!SUPABASE_URL||!SUPABASE_KEY){status('Supabase não configurado.','error');return;}
     bind();
     try{
-      const token=location.hash.match(/access_token=([^&]+)/)?.[1];
-      if(token){history.replaceState({},'',location.pathname);}
       // Recupera a sessão persistida manualmente via localStorage usada por esta área.
       const saved=JSON.parse(localStorage.getItem('eralisAuth')||'null');
       if(saved?.access_token){
@@ -144,14 +167,21 @@
       }
       render();
     }catch(e){status('Não foi possível carregar sua conta. '+e.message,'error');}
-    // Guarda tokens obtidos pelo login/signup e sincroniza a página.
-    const originalSignIn=signIn;
   }
   // Sobrescreve os pontos de autenticação para persistir o token entre páginas.
   const oldSignIn=signIn;
   signIn=async function(email,password){const data=await auth('token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token}));sb={session:data,user:data.user};user=data.user;await loadAccount();render();};
   const oldSignUp=signUp;
-  signUp=async function(name,email,phone,cpf,password){const data=await auth('signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,phone,cpf}})});if(data.access_token){localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token}));sb={session:data,user:data.user};user=data.user;await loadAccount();render();status('Cadastro realizado. Sua conta está pronta.','success');}else status('Cadastro realizado. Verifique seu e-mail para confirmar a conta antes de entrar.','success');};
+  signUp=async function(name,email,emailConfirm,phone,cpf,password){
+    if(email.toLowerCase()!==emailConfirm.toLowerCase()) throw new Error('Os e-mails não coincidem. Confira os dois campos.');
+    const data=await auth('signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,phone,cpf}})});
+    if(data.access_token){
+      localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
+      sb={session:data,user:data.user};user=data.user;await loadAccount();render();status('Cadastro realizado. Sua conta está pronta.','success');
+    }else{
+      throw new Error('O Supabase ainda está exigindo confirmação por e-mail. Desative “Confirm email” nas configurações de Authentication do projeto.');
+    }
+  };
   const oldSignOut=signOut;
   signOut=async function(){await oldSignOut();localStorage.removeItem('eralisAuth');};
   init();

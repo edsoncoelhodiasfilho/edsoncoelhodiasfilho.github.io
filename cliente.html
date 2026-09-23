@@ -29,8 +29,12 @@
         <label>CPF<input id="signupCpf" type="text" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00"></label>
       </div>
       <label>E-mail<input id="loginEmail" type="email" autocomplete="email" required></label>
+      <div id="signupEmailConfirm" hidden>
+        <label>Confirme seu e-mail<input id="signupEmailConfirmInput" type="email" autocomplete="email" inputmode="email"></label>
+        <p class="field-help">Digite novamente o mesmo e-mail para evitar erros no cadastro.</p>
+      </div>
       <label>Senha<input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required></label>
-      <button class="btn btn-primary" type="submit">Continuar →</button>
+      <button class="btn btn-primary" id="authSubmit" type="submit">Continuar →</button>
       <button class="text-button" id="forgotPassword" type="button">Esqueci minha senha</button>
     </form>
   </section>
