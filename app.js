@@ -4,8 +4,7 @@
   const defaultMsg='Olá! Vim do site da Eralis e quero saber mais sobre as peças 3D.';
   let products=[];
   let productsLoaded=false;
-  function readCart(){try{const raw=localStorage.getItem('eralisCart');return raw?JSON.parse(raw):[];}catch(_){return []}}
-  let cart=readCart();
+  let cart=JSON.parse(localStorage.getItem('eralisCart')||'[]');
   const container=document.getElementById('catalog-rows');
   const overlay=document.getElementById('modal-overlay');
   const image=document.getElementById('modal-image');
@@ -30,7 +29,7 @@
     const label=link.querySelector('span');
     if(!label)return;
 
-    let savedRaw=null;try{savedRaw=localStorage.getItem('eralisAuth')}catch(_){}
+    const savedRaw=localStorage.getItem('eralisAuth');
     if(!savedRaw){
       label.textContent='Minha conta';
       link.setAttribute('aria-label','Minha conta');
@@ -40,7 +39,7 @@
     try{
       const saved=JSON.parse(savedRaw);
       if(!saved?.access_token){
-        try{localStorage.removeItem('eralisAuth')}catch(_){}
+        localStorage.removeItem('eralisAuth');
         label.textContent='Minha conta';
         link.setAttribute('aria-label','Minha conta');
         return;
@@ -57,7 +56,7 @@
       );
 
       if(!userResponse.ok){
-        try{localStorage.removeItem('eralisAuth')}catch(_){}
+        localStorage.removeItem('eralisAuth');
         label.textContent='Minha conta';
         link.setAttribute('aria-label','Minha conta');
         return;
@@ -206,6 +205,8 @@
     ensureCartUI();
     const count=document.getElementById('cart-count');
     if(count) count.textContent=countCart();
+    const mobileCount=document.getElementById('mobile-cart-count');
+    if(mobileCount) mobileCount.textContent=countCart();
   }
 
   function addToCart(p,qty=1,button=null){
@@ -223,7 +224,7 @@
       setTimeout(()=>{button.textContent=original;button.classList.remove('cart-added-feedback');},900);
     }
   }
-  function saveCart(){try{localStorage.setItem('eralisCart',JSON.stringify(cart));}catch(_){}}
+  function saveCart(){localStorage.setItem('eralisCart',JSON.stringify(cart));}
   function countCart(){return cart.reduce((s,x)=>s+Number(x.qty||0),0);}
   function totalCart(){return cart.reduce((s,x)=>{const p=products.find(y=>String(y.id)===String(x.id));return s+(p?Number(p.price)*Number(x.qty):0)},0);}
 
@@ -318,10 +319,26 @@ overlay.hidden=true;document.body.style.overflow='';}
       if(!count){count=document.createElement('span');count.id='cart-count';count.className='nav-cart-count';navCart.appendChild(count);}
       navCart.onclick=e=>{e.preventDefault();openCart();};
     }
+
+    // No mobile, o carrinho permanece sempre acessível sem obrigar o cliente
+    // a voltar ao topo da página. O botão é criado uma única vez e reutiliza
+    // exatamente a mesma função do carrinho do cabeçalho.
+    let mobileCart=document.getElementById('mobile-cart-float');
+    if(!mobileCart){
+      mobileCart=document.createElement('button');
+      mobileCart.type='button';
+      mobileCart.id='mobile-cart-float';
+      mobileCart.className='mobile-cart-float';
+      mobileCart.setAttribute('aria-label','Abrir carrinho');
+      mobileCart.innerHTML='<span class="mobile-cart-icon" aria-hidden="true">🛒</span><span class="mobile-cart-label">Carrinho</span><span id="mobile-cart-count" class="mobile-cart-count">0</span>';
+      document.body.appendChild(mobileCart);
+      mobileCart.addEventListener('click',openCart);
+    }
+
     if(document.getElementById('cart-overlay'))return;
     const o=document.createElement('div');o.id='cart-overlay';o.hidden=true;o.className='cart-overlay';o.innerHTML='<aside class="cart-panel"><button class="modal-close" id="cart-close">×</button><h2>Seu carrinho</h2><div id="cart-items"></div><div class="cart-total"><span>Total estimado</span><strong id="cart-total-value">R$ 0,00</strong></div><button id="cart-checkout" class="btn btn-primary">Finalizar compra →</button><a href="#catalogo" id="cart-continue" class="cart-continue">Continuar comprando</a></aside>';document.body.appendChild(o);document.getElementById('cart-close').onclick=closeCart;o.addEventListener('click',e=>{if(e.target===o)closeCart()});document.getElementById('cart-checkout').onclick=checkout;
   }
-  function renderCart(){ensureCartUI();document.getElementById('cart-count').textContent=countCart();const box=document.getElementById('cart-items');box.innerHTML='';
+  function renderCart(){ensureCartUI();document.getElementById('cart-count').textContent=countCart();const mobileCount=document.getElementById('mobile-cart-count');if(mobileCount)mobileCount.textContent=countCart();const box=document.getElementById('cart-items');box.innerHTML='';
     // Na primeira renderização, os produtos ainda podem estar sendo carregados do Supabase.
     // Nunca filtre nem grave o carrinho nesse momento, pois isso poderia apagar o localStorage
     // ao voltar do checkout para a loja antes do evento eralis-content-loaded.

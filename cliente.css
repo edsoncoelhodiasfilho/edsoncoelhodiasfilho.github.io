@@ -9,6 +9,3 @@
 @media(max-width:480px){.wrap{width:min(100% - 28px,1180px)}.auth-card,.account-card{padding:20px}.address-two,.address-three{grid-template-columns:1fr}.address-three label:last-child{grid-column:auto}.dialog-actions{flex-direction:column-reverse}.dialog-actions .btn{width:100%}}
 
 .field-help{font-size:12px;color:var(--muted);margin:-8px 0 8px;line-height:1.45}
-
-/* Dialog fallback for mobile browsers without showModal(). */
-dialog[open]{display:block;max-width:calc(100% - 20px);box-sizing:border-box}

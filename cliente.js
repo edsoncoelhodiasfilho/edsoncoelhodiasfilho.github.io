@@ -3,9 +3,6 @@
   const SUPABASE_URL=window.ERALIS_SUPABASE_URL;
   const SUPABASE_KEY=window.ERALIS_SUPABASE_KEY;
   const $=s=>document.querySelector(s);
-  function readLocal(key,fallback=null){try{const v=localStorage.getItem(key);return v===null?fallback:v}catch(_){return fallback}}
-  function writeLocal(key,value){try{localStorage.setItem(key,value)}catch(_){}}
-  function removeLocal(key){try{localStorage.removeItem(key)}catch(_){}}
   let sb=null, user=null, profile=null, addresses=[];
 
   function status(msg,type='info'){
@@ -21,9 +18,6 @@
   function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
   function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
   function authHeaders(){return {apikey:SUPABASE_KEY,Authorization:`Bearer ${sb?.session?.access_token||SUPABASE_KEY}`};}
-  function openAddressDialog(){const d=document.getElementById('addressDialog');if(!d)return;if(typeof d.showModal==='function')d.showModal();else{d.setAttribute('open','');d.style.display='block';}}
-  function closeAddressDialog(){const d=document.getElementById('addressDialog');if(!d)return;if(typeof d.close==='function')d.close();else{d.removeAttribute('open');d.style.display='none';}}
-
   async function rest(path,options={}){
     const headers={...authHeaders(),...(options.headers||{})};
     const r=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers});
@@ -39,14 +33,14 @@
   }
   async function signIn(email,password){
     const data=await auth('token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
-    writeLocal('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
+    localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
     sb={session:data,user:data.user}; user=data.user; await loadAccount(); render();
   }
   async function signUp(name,email,emailConfirm,phone,cpf,password){
     if(email.toLowerCase()!==emailConfirm.toLowerCase()) throw new Error('Os e-mails não coincidem. Confira os dois campos.');
     const data=await auth('signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,phone,cpf}})});
     if(data.access_token){
-      writeLocal('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
+      localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
       sb={session:data,user:data.user};user=data.user;
       await loadAccount();
       // O perfil é criado pelo trigger do Supabase; se ainda não estiver disponível,
@@ -62,7 +56,7 @@
   }
   async function signOut(){
     if(sb?.session?.access_token){await fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:'POST',headers:authHeaders()}).catch(()=>{});}
-    sb=null;user=null;profile=null;addresses=[];removeLocal('eralisAuth');
+    sb=null;user=null;profile=null;addresses=[];localStorage.removeItem('eralisAuth');
     window.location.href='index.html';
   }
   async function loadAccount(){
@@ -105,7 +99,7 @@
     $('#addressForm').reset(); $('#addressId').value=''; $('#addressLabel').value='Casa'; $('#addressDefault').checked=addresses.length===0; $('#addressFormTitle').textContent='Novo endereço';
   }
   function fillAddress(a){
-    $('#addressId').value=a.id; $('#addressLabel').value=a.label||'Casa'; $('#addressZipcode').value=a.zipcode||''; $('#addressStreet').value=a.street||''; $('#addressNumber').value=a.number||''; $('#addressComplement').value=a.complement||''; $('#addressNeighborhood').value=a.neighborhood||''; $('#addressCity').value=a.city||''; $('#addressState').value=a.state||''; $('#addressDefault').checked=!!a.is_default; $('#addressFormTitle').textContent='Editar endereço'; openAddressDialog();
+    $('#addressId').value=a.id; $('#addressLabel').value=a.label||'Casa'; $('#addressZipcode').value=a.zipcode||''; $('#addressStreet').value=a.street||''; $('#addressNumber').value=a.number||''; $('#addressComplement').value=a.complement||''; $('#addressNeighborhood').value=a.neighborhood||''; $('#addressCity').value=a.city||''; $('#addressState').value=a.state||''; $('#addressDefault').checked=!!a.is_default; $('#addressFormTitle').textContent='Editar endereço'; $('#addressDialog').showModal();
   }
   async function cepLookup(){
     const cep=$('#addressZipcode').value.replace(/\D/g,'');
@@ -133,7 +127,7 @@
       if(payload.is_default) await rest(`customer_addresses?customer_id=eq.${encodeURIComponent(user.id)}`,{method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({is_default:false})});
       if(id) await rest(`customer_addresses?id=eq.${encodeURIComponent(id)}&customer_id=eq.${encodeURIComponent(user.id)}`,{method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(payload)});
       else await rest('customer_addresses',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(payload)});
-      closeAddressDialog();await loadAccount();renderAddresses();status('Endereço salvo.','success');
+      $('#addressDialog').close();await loadAccount();renderAddresses();status('Endereço salvo.','success');
     }catch(e){status('Não foi possível salvar o endereço. '+e.message,'error');}
   }
   async function deleteAddress(id){
@@ -209,9 +203,9 @@
     $('#forgotPassword').addEventListener('click',resetPassword);
     $('#profileForm').addEventListener('submit',saveProfile);
     $('#logoutBtn').addEventListener('click',signOut);
-    $('#newAddressBtn').addEventListener('click',()=>{resetAddressForm();openAddressDialog();});
-    $('#addressClose').addEventListener('click',()=>closeAddressDialog());
-    $('#addressCancel').addEventListener('click',()=>closeAddressDialog());
+    $('#newAddressBtn').addEventListener('click',()=>{resetAddressForm();$('#addressDialog').showModal();});
+    $('#addressClose').addEventListener('click',()=>$('#addressDialog').close());
+    $('#addressCancel').addEventListener('click',()=>$('#addressDialog').close());
     $('#addressForm').addEventListener('submit',saveAddress);
     $('#addressZipcode').addEventListener('blur',cepLookup);
     $('#addressList').addEventListener('click',e=>{const edit=e.target.closest('[data-address-edit]');const del=e.target.closest('[data-address-delete]');if(edit){const a=addresses.find(x=>String(x.id)===String(edit.dataset.addressEdit));if(a)fillAddress(a);}if(del)deleteAddress(del.dataset.addressDelete);});
@@ -221,11 +215,11 @@
     bind();
     try{
       // Recupera a sessão persistida manualmente via localStorage usada por esta área.
-      const saved=JSON.parse(readLocal('eralisAuth','null')||'null');
+      const saved=JSON.parse(localStorage.getItem('eralisAuth')||'null');
       if(saved?.access_token){
         const r=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${saved.access_token}`}});
         if(r.ok){user=await r.json();sb={session:{access_token:saved.access_token},user};await loadAccount();}
-        else removeLocal('eralisAuth');
+        else localStorage.removeItem('eralisAuth');
       }
       render();
     }catch(e){status('Não foi possível carregar sua conta. '+e.message,'error');}
