@@ -234,8 +234,13 @@ overlay.hidden=true;document.body.style.overflow='';}
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!zoomOverlay.hidden){zoomOverlay.hidden=true;zoomImg.removeAttribute('src');}else if(!overlay.hidden)closeProduct();}});
 
   function ensureCartUI(){
-    if(document.getElementById('cart-float'))return;
-    const b=document.createElement('button');b.id='cart-float';b.className='btn btn-accent cart-float';b.innerHTML='Carrinho <span id="cart-count">0</span>';b.onclick=openCart;document.body.appendChild(b);
+    const navCart=document.querySelector('.nav-cart');
+    if(navCart){
+      let count=document.getElementById('cart-count');
+      if(!count){count=document.createElement('span');count.id='cart-count';count.className='nav-cart-count';navCart.appendChild(count);}
+      navCart.onclick=e=>{e.preventDefault();openCart();};
+    }
+    if(document.getElementById('cart-overlay'))return;
     const o=document.createElement('div');o.id='cart-overlay';o.hidden=true;o.className='cart-overlay';o.innerHTML='<aside class="cart-panel"><button class="modal-close" id="cart-close">×</button><h2>Seu carrinho</h2><div id="cart-items"></div><div class="cart-total"><span>Total estimado</span><strong id="cart-total-value">R$ 0,00</strong></div><button id="cart-whatsapp" class="btn btn-accent">Finalizar pelo WhatsApp</button><a href="#catalogo" id="cart-continue" class="cart-continue">Continuar comprando</a></aside>';document.body.appendChild(o);document.getElementById('cart-close').onclick=closeCart;o.addEventListener('click',e=>{if(e.target===o)closeCart()});document.getElementById('cart-whatsapp').onclick=checkout;
   }
   function renderCart(){ensureCartUI();document.getElementById('cart-count').textContent=countCart();const box=document.getElementById('cart-items');box.innerHTML='';

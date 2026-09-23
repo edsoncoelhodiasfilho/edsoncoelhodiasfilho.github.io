@@ -171,3 +171,9 @@ footer{border-top:1px solid var(--line);background:#fff}.footer-inner{min-height
     animation: none !important;
   }
 }
+
+
+/* Contador do carrinho no botão redondo do topo */
+.nav-actions .nav-cart{position:relative}
+.nav-cart-count{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--orange);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;line-height:1;border:2px solid var(--paper);box-sizing:border-box}
+.cart-float{display:none!important}
