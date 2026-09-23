@@ -20,6 +20,82 @@
   const wa=t=>`https://wa.me/${phone}?text=${encodeURIComponent(t)}`;
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 
+
+  async function updateNavAccount(){
+    const link=document.querySelector('.nav-account');
+    if(!link)return;
+
+    const label=link.querySelector('span');
+    if(!label)return;
+
+    const savedRaw=localStorage.getItem('eralisAuth');
+    if(!savedRaw){
+      label.textContent='Minha conta';
+      link.setAttribute('aria-label','Minha conta');
+      return;
+    }
+
+    try{
+      const saved=JSON.parse(savedRaw);
+      if(!saved?.access_token){
+        localStorage.removeItem('eralisAuth');
+        label.textContent='Minha conta';
+        link.setAttribute('aria-label','Minha conta');
+        return;
+      }
+
+      const headers={
+        apikey: window.ERALIS_SUPABASE_KEY,
+        Authorization: `Bearer ${saved.access_token}`
+      };
+
+      const userResponse=await fetch(
+        `${window.ERALIS_SUPABASE_URL}/auth/v1/user`,
+        {headers}
+      );
+
+      if(!userResponse.ok){
+        localStorage.removeItem('eralisAuth');
+        label.textContent='Minha conta';
+        link.setAttribute('aria-label','Minha conta');
+        return;
+      }
+
+      const authUser=await userResponse.json();
+      let firstName='';
+
+      // Prefer the current profile name so changes made in "Minha conta"
+      // are reflected on the store homepage.
+      if(authUser?.id){
+        try{
+          const profileResponse=await fetch(
+            `${window.ERALIS_SUPABASE_URL}/rest/v1/customer_profiles?id=eq.${encodeURIComponent(authUser.id)}&select=full_name`,
+            {headers}
+          );
+          if(profileResponse.ok){
+            const rows=await profileResponse.json();
+            firstName=String(rows?.[0]?.full_name||'').trim().split(/\s+/)[0]||'';
+          }
+        }catch(_){}
+      }
+
+      if(!firstName){
+        firstName=String(authUser?.user_metadata?.full_name||authUser?.email||'').trim().split(/\s+/)[0]||'';
+      }
+
+      if(firstName){
+        label.textContent=firstName;
+        link.setAttribute('aria-label',`Minha conta — ${firstName}`);
+      }else{
+        label.textContent='Minha conta';
+        link.setAttribute('aria-label','Minha conta');
+      }
+    }catch(_){
+      label.textContent='Minha conta';
+      link.setAttribute('aria-label','Minha conta');
+    }
+  }
+
   function setupWhatsApp(){ ['wa-header','wa-hero','wa-cta','wa-float'].forEach(id=>{const el=document.getElementById(id);if(el)el.href=wa(defaultMsg);}); }
   setupWhatsApp();
 
@@ -255,6 +331,9 @@ overlay.hidden=true;document.body.style.overflow='';}
   document.addEventListener('click',e=>{if(e.target&&e.target.id==='cart-continue'){closeCart();}});
   function checkout(){if(!cart.length){alert('Seu carrinho está vazio.');return;}const lines=cart.map(x=>{const p=products.find(y=>String(y.id)===String(x.id));return `• ${p.name} — ${x.qty} un. — ${fmt(p.price*x.qty)}`}).join('\n');const msg=`Olá! Quero fazer um pedido na ERALIS.\n\n${lines}\n\nMe envie o link para pagamento pelo Mercado Pago.\n\nTotal estimado: ${fmt(totalCart())}`;window.open(wa(msg),'_blank','noopener');}
 
+  updateNavAccount();
+
   window.addEventListener('eralis-content-loaded',e=>{products=(e.detail.products||[]).map(normalize);products.forEach(p=>{p.category=p.category||'Produtos'});renderCatalog();renderCart();});
   ensureCartUI();renderCart();
+  window.addEventListener('storage',e=>{if(e.key==='eralisAuth')updateNavAccount();});
 })();
