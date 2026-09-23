@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redefinir senha — ERALIS</title>
+  <link rel="stylesheet" href="cliente.css">
+  <style>
+    .reset-page{min-height:100vh;display:grid;place-items:center;padding:32px 16px;box-sizing:border-box}
+    .reset-card{width:min(100%,460px);padding:32px;border-radius:18px;background:#fff;box-shadow:0 18px 50px rgba(0,0,0,.10)}
+    .reset-logo{display:block;max-width:170px;max-height:70px;margin:0 auto 24px;object-fit:contain}
+    .reset-card h1{margin:0 0 10px;text-align:center}
+    .reset-card .intro{text-align:center;margin:0 0 24px;color:#666;line-height:1.5}
+    .reset-card label{display:block;margin:14px 0 7px;font-weight:600}
+    .reset-card input{width:100%;box-sizing:border-box}
+    .reset-btn{width:100%;margin-top:20px}
+    .reset-status{margin-top:16px;padding:12px 14px;border-radius:10px;line-height:1.45}
+    .reset-status.error{background:#fff0f0;color:#a33}
+    .reset-status.success{background:#eefaf1;color:#176b35}
+    .reset-status[hidden]{display:none}
+    .reset-back{text-align:center;margin-top:18px}
+  </style>
+</head>
+<body>
+  <main class="reset-page">
+    <section class="reset-card" aria-labelledby="resetTitle">
+      <img class="reset-logo" src="assets/eralis-logo.png" alt="ERALIS" onerror="this.hidden=true">
+      <h1 id="resetTitle">Redefina sua senha</h1>
+      <p class="intro">Crie uma nova senha para acessar sua conta ERALIS.</p>
+
+      <form id="resetForm" novalidate>
+        <label for="newPassword">Nova senha</label>
+        <input id="newPassword" type="password" autocomplete="new-password" minlength="6" required>
+
+        <label for="confirmPassword">Confirmar nova senha</label>
+        <input id="confirmPassword" type="password" autocomplete="new-password" minlength="6" required>
+
+        <button id="resetSubmit" class="btn btn-accent reset-btn" type="submit">Redefinir senha</button>
+        <div id="resetStatus" class="reset-status" role="alert" hidden></div>
+      </form>
+
+      <p class="reset-back"><a href="cliente.html">Voltar para minha conta</a></p>
+    </section>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script>
+  (function(){
+    'use strict';
+    const SUPABASE_URL=window.ERALIS_SUPABASE_URL;
+    const SUPABASE_KEY=window.ERALIS_SUPABASE_KEY;
+    const $=s=>document.querySelector(s);
+    const statusEl=$('#resetStatus');
+
+    function status(msg,type){
+      statusEl.textContent=msg||'';
+      statusEl.className='reset-status '+(type||'');
+      statusEl.hidden=!msg;
+    }
+
+    async function updatePassword(password,accessToken){
+      const r=await fetch(SUPABASE_URL+'/auth/v1/user',{
+        method:'PUT',
+        headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},
+        body:JSON.stringify({password})
+      });
+      const data=await r.json().catch(()=>({}));
+      if(!r.ok) throw new Error(data.msg||data.error_description||data.message||'Não foi possível redefinir sua senha.');
+      return data;
+    }
+
+    function getAccessToken(){
+      const hash=new URLSearchParams(window.location.hash.replace(/^#/,'') );
+      const query=new URLSearchParams(window.location.search);
+      return hash.get('access_token')||query.get('access_token');
+    }
+
+    const token=getAccessToken();
+    if(!token){
+      status('Este link de redefinição é inválido ou expirou. Solicite um novo link na página de login.','error');
+      $('#resetSubmit').disabled=true;
+    }
+
+    $('#resetForm').addEventListener('submit',async function(e){
+      e.preventDefault();
+      if(!token)return;
+      const password=$('#newPassword').value;
+      const confirm=$('#confirmPassword').value;
+      if(password.length<6){status('A senha deve ter pelo menos 6 caracteres.','error');return;}
+      if(password!==confirm){status('As senhas não coincidem. Confira os dois campos.','error');return;}
+      const btn=$('#resetSubmit');
+      btn.disabled=true;
+      btn.textContent='Salvando...';
+      status('');
+      try{
+        await updatePassword(password,token);
+        localStorage.removeItem('eralisAuth');
+        status('Senha alterada com sucesso! Você já pode entrar na sua conta.','success');
+        $('#resetForm').reset();
+        setTimeout(()=>{window.location.href='cliente.html';},1400);
+      }catch(e){
+        status(e.message,'error');
+        btn.disabled=false;
+        btn.textContent='Redefinir senha';
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

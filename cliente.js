@@ -137,7 +137,7 @@
   async function resetPassword(){
     const email=$('#loginEmail').value.trim();
     if(!email){status('Informe seu e-mail primeiro.','error');return;}
-    try{const redirectTo=window.location.origin + window.location.pathname; await auth('recover?redirect_to='+encodeURIComponent(redirectTo),{method:'POST',body:JSON.stringify({email,gotrue_meta_security:{}})});status('Enviamos um link para redefinir sua senha, se o e-mail estiver cadastrado.','success');}catch(e){status(e.message,'error');}
+    try{const redirectTo=new URL('redefinir-senha.html',window.location.href).href; await auth('recover?redirect_to='+encodeURIComponent(redirectTo),{method:'POST',body:JSON.stringify({email,gotrue_meta_security:{}})});status('Enviamos um link para redefinir sua senha, se o e-mail estiver cadastrado.','success');}catch(e){status(e.message,'error');}
   }
   function formatCpf(value){
     const digits=String(value||'').replace(/\D/g,'').slice(0,11);
