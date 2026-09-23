@@ -30,17 +30,31 @@
   }
   async function signIn(email,password){
     const data=await auth('token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
+    localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
     sb={session:data,user:data.user}; user=data.user; await loadAccount(); render();
   }
   async function signUp(name,email,emailConfirm,phone,cpf,password){
     if(email.toLowerCase()!==emailConfirm.toLowerCase()) throw new Error('Os e-mails não coincidem. Confira os dois campos.');
     const data=await auth('signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,phone,cpf}})});
-    if(data.access_token){sb={session:data,user:data.user};user=data.user;await loadAccount();render();status('Cadastro realizado. Sua conta está pronta.','success');}
-    else throw new Error('Não foi possível concluir o cadastro. Verifique as configurações de autenticação do Supabase.');
+    if(data.access_token){
+      localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
+      sb={session:data,user:data.user};user=data.user;
+      await loadAccount();
+      // O perfil é criado pelo trigger do Supabase; se ainda não estiver disponível,
+      // grava os dados básicos diretamente para que o cliente não precise clicar em Salvar.
+      if(!profile){
+        try{
+          await rest('customer_profiles',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({id:user.id,email:user.email,full_name:name,phone,cpf})});
+          await loadAccount();
+        }catch(_){}
+      }
+      render();
+    }else throw new Error('Não foi possível concluir o cadastro. Verifique as configurações de autenticação do Supabase.');
   }
   async function signOut(){
     if(sb?.session?.access_token){await fetch(`${SUPABASE_URL}/auth/v1/logout`,{method:'POST',headers:authHeaders()}).catch(()=>{});}
-    sb=null;user=null;profile=null;addresses=[];render();
+    sb=null;user=null;profile=null;addresses=[];localStorage.removeItem('eralisAuth');
+    window.location.href='index.html';
   }
   async function loadAccount(){
     if(!user)return;
@@ -167,6 +181,7 @@
           const emailConfirm=$('#signupEmailConfirmInput').value.trim();
           await signUp($('#signupName').value.trim(),email,emailConfirm,$('#signupPhone').value.trim(),$('#signupCpf').value.replace(/\D/g,''),pass);
         }else await signIn(email,pass);
+        window.location.href='index.html';
       }catch(e){status(e.message,'error');}
       finally{submit.disabled=false;submit.textContent=originalText;}
     });
@@ -194,21 +209,5 @@
       render();
     }catch(e){status('Não foi possível carregar sua conta. '+e.message,'error');}
   }
-  // Sobrescreve os pontos de autenticação para persistir o token entre páginas.
-  const oldSignIn=signIn;
-  signIn=async function(email,password){const data=await auth('token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token}));sb={session:data,user:data.user};user=data.user;await loadAccount();render();};
-  const oldSignUp=signUp;
-  signUp=async function(name,email,emailConfirm,phone,cpf,password){
-    if(email.toLowerCase()!==emailConfirm.toLowerCase()) throw new Error('Os e-mails não coincidem. Confira os dois campos.');
-    const data=await auth('signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,phone,cpf}})});
-    if(data.access_token){
-      localStorage.setItem('eralisAuth',JSON.stringify({access_token:data.access_token,refresh_token:data.refresh_token||''}));
-      sb={session:data,user:data.user};user=data.user;await loadAccount();render();status('Cadastro realizado. Sua conta está pronta.','success');
-    }else{
-      throw new Error('O Supabase ainda está exigindo confirmação por e-mail. Desative “Confirm email” nas configurações de Authentication do projeto.');
-    }
-  };
-  const oldSignOut=signOut;
-  signOut=async function(){await oldSignOut();localStorage.removeItem('eralisAuth');};
   init();
 })();
