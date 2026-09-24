@@ -3,14 +3,14 @@
 
   // =========================================================
   // ERALIS — Checkout / Frete
-  // MODO ATUAL: Correios SIMULADO
-  //
-  // Para produção, substitua apenas shippingProvider.quote()
-  // por uma chamada à função/Edge Function que consumirá a
-  // API real dos Correios. O restante do checkout permanece igual.
+  // ERALIS — Checkout + Correios simulado + Mercado Pago
+  // O frete permanece simulado nesta etapa. O pagamento é criado no backend
+  // via Supabase Edge Function para que o Access Token do Mercado Pago nunca
+  // seja exposto no navegador.
   // =========================================================
   const SUPABASE_URL=window.ERALIS_SUPABASE_URL;
   const SUPABASE_KEY=window.ERALIS_SUPABASE_KEY;
+  const MP_FUNCTION='mercado-pago-create-order';
   const $=s=>document.querySelector(s);
   let user=null,profile=null,addresses=[];
   let cart=JSON.parse(localStorage.getItem('eralisCart')||'[]');
@@ -298,11 +298,48 @@
     }
   }
 
-  function continueToPayment(){
-    if(!selectedShipping){calculateShipping();return;}
+  async function continueToPayment(){
+    if(!selectedShipping){await calculateShipping();return;}
     const selected=$('input[name="deliveryAddress"]:checked');
     if(!selected){status('Selecione um endereço de entrega.','error');return;}
-    status('Frete selecionado. O próximo passo será a integração do pagamento.','success');
+
+    const btn=$('#continueBtn');
+    btn.disabled=true;
+    btn.textContent='Preparando pagamento...';
+    status('Criando seu pedido com segurança...','success');
+    try{
+      const saved=authRaw?JSON.parse(authRaw):null;
+      if(!saved?.access_token)throw new Error('Sua sessão expirou. Entre novamente na sua conta.');
+      const address=addresses.find(a=>String(a.id)===String(selected.value));
+      if(!address)throw new Error('Endereço de entrega não encontrado.');
+      const payload={
+        address_id:address.id,
+        shipping:{
+          id:selectedShipping.id,
+          carrier:selectedShipping.carrier,
+          service:selectedShipping.service,
+          price:Number(selectedShipping.price||0),
+          delivery_days:Number(selectedShipping.deliveryDays||0),
+          simulated:true
+        },
+        cart:cart.map(x=>({id:x.id,qty:Number(x.qty||1)}))
+      };
+      const r=await fetch(`${SUPABASE_URL}/functions/v1/${MP_FUNCTION}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json',Authorization:`Bearer ${saved.access_token}`,apikey:SUPABASE_KEY},
+        body:JSON.stringify(payload)
+      });
+      const data=await r.json().catch(()=>({}));
+      if(!r.ok)throw new Error(data?.error||data?.message||'Não foi possível iniciar o pagamento.');
+      if(!data.checkout_url)throw new Error('O Mercado Pago não retornou a URL de pagamento.');
+      localStorage.setItem('eralisPendingOrder',JSON.stringify({order_id:data.order_id,mp_order_id:data.mp_order_id,total:data.total}));
+      window.location.href=data.checkout_url;
+    }catch(e){
+      console.error(e);
+      status('Não foi possível iniciar o pagamento. '+(e.message||'Tente novamente.'),'error');
+      btn.disabled=false;
+      btn.textContent='Continuar para pagamento →';
+    }
   }
 
   document.addEventListener('DOMContentLoaded',async()=>{

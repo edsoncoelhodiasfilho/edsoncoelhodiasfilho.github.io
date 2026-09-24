@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pagamento — ERALIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="checkout.css">
+<style>
+.payment-result{max-width:680px;margin:70px auto;padding:42px;text-align:center}.payment-icon{font-size:54px;margin-bottom:12px}.payment-result h1{margin:0 0 10px}.payment-result p{color:#6d665f;line-height:1.65}.payment-order{margin:24px 0;padding:18px;border-radius:18px;background:#f7f3ed}.payment-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}.payment-actions a{display:inline-flex;text-decoration:none}
+</style>
+</head>
+<body class="checkout-page">
+<div class="announcement"><div class="wrap announcement-inner"><span>✨ ERALIS — seu pedido está quase pronto</span><a href="index.html">Voltar para a loja →</a></div></div>
+<header class="site-header"><div class="wrap nav"><a class="brand" href="index.html" aria-label="ERALIS início"><img src="assets/eralis-logo.png" alt="ERALIS" class="brand-logo"><span><b>ERALIS</b><small>IDEIAS QUE GANHAM FORMA</small></span></a></div></header>
+<main class="checkout-main wrap"><section class="checkout-card payment-result"><div class="payment-icon" id="paymentIcon">⏳</div><span class="section-kicker" id="paymentKicker">PAGAMENTO</span><h1 id="paymentTitle">Confirmando seu pedido...</h1><p id="paymentText">Estamos consultando o status mais recente do Mercado Pago.</p><div class="payment-order" id="paymentOrder" hidden></div><div class="payment-actions"><a class="btn btn-primary" href="cliente.html">Ver minha conta</a><a class="btn btn-light" href="index.html">Voltar à loja</a></div></section></main>
+<footer><div class="wrap footer-inner"><div class="footer-brand"><img src="assets/eralis-logo.png" alt="ERALIS" class="brand-logo"><div><b>ERALIS</b><small>IDEIAS QUE GANHAM FORMA</small></div></div><p>Eralis — peças impressas em 3D, sob encomenda</p><span>Aracaju/SE</span></div></footer>
+<script src="supabase-config.js"></script>
+<script>
+(function(){
+  const SUPABASE_URL=window.ERALIS_SUPABASE_URL, KEY=window.ERALIS_SUPABASE_KEY;
+  const $=id=>document.getElementById(id);
+  const params=new URLSearchParams(location.search); const requested=params.get('status')||'pending'; const orderId=params.get('order_id');
+  const auth=(()=>{try{return JSON.parse(localStorage.getItem('eralisAuth')||'null')}catch(_){return null}})();
+  const labels={success:{icon:'✓',title:'Pagamento concluído',text:'Recebemos a confirmação do seu pagamento. Seu pedido já está registrado na ERALIS.'},failure:{icon:'×',title:'Pagamento não concluído',text:'O pagamento não foi aprovado. Você pode voltar à loja e tentar novamente.'},pending:{icon:'⏳',title:'Pagamento pendente',text:'O pagamento foi iniciado, mas ainda aguardamos a confirmação do Mercado Pago.'}};
+  function apply(state,order){const x=labels[state]||labels.pending;$('paymentIcon').textContent=x.icon;$('paymentTitle').textContent=x.title;$('paymentText').textContent=x.text;if(order){$('paymentOrder').hidden=false;$('paymentOrder').innerHTML=`<strong>Pedido #${String(order.id).padStart(6,'0')}</strong><br>Total: ${Number(order.total||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}<br><small>Pagamento: ${order.payment_status||'pending'}</small>`;}}
+  async function check(){
+    if(!auth?.access_token||!orderId){apply(requested);return;}
+    try{
+      const r=await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${encodeURIComponent(orderId)}&select=id,total,status,payment_status,mp_status,mp_status_detail`,{headers:{apikey:KEY,Authorization:`Bearer ${auth.access_token}`}});
+      const rows=await r.json(); const o=rows?.[0]; if(!o){apply(requested);return;}
+      if(o.payment_status==='approved')apply('success',o);else if(['rejected','error'].includes(o.payment_status)||o.status==='cancelado')apply('failure',o);else apply('pending',o);
+      if(o.payment_status==='approved'||o.payment_status==='rejected')return;
+      setTimeout(check,4000);
+    }catch(_){apply(requested);setTimeout(check,5000)}
+  }
+  check();
+})();
+</script>
+</body></html>
