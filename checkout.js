@@ -24,7 +24,7 @@
   const SHIPPING_CONFIG={
     mode:'simulation',
     carrier:'Correios',
-    originCep:'49000-000',
+    originCep:'49040700',
   };
 
   const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});

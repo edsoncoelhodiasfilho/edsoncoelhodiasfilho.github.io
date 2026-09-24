@@ -17,7 +17,7 @@ No Supabase > Edge Functions > Secrets, cadastre:
 - `MP_ACCESS_TOKEN` = Access Token do Mercado Pago (primeiro use a credencial de teste).
 - `MP_WEBHOOK_SECRET` = chave secreta gerada em Mercado Pago > Sua integração > Webhooks.
 - `ERALIS_SITE_URL` = `https://www.eralis.com.br`
-- `ERALIS_ORIGIN_CEP` = CEP real de origem usado no cálculo simulado, por exemplo `49000-000`.
+- `ERALIS_ORIGIN_CEP` = CEP real de origem usado no cálculo simulado. Nesta configuração: `49040700`.
 
 O Access Token e o Webhook Secret **não devem ser colocados em nenhum arquivo JavaScript público**.
 
